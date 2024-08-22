@@ -50,7 +50,7 @@
     "react-refresh": "^0.11.0",
     "resolve": "^1.20.0",
     "resolve-url-loader": "^4.0.0",
-    "sass-loader": "^12.3.0",
+    "sass-loader": "^16.0.1",
     "semver": "^7.3.5",
     "source-map-loader": "^3.0.0",
     "style-loader": "^4.0.0",
@@ -69,7 +69,7 @@
     "dev:start": "nodemon ./server-build/index.js",
     "dev": "npm-run-all --parallel build dev:*",
     "test": "node scripts/test.js",
-    "fix":"eslint --ext .jsx,.js,.ts,.tsx src/** --fix"
+    "fix": "eslint --ext .jsx,.js,.ts,.tsx src/** --fix"
   },
   "browserslist": {
     "production": [

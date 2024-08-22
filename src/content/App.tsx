@@ -1,5 +1,5 @@
 import Chatroom from "./components/chatroom";
-
+import "./App.scss";
 function App() {
 	return (
 		<div className="App">
