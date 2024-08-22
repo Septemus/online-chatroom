@@ -57,42 +57,43 @@ const Chatroom = () => {
 				loading: isReady,
 			})}
 		>
-			<h1>WebSocket Demo</h1>
-			<p>Received message:</p>
-			<ul>{msgListEl}</ul>
-			<Form
-				name="basic"
-				onFinish={onFinish}
-				onFinishFailed={onFinishFailed}
-				autoComplete="off"
-			>
-				<Form.Item<FieldType>
-					label="message"
-					name="msg"
-					rules={[
-						{
-							required: true,
-							message: "Please input your message!",
-						},
-					]}
+			<div className="message-screen">
+				<p>Received message:</p>
+				<ul>{msgListEl}</ul>
+				<Form
+					name="basic"
+					onFinish={onFinish}
+					onFinishFailed={onFinishFailed}
+					autoComplete="off"
 				>
-					<Input
-						value={msg}
-						onChange={(e) => {
-							setMsg(e.target.value);
-						}}
-					/>
-				</Form.Item>
-
-				<Form.Item>
-					<Button
-						type="primary"
-						htmlType="submit"
+					<Form.Item<FieldType>
+						label="message"
+						name="msg"
+						rules={[
+							{
+								required: true,
+								message: "Please input your message!",
+							},
+						]}
 					>
-						Submit
-					</Button>
-				</Form.Item>
-			</Form>
+						<Input
+							value={msg}
+							onChange={(e) => {
+								setMsg(e.target.value);
+							}}
+						/>
+					</Form.Item>
+
+					<Form.Item>
+						<Button
+							type="primary"
+							htmlType="submit"
+						>
+							Submit
+						</Button>
+					</Form.Item>
+				</Form>
+			</div>
 		</div>
 	);
 };
