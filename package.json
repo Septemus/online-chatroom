@@ -68,7 +68,8 @@
     "dev:build-server": "NODE_ENV=production webpack --config config/webpack.server.js --mode=production -w",
     "dev:start": "nodemon ./server-build/index.js",
     "dev": "npm-run-all --parallel build dev:*",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "fix":"eslint --ext .jsx,.js,.ts,.tsx src/** --fix"
   },
   "browserslist": {
     "production": [

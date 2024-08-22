@@ -1,11 +1,11 @@
-import Chatroom from './components/chatroom';
+import Chatroom from "./components/chatroom";
 
 function App() {
-  return (
-    <div className="App">
-      <Chatroom />
-    </div>
-  );
+	return (
+		<div className="App">
+			<Chatroom />
+		</div>
+	);
 }
 
 export default App;
