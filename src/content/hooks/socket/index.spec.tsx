@@ -9,9 +9,11 @@ const socketTestCase = async () => {
         console.log('mock server is connected')
     });
     const {result}=renderHook(() => { return useSocket(fakeURL) })
-    const[_,isReady]=result.current
+    const[socket,isReady]=result.current
     setTimeout(()=>{
         expect(isReady).toBe(true)
+        socket.close()
+        expect(isReady).toBe(false)
     },1000)
     
 }
