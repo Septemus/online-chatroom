@@ -1,9 +1,10 @@
-import Chatroom from "./components/chatroom";
+import Chatroom from "@/content/components/chatroom";
+import Sidebar from "@/content/components/sidebar";
 import "./App.scss";
 function App() {
 	return (
 		<div className="App">
-			<h1>WebSocket Demo</h1>
+			<Sidebar />
 			<Chatroom />
 		</div>
 	);

@@ -1,0 +1,23 @@
+$type-area-height: 50px;
+.chatroom {
+	height: 100%;
+	flex-grow: 1;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	.message-screen {
+		flex-grow: 1;
+		overflow-y: scroll;
+	}
+	.type-area {
+		height: $type-area-height;
+		display: flex;
+		.type-input,
+		button[type="submit"] {
+            height: $type-area-height;
+		}
+        button[type="submit"] {
+            width:150px;
+        }
+	}
+}

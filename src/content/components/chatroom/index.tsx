@@ -4,6 +4,7 @@ import { Button, Form, Input } from "antd";
 import { useSocket } from "@/content/hooks/socket";
 import classNames from "classnames";
 import { Note } from "@/types/message";
+import "./index.scss";
 type FieldType = {
 	msg: string;
 };
@@ -58,42 +59,46 @@ const Chatroom = () => {
 			})}
 		>
 			<div className="message-screen">
-				<p>Received message:</p>
 				<ul>{msgListEl}</ul>
-				<Form
-					name="basic"
-					onFinish={onFinish}
-					onFinishFailed={onFinishFailed}
-					autoComplete="off"
-				>
-					<Form.Item<FieldType>
-						label="message"
-						name="msg"
-						rules={[
-							{
-								required: true,
-								message: "Please input your message!",
-							},
-						]}
-					>
-						<Input
-							value={msg}
-							onChange={(e) => {
-								setMsg(e.target.value);
-							}}
-						/>
-					</Form.Item>
-
-					<Form.Item>
-						<Button
-							type="primary"
-							htmlType="submit"
-						>
-							Submit
-						</Button>
-					</Form.Item>
-				</Form>
 			</div>
+			<Form
+				name="basic"
+				onFinish={onFinish}
+				onFinishFailed={onFinishFailed}
+				autoComplete="off"
+				className="type-area"
+			>
+				<Form.Item<FieldType>
+					name="msg"
+					rules={[
+						{
+							required: true,
+							message: "Please input your message!",
+						},
+					]}
+					style={{
+						flexGrow: 1,
+						height: "100%",
+					}}
+				>
+					<Input
+						className="type-input"
+						value={msg}
+						onChange={(e) => {
+							setMsg(e.target.value);
+						}}
+					/>
+				</Form.Item>
+
+				<Form.Item>
+					<Button
+						type="primary"
+						htmlType="submit"
+					>
+						Submit
+					</Button>
+				</Form.Item>
+			</Form>
 		</div>
 	);
 };
