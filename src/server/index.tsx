@@ -4,11 +4,7 @@ import fs from "fs";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import express from "express";
-import { randomUUID } from "crypto";
 import App from "@/content/App";
-import { WebSocketServer, WebSocket } from "ws";
-import { Note } from "@/types/message";
-import createSocket from "./socket";
 import myCreateSocket from "./socket";
 Object.assign(global, { WebSocket: require("ws") });
 
