@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import type { FormProps } from "antd";
 import { Button, Form, Input } from "antd";
 import { useSocket } from "@/content/hooks/socket";
@@ -40,16 +40,18 @@ const Chatroom = () => {
 		console.log("Failed:", errorInfo);
 	};
 	const msgListEl = msgList.map((content) => {
+		let tmp: ReactElement | null = null;
 		if (content.type === "message") {
-			return (
-				<li>
+			tmp = (
+				<div className={content.id === id ? "self" : "other"}>
 					<span>{content.id}:</span>
 					{content.msg}
-				</li>
+				</div>
 			);
 		} else if (content.type === "init") {
-			return <li>You have joined the gang!🥷🏿</li>;
+			tmp = <div className="welcome">You have joined the gang!🥷🏿</div>;
 		}
+		return <div className="msg-note">{tmp}</div>;
 	});
 	return (
 		<div
@@ -58,9 +60,7 @@ const Chatroom = () => {
 				loading: isReady,
 			})}
 		>
-			<div className="message-screen">
-				<ul>{msgListEl}</ul>
-			</div>
+			<div className="message-screen">{msgListEl}</div>
 			<Form
 				name="basic"
 				onFinish={onFinish}
