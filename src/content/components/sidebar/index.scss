@@ -1,3 +1,20 @@
+$item-height:70px;
 .sidebar {
-    width:400px;
+    width:$item-height;
+    .sideMenu {
+        height: 100%;
+        .ant-menu-item {
+            text-align: center;
+            height: $item-height;
+            line-height: $item-height;
+            margin-bottom: 20px;
+            padding: 0;
+            .ant-menu-title-content {
+                margin-inline-start: 0;
+            }
+            .ant-menu-item-icon {
+                font-size: 25px;
+            }
+        }
+    }
 }
