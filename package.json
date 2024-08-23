@@ -64,10 +64,10 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "scripts": {
-    "build": "node scripts/build.js",
-    "dev:build-server": "NODE_ENV=production webpack --config config/webpack.server.js --mode=production -w",
+    "start": "node scripts/start.js",
+    "dev:build-server": "NODE_ENV=development webpack --config config/webpack.server.js --mode=development -w",
     "dev:start": "nodemon ./server-build/index.js",
-    "dev": "npm-run-all --parallel build dev:*",
+    "dev": "npm-run-all --parallel start dev:*",
     "test": "node scripts/test.js",
     "fix": "eslint --ext .jsx,.js,.ts,.tsx src/** --fix",
     "prepare": "husky"
@@ -93,6 +93,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "antd": "^5.20.2",
     "classnames": "^2.5.1",
+    "cra-build-watch": "^3.4.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.5",
