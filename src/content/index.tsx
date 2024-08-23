@@ -1,13 +1,14 @@
 import React from "react";
 import { hydrateRoot } from "react-dom/client";
-import "./index.css";
-import App from "@/content/App";
 import reportWebVitals from "@/content/reportWebVitals";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import routes from "@/common/routes";
+let router = createBrowserRouter(routes);
 
 hydrateRoot(
 	document.getElementById("root") as HTMLElement,
 	<React.StrictMode>
-		<App />
+		<RouterProvider router={router} />
 	</React.StrictMode>,
 );
 

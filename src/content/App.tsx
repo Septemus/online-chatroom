@@ -1,11 +1,11 @@
-import Chatroom from "@/content/components/chatroom";
 import Sidebar from "@/content/components/sidebar";
 import "./App.scss";
+import { Outlet } from "react-router-dom";
 function App() {
 	return (
 		<div className="App">
 			<Sidebar />
-			<Chatroom />
+			<Outlet />
 		</div>
 	);
 }

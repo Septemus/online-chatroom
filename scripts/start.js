@@ -14,7 +14,7 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const chalk = require('react-dev-utils/chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
@@ -74,6 +74,7 @@ checkBrowsers(paths.appPath, isInteractive)
     return choosePort(HOST, DEFAULT_PORT);
   })
   .then(port => {
+    copyPublicFolder()
     if (port == null) {
       // We have not found a port.
       return;
@@ -152,3 +153,9 @@ checkBrowsers(paths.appPath, isInteractive)
     }
     process.exit(1);
   });
+  function copyPublicFolder() {
+    fs.copySync(paths.appPublic, paths.appBuild, {
+      dereference: true,
+      filter: (file) => file !== paths.appHtml,
+    });
+  }
