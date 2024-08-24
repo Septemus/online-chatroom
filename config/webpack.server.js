@@ -1,5 +1,4 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: './src/server/index.tsx',
@@ -19,7 +18,29 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader'
+        loader: 'babel-loader',
+        options:{
+          "presets": [
+              "@babel/preset-env",
+          ],
+          "plugins": [
+              [
+                  "@babel/plugin-proposal-decorators",
+                  {
+                      "legacy": true,
+                  }
+              ],
+              [
+                  "@babel/plugin-transform-class-properties",
+              ],
+              [
+                  "@babel/plugin-transform-private-methods",
+              ],
+              [
+                  "@babel/plugin-transform-private-property-in-object",
+              ]
+          ],
+        }
       },
       {
         test: /\.tsx?$/,
