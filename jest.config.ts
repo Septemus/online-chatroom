@@ -1,7 +1,6 @@
 const config = {
 	roots: ["<rootDir>/src"],
 	collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.ts"],
-	setupFiles: ["react-app-polyfill/jsdom"],
 	setupFilesAfterEnv: ["<rootDir>/src/content/setupTests.ts"],
 	testMatch: [
 		"<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -9,14 +8,14 @@ const config = {
 	],
 	testEnvironment: "jsdom",
 	transform: {
-		"^.+\\.(js|jsx|mjs|cjs|ts|tsx)$":
-			"<rootDir>/config/jest/babelTransform.js",
+		"^.+\\.(ts|tsx)$": "ts-jest",
+		"^.+\\.(js|jsx|mjs|cjs)$": "<rootDir>/config/jest/babelTransform.js",
 		"^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
 		"^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)":
 			"<rootDir>/config/jest/fileTransform.js",
 	},
 	transformIgnorePatterns: [
-		"[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+		"/node_modules/(?!(chalk|ansi-styles|axios))",
 		"^.+\\.module\\.(css|sass|scss)$",
 	],
 	modulePaths: [],
@@ -37,10 +36,10 @@ const config = {
 		"jsx",
 		"node",
 	],
-	watchPlugins: [
-		"jest-watch-typeahead/filename",
-		"jest-watch-typeahead/testname",
-	],
+	// watchPlugins: [
+	// 	"jest-watch-typeahead/filename",
+	// 	"jest-watch-typeahead/testname",
+	// ],
 	resetMocks: true,
 };
 export default config;

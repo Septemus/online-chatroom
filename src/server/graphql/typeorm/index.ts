@@ -7,7 +7,7 @@ export const AppDataSource = new DataSource({
 	port: 5432,
 	username: "joe",
 	password: "123456",
-	database: "chatroom",
+	database: process.env.db_name,
 	synchronize: true,
 	logging: true,
 	entities: [Book],

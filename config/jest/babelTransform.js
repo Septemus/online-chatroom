@@ -16,11 +16,21 @@ const hasJsxRuntime = (() => {
 module.exports = babelJest.createTransformer({
 	presets: [
 		[
-			require.resolve("babel-preset-react-app"),
+			// require.resolve("babel-preset-react-app"),
+			// {
+			// 	runtime: hasJsxRuntime ? "automatic" : "classic",
+			// },
+			"@babel/preset-env",
+		],
+	],
+	plugins: [
+		[
+			"@babel/plugin-proposal-decorators",
 			{
-				runtime: hasJsxRuntime ? "automatic" : "classic",
+				legacy: true,
 			},
 		],
+		"babel-plugin-parameter-decorator",
 	],
 	babelrc: false,
 	configFile: false,
