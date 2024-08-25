@@ -3,12 +3,19 @@ import { hydrateRoot } from "react-dom/client";
 import reportWebVitals from "@/content/reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routes from "@/common/routes";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 let router = createBrowserRouter(routes);
-
+const client = new ApolloClient({
+	ssrMode: true,
+	uri: "http://localhost:3006/graphql",
+	cache: new InMemoryCache(),
+});
 hydrateRoot(
 	document.getElementById("root") as HTMLElement,
 	<React.StrictMode>
-		<RouterProvider router={router} />
+		<ApolloProvider client={client}>
+			<RouterProvider router={router} />
+		</ApolloProvider>
 	</React.StrictMode>,
 );
 

@@ -1,6 +1,7 @@
 $item-height:70px;
 .sidebar {
     width:$item-height;
+    border-right:solid 1px rgb(121, 112, 100);
     .sideMenu {
         height: 100%;
         .ant-menu-item {

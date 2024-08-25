@@ -11,9 +11,15 @@ import {
 import ReactDOMServer from "react-dom/server";
 import React from "react";
 import routes from "@/common/routes";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 let handler = createStaticHandler(routes);
 
 const SSRCallback: RequestHandler = async (req, res) => {
+	const client = new ApolloClient({
+		ssrMode: true,
+		uri: "http://localhost:3006/graphql",
+		cache: new InMemoryCache(),
+	});
 	let fetchRequest = createFetchRequest(req, res);
 	let context: StaticHandlerContext = (await handler.query(
 		fetchRequest,
@@ -21,10 +27,12 @@ const SSRCallback: RequestHandler = async (req, res) => {
 	let router = createStaticRouter(handler.dataRoutes, context);
 	const app = ReactDOMServer.renderToString(
 		<React.StrictMode>
-			<StaticRouterProvider
-				router={router}
-				context={context}
-			/>
+			<ApolloProvider client={client}>
+				<StaticRouterProvider
+					router={router}
+					context={context}
+				/>
+			</ApolloProvider>
 		</React.StrictMode>,
 	);
 	const indexFile = path.resolve("./build/index.html");

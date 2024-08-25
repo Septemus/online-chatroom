@@ -1,9 +1,4 @@
-import typeorm, {
-	Entity,
-	BaseEntity,
-	PrimaryGeneratedColumn,
-	Column,
-} from "typeorm";
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { ObjectType, Field, ID, InputType } from "type-graphql";
 
 @Entity()
@@ -45,13 +40,4 @@ export class UpdateBookInput {
 
 	@Field({ nullable: true })
 	isPublished?: boolean;
-}
-
-@ObjectType()
-export class OperationInfo {
-	@Field({ nullable: true })
-	msg?: string;
-
-	@Field()
-	success: boolean;
 }

@@ -5,6 +5,7 @@ import { useSocket } from "@/content/hooks/socket";
 import classNames from "classnames";
 import { Note } from "@/types/message";
 import "./index.scss";
+import ContactsList from "../contacts/contacts-list";
 type FieldType = {
 	msg: string;
 };
@@ -60,45 +61,50 @@ const Chatroom = () => {
 				loading: isReady,
 			})}
 		>
-			<div className="message-screen">{msgListEl}</div>
-			<Form
-				name="basic"
-				onFinish={onFinish}
-				onFinishFailed={onFinishFailed}
-				autoComplete="off"
-				className="type-area"
-			>
-				<Form.Item<FieldType>
-					name="msg"
-					rules={[
-						{
-							required: true,
-							message: "Please input your message!",
-						},
-					]}
-					style={{
-						flexGrow: 1,
-						height: "100%",
-					}}
+			<div className="contact-list-wrapper">
+				<ContactsList />
+			</div>
+			<div className="message-area">
+				<div className="message-screen">{msgListEl}</div>
+				<Form
+					name="basic"
+					onFinish={onFinish}
+					onFinishFailed={onFinishFailed}
+					autoComplete="off"
+					className="type-area"
 				>
-					<Input
-						className="type-input"
-						value={msg}
-						onChange={(e) => {
-							setMsg(e.target.value);
+					<Form.Item<FieldType>
+						name="msg"
+						rules={[
+							{
+								required: true,
+								message: "Please input your message!",
+							},
+						]}
+						style={{
+							flexGrow: 1,
+							height: "100%",
 						}}
-					/>
-				</Form.Item>
-
-				<Form.Item>
-					<Button
-						type="primary"
-						htmlType="submit"
 					>
-						Submit
-					</Button>
-				</Form.Item>
-			</Form>
+						<Input
+							className="type-input"
+							value={msg}
+							onChange={(e) => {
+								setMsg(e.target.value);
+							}}
+						/>
+					</Form.Item>
+
+					<Form.Item>
+						<Button
+							type="primary"
+							htmlType="submit"
+						>
+							Submit
+						</Button>
+					</Form.Item>
+				</Form>
+			</div>
 		</div>
 	);
 };

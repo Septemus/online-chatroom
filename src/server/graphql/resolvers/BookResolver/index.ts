@@ -2,10 +2,10 @@ import { Resolver, Query, Mutation, Arg } from "type-graphql";
 import {
 	Book,
 	CreateBookInput,
-	OperationInfo,
 	UpdateBookInput,
 } from "@/server/graphql/entities/book";
 import { BookRepo } from "@/server/graphql/typeorm";
+import { OperationInfo } from "../../entities/operationInfo";
 @Resolver()
 export class BookResolver {
 	@Query(() => [Book])

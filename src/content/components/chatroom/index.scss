@@ -3,35 +3,44 @@ $type-area-height: 50px;
 	height: 100%;
 	flex-grow: 1;
 	display: flex;
-	justify-content: space-between;
-	flex-direction: column;
-	.message-screen {
-		flex-grow: 1;
-		overflow-y: scroll;
-		.msg-note {
-			.welcome {
-				text-align: center;
-				color: rgb(149, 141, 128);
-				font-size: 12px;
-			}
-			.self {
-				text-align: right;
-			}
-			.other {
-				text-align: left;
-			}
-			padding: 10px 0;
-		}
+	.contact-list-wrapper {
+		width: 300px;
+		// height: 100%;
+		border-right:solid 2px rgb(121, 112, 100);
 	}
-	.type-area {
-		height: $type-area-height;
+	.message-area {
 		display: flex;
-		.type-input,
-		button[type="submit"] {
-            height: $type-area-height;
+		flex-grow: 1;
+		justify-content: space-between;
+		flex-direction: column;
+		.message-screen {
+			flex-grow: 1;
+			overflow-y: scroll;
+			.msg-note {
+				.welcome {
+					text-align: center;
+					color: rgb(149, 141, 128);
+					font-size: 12px;
+				}
+				.self {
+					text-align: right;
+				}
+				.other {
+					text-align: left;
+				}
+				padding: 10px 0;
+			}
 		}
-        button[type="submit"] {
-            width:150px;
-        }
+		.type-area {
+			height: $type-area-height;
+			display: flex;
+			.type-input,
+			button[type="submit"] {
+				height: $type-area-height;
+			}
+			button[type="submit"] {
+				width: 150px;
+			}
+		}
 	}
 }
