@@ -4,6 +4,9 @@ import reportWebVitals from "@/content/reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routes from "@/common/routes";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { store } from "@/content/store";
+import { Provider } from "react-redux";
+
 let router = createBrowserRouter(routes);
 const client = new ApolloClient({
 	ssrMode: true,
@@ -13,9 +16,11 @@ const client = new ApolloClient({
 hydrateRoot(
 	document.getElementById("root") as HTMLElement,
 	<React.StrictMode>
-		<ApolloProvider client={client}>
-			<RouterProvider router={router} />
-		</ApolloProvider>
+		<Provider store={store}>
+			<ApolloProvider client={client}>
+				<RouterProvider router={router} />
+			</ApolloProvider>
+		</Provider>
 	</React.StrictMode>,
 );
 

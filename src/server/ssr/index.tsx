@@ -12,6 +12,9 @@ import ReactDOMServer from "react-dom/server";
 import React from "react";
 import routes from "@/common/routes";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { store } from "@/content/store";
+import { Provider } from "react-redux";
+
 let handler = createStaticHandler(routes);
 
 const SSRCallback: RequestHandler = async (req, res) => {
@@ -20,6 +23,7 @@ const SSRCallback: RequestHandler = async (req, res) => {
 		uri: "http://localhost:3006/graphql",
 		cache: new InMemoryCache(),
 	});
+
 	let fetchRequest = createFetchRequest(req, res);
 	let context: StaticHandlerContext = (await handler.query(
 		fetchRequest,
@@ -27,12 +31,14 @@ const SSRCallback: RequestHandler = async (req, res) => {
 	let router = createStaticRouter(handler.dataRoutes, context);
 	const app = ReactDOMServer.renderToString(
 		<React.StrictMode>
-			<ApolloProvider client={client}>
-				<StaticRouterProvider
-					router={router}
-					context={context}
-				/>
-			</ApolloProvider>
+			<Provider store={store}>
+				<ApolloProvider client={client}>
+					<StaticRouterProvider
+						router={router}
+						context={context}
+					/>
+				</ApolloProvider>
+			</Provider>
 		</React.StrictMode>,
 	);
 	const indexFile = path.resolve("./build/index.html");
