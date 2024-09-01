@@ -69,6 +69,7 @@ const RegisterForm: React.FC<{
 					<Button
 						type="primary"
 						className="sumit-bt"
+						htmlType="submit"
 					>
 						Register
 					</Button>

@@ -68,6 +68,7 @@ const LoginForm: React.FC<{
 				<Button
 					type="primary"
 					className="sumit-bt"
+					htmlType="submit"
 				>
 					Login
 				</Button>
