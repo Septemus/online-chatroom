@@ -6,3 +6,15 @@ import "reflect-metadata";
 import { TextEncoder, TextDecoder } from "util";
 
 Object.assign(global, { TextDecoder, TextEncoder });
+Object.defineProperty(window, "matchMedia", {
+	value: () => {
+		const t = document.createElement("p");
+		Object.defineProperty(t, "addListener", {
+			value: () => {},
+		});
+		Object.defineProperty(t, "removeListener", {
+			value: () => {},
+		});
+		return t;
+	},
+});
