@@ -1,7 +1,12 @@
 import { Resolver, Query, Mutation, Arg } from "type-graphql";
-import { CreateUserInput, User } from "@/server/graphql/entities/user";
+import {
+	CreateUserInput,
+	loginInput,
+	User,
+} from "@/server/graphql/entities/user";
 import { UserRepo } from "@/server/graphql/typeorm";
 import { OperationInfo } from "../../entities/operationInfo";
+import { randomUUID } from "crypto";
 @Resolver()
 export class UserResolver {
 	@Query(() => [User])
@@ -14,10 +19,26 @@ export class UserResolver {
 		return UserRepo.findOne({ where: { id } });
 	}
 
+	@Query(() => OperationInfo)
+	async login(@Arg("data") data: loginInput): Promise<OperationInfo> {
+		const user = await UserRepo.findOne({ where: { ...data } });
+		if (!user) {
+			return {
+				success: false,
+				msg: "用户不存在！",
+			};
+		} else {
+			return {
+				success: true,
+				msg: "登录成功",
+			};
+		}
+	}
+
 	@Mutation(() => User)
 	async createUser(@Arg("data") data: CreateUserInput): Promise<User> {
 		const u = new User();
-		Object.assign(u, data);
+		Object.assign(u, data, { id: randomUUID() });
 		await UserRepo.save(u);
 		return u;
 	}

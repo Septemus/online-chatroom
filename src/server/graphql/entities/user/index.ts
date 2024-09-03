@@ -17,14 +17,25 @@ export class User extends BaseEntity {
 	name: string;
 
 	@Field(() => String)
+	@Column({ nullable: true })
+	password: string;
+
+	@Field(() => String)
 	@Column({ default: "images/avatars/default.jpg" })
 	avatar: string;
 }
 @InputType()
 export class CreateUserInput {
-	@Field()
-	id: string;
-
-	@Field()
+	@Field(() => String)
 	name: string;
+	@Field(() => String)
+	password: string;
+}
+
+@InputType()
+export class loginInput {
+	@Field(() => String)
+	id: string;
+	@Field(() => String)
+	password: string;
 }
