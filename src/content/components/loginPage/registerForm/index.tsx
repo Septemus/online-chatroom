@@ -1,14 +1,39 @@
 import { Button, Form, FormProps, Input } from "antd";
+import { useMutation, gql } from "@apollo/client";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import md5 from "md5";
+const REGISTER = gql`
+	mutation addUserMuttation($data: CreateUserInput!) {
+		createUser(data: $data) {
+			success
+			msg
+		}
+	}
+`;
 type FieldType = {
 	username?: string;
 	password?: string;
 };
-const RegisterForm: React.FC<{
-	toggler: () => void;
-}> = ({ toggler }) => {
+const RegisterForm: React.FC = () => {
+	const [register, { loading, error, data }] = useMutation(REGISTER);
+	const nav = useNavigate();
 	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-		console.log("Success:", values);
+		console.log("Fields Check Success:", values);
+		register({
+			variables: {
+				data: {
+					name: values.username,
+					password: md5(values.password as string),
+				},
+			},
+		}).then((res) => {
+			if (res.data.createUser.success) {
+				console.log(1);
+			} else {
+				console.log("register failed!", res.data.createUser.msg);
+			}
+		});
 	};
 
 	const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
@@ -78,7 +103,9 @@ const RegisterForm: React.FC<{
 				<Form.Item>
 					<Button
 						className="toggle"
-						onClick={toggler}
+						onClick={() => {
+							nav("..");
+						}}
 					>
 						Switch To Login
 					</Button>

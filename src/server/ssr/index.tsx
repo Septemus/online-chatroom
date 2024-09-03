@@ -14,6 +14,7 @@ import routes from "@/common/routes";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { store } from "@/content/store";
 import { Provider } from "react-redux";
+import { renderToStringWithData } from "@apollo/client/react/ssr";
 
 let handler = createStaticHandler(routes);
 
@@ -29,7 +30,7 @@ const SSRCallback: RequestHandler = async (req, res) => {
 		fetchRequest,
 	)) as StaticHandlerContext;
 	let router = createStaticRouter(handler.dataRoutes, context);
-	const app = ReactDOMServer.renderToString(
+	const app = await renderToStringWithData(
 		<React.StrictMode>
 			<Provider store={store}>
 				<ApolloProvider client={client}>

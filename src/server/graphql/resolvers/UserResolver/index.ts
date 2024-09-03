@@ -35,12 +35,17 @@ export class UserResolver {
 		}
 	}
 
-	@Mutation(() => User)
-	async createUser(@Arg("data") data: CreateUserInput): Promise<User> {
+	@Mutation(() => OperationInfo)
+	async createUser(
+		@Arg("data") data: CreateUserInput,
+	): Promise<OperationInfo> {
 		const u = new User();
 		Object.assign(u, data, { id: randomUUID() });
 		await UserRepo.save(u);
-		return u;
+		return {
+			success: true,
+			msg: "注册成功",
+		};
 	}
 
 	@Mutation(() => OperationInfo)

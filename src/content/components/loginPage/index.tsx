@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
+import { Outlet } from "react-router-dom";
 import "./index.scss";
 import logo from "@/content/logo.svg";
-import LoginForm from "./loginForm";
-import RegisterForm from "./registerForm";
 
 export enum LoginPageState {
 	logining,
@@ -10,25 +9,6 @@ export enum LoginPageState {
 }
 
 const LoginPage: React.FC = () => {
-	const [current, setCurrent] = useState<LoginPageState>(
-		LoginPageState.logining,
-	);
-	let displaying = (
-		<LoginForm
-			toggler={() => {
-				setCurrent(LoginPageState.registering);
-			}}
-		/>
-	);
-	if (current === LoginPageState.registering) {
-		displaying = (
-			<RegisterForm
-				toggler={() => {
-					setCurrent(LoginPageState.logining);
-				}}
-			/>
-		);
-	}
 	return (
 		<div className="loginPage">
 			<div className="logo">
@@ -37,7 +17,7 @@ const LoginPage: React.FC = () => {
 					alt=""
 				/>
 			</div>
-			{displaying}
+			<Outlet />
 		</div>
 	);
 };

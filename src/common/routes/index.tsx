@@ -2,6 +2,8 @@ import App from "@/content/App";
 import Account from "@/content/components/account";
 import Chatroom from "@/content/components/chatroom";
 import LoginPage from "@/content/components/loginPage";
+import LoginForm from "@/content/components/loginPage/loginForm";
+import RegisterForm from "@/content/components/loginPage/registerForm";
 import { createRoutesFromElements, Route } from "react-router-dom";
 
 export default createRoutesFromElements(
@@ -22,6 +24,15 @@ export default createRoutesFromElements(
 		<Route
 			element={<LoginPage />}
 			path="login"
-		></Route>
+		>
+			<Route
+				element={<LoginForm />}
+				path=""
+			></Route>
+			<Route
+				element={<RegisterForm />}
+				path="register"
+			></Route>
+		</Route>
 	</>,
 );
