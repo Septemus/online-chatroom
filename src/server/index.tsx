@@ -3,8 +3,9 @@ import express from "express";
 import myCreateSocket from "./socket";
 import myCreateGraphql from "./graphql";
 import SSRCallback from "./ssr";
-
+import dotenv from "dotenv";
 Object.assign(global, { WebSocket: require("ws") });
+dotenv.config();
 async function setUpExpressServer() {
 	const PORT = process.env.PORT || 3006;
 	const app = express();
