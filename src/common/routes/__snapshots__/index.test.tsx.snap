@@ -99,7 +99,7 @@ Array [
     "index": undefined,
     "lazy": undefined,
     "loader": undefined,
-    "path": "login",
+    "path": "/login",
     "shouldRevalidate": undefined,
   },
 ]

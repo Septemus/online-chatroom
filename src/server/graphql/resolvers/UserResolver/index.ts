@@ -2,20 +2,20 @@ import { Resolver, Query, Mutation, Arg } from "type-graphql";
 import {
 	CreateUserInput,
 	loginInput,
-	User,
+	Users,
 } from "@/server/graphql/entities/user";
 import { UserRepo } from "@/server/graphql/typeorm";
 import { OperationInfo } from "../../entities/operationInfo";
 import { randomUUID } from "crypto";
 @Resolver()
 export class UserResolver {
-	@Query(() => [User])
-	users(): Promise<User[]> {
+	@Query(() => [Users])
+	users(): Promise<Users[]> {
 		return UserRepo.find();
 	}
 
-	@Query(() => User)
-	user(@Arg("id") id: string): Promise<User | null> {
+	@Query(() => Users)
+	user(@Arg("id") id: string): Promise<Users | null> {
 		return UserRepo.findOne({ where: { id } });
 	}
 
@@ -39,7 +39,7 @@ export class UserResolver {
 	async createUser(
 		@Arg("data") data: CreateUserInput,
 	): Promise<OperationInfo> {
-		const u = new User();
+		const u = new Users();
 		Object.assign(u, data, { id: randomUUID() });
 		await UserRepo.save(u);
 		return {

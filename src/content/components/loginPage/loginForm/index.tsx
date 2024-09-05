@@ -3,7 +3,9 @@ import { useLazyQuery, gql } from "@apollo/client";
 import React from "react";
 import md5 from "md5";
 import { useNavigate } from "react-router-dom";
-const LOGIN = gql`
+import { useAppDispatch } from "@/content/hooks/store";
+import { setId } from "@/content/store/userSlice";
+export const LOGIN = gql`
 	query loginQuery($data: loginInput!) {
 		login(data: $data) {
 			msg
@@ -20,6 +22,7 @@ type FieldType = {
 const LoginForm: React.FC = () => {
 	const [login, { loading, error, data }] = useLazyQuery(LOGIN);
 	const nav = useNavigate();
+	const dispatch = useAppDispatch();
 	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
 		login({
 			variables: {
@@ -31,6 +34,8 @@ const LoginForm: React.FC = () => {
 		}).then((res) => {
 			if (res.data.login.success) {
 				console.log(res.data.login.success, res.data.login.msg);
+				dispatch(setId(values.userid as string));
+				nav("/");
 			} else {
 				console.log("error", res.data.login.msg);
 			}

@@ -132,6 +132,7 @@
     "webpack-cli": "^5.1.4",
     "webpack-node-externals": "^3.0.0",
     "websocket": "^1.0.35",
+    "whatwg-fetch": "^3.6.20",
     "ws": "^8.18.0"
   }
 }

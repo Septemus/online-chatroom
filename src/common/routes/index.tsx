@@ -23,7 +23,7 @@ export default createRoutesFromElements(
 		</Route>
 		<Route
 			element={<LoginPage />}
-			path="login"
+			path="/login"
 		>
 			<Route
 				element={<LoginForm />}

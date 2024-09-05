@@ -1,6 +1,7 @@
 const config = {
 	roots: ["<rootDir>/src"],
 	collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.ts"],
+	setupFiles: ["whatwg-fetch"],
 	setupFilesAfterEnv: ["<rootDir>/src/content/setupTests.ts"],
 	testMatch: [
 		"<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",

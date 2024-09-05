@@ -3,7 +3,7 @@ import { useMutation, gql } from "@apollo/client";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import md5 from "md5";
-const REGISTER = gql`
+export const REGISTER = gql`
 	mutation addUserMuttation($data: CreateUserInput!) {
 		createUser(data: $data) {
 			success
