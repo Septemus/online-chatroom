@@ -1,48 +1,22 @@
 import { Button, Checkbox, Flex, Form, FormProps, Input } from "antd";
-import { useLazyQuery, gql } from "@apollo/client";
 import React from "react";
-import md5 from "md5";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/content/hooks/store";
-import { setId } from "@/content/store/userSlice";
-export const LOGIN = gql`
-	query loginQuery($data: loginInput!) {
-		login(data: $data) {
-			msg
-			success
-		}
-	}
-`;
-type FieldType = {
-	userid?: string;
-	password?: string;
-	remember?: string;
+import { useNavigate, useSubmit } from "react-router-dom";
+export type LoginFieldType = {
+	userid: string;
+	password: string;
+	remember: string;
 };
 
 const LoginForm: React.FC = () => {
-	const [login, { loading, error, data }] = useLazyQuery(LOGIN);
+	const submit = useSubmit();
 	const nav = useNavigate();
-	const dispatch = useAppDispatch();
-	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-		login({
-			variables: {
-				data: {
-					id: values.userid,
-					password: md5(values.password as string),
-				},
-			},
-			fetchPolicy: "network-only",
-		}).then((res) => {
-			if (res.data.login.success) {
-				console.log(res.data.login.success, res.data.login.msg);
-				dispatch(setId(values.userid as string));
-				nav("/");
-			} else {
-				console.log("error", res.data.login.msg);
-			}
+	const onFinish: FormProps<LoginFieldType>["onFinish"] = (values) => {
+		submit(values, {
+			method: "POST",
+			action: "/login",
 		});
 	};
-	const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+	const onFinishFailed: FormProps<LoginFieldType>["onFinishFailed"] = (
 		errorInfo,
 	) => {
 		console.log("Failed:", errorInfo);
@@ -57,7 +31,7 @@ const LoginForm: React.FC = () => {
 			onFinishFailed={onFinishFailed}
 			autoComplete="off"
 		>
-			<Form.Item<FieldType>
+			<Form.Item<LoginFieldType>
 				label="User ID"
 				name="userid"
 				rules={[
@@ -70,7 +44,7 @@ const LoginForm: React.FC = () => {
 				<Input className="field" />
 			</Form.Item>
 
-			<Form.Item<FieldType>
+			<Form.Item<LoginFieldType>
 				label="Password"
 				name="password"
 				rules={[
@@ -83,7 +57,7 @@ const LoginForm: React.FC = () => {
 				<Input.Password className="field" />
 			</Form.Item>
 
-			<Form.Item<FieldType>
+			<Form.Item<LoginFieldType>
 				name="remember"
 				valuePropName="checked"
 				wrapperCol={{ span: 24 }}

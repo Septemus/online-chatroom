@@ -1,5 +1,5 @@
+import { LOGIN } from "@/common/apollo/client/login";
 import { REGISTER } from "@/common/apollo/client/register";
-import { LOGIN } from "../../loginForm";
 export const apolloMocks = [
 	{
 		request: {

@@ -5,4 +5,5 @@
         "plugin:prettier/recommended"
     ],
     "rules": {},
+    "ignorePatterns":["src/common/gql/*"]
 }

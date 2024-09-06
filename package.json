@@ -67,6 +67,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "codegen": "graphql-codegen -w",
     "dev:build-server": "NODE_ENV=development webpack --config config/webpack.server.js --mode=development -w",
     "dev:start": "nodemon ./server-build/index.js",
     "dev": "npm-run-all --parallel start dev:*",
@@ -95,6 +96,8 @@
     "@babel/plugin-transform-react-jsx": "^7.25.2",
     "@babel/plugin-transform-typescript": "^7.25.2",
     "@babel/runtime": "^7.25.4",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@parcel/watcher": "^2.4.2-alpha.0",
     "@reduxjs/toolkit": "^2.2.7",
     "@types/cors": "^2.8.17",
     "@types/md5": "^2.3.5",

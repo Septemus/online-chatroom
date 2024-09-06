@@ -1,0 +1,146 @@
+/* eslint-disable */
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+};
+
+export type Book = {
+  __typename?: 'Book';
+  author: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isPublished: Scalars['Boolean']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type CreateBookInput = {
+  author: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
+export type CreateUserInput = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createBook: Book;
+  createUser: OperationInfo;
+  deleteBook: OperationInfo;
+  deleteUser: OperationInfo;
+  updateBook: Book;
+};
+
+
+export type MutationCreateBookArgs = {
+  data: CreateBookInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  data: CreateUserInput;
+};
+
+
+export type MutationDeleteBookArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateBookArgs = {
+  data: UpdateBookInput;
+  id: Scalars['String']['input'];
+};
+
+export type OperationInfo = {
+  __typename?: 'OperationInfo';
+  msg?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  book: Book;
+  books: Array<Book>;
+  login: OperationInfo;
+  user: Users;
+  users: Array<Users>;
+};
+
+
+export type QueryBookArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryLoginArgs = {
+  data: LoginInput;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type UpdateBookInput = {
+  author?: InputMaybe<Scalars['String']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Users = {
+  __typename?: 'Users';
+  avatar: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  isOnline: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  password: Scalars['String']['output'];
+};
+
+export type LoginInput = {
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type LoginQueryQueryVariables = Exact<{
+  data: LoginInput;
+}>;
+
+
+export type LoginQueryQuery = { __typename?: 'Query', login: { __typename?: 'OperationInfo', msg?: string | null, success: boolean } };
+
+export type AddUserMuttationMutationVariables = Exact<{
+  data: CreateUserInput;
+}>;
+
+
+export type AddUserMuttationMutation = { __typename?: 'Mutation', createUser: { __typename?: 'OperationInfo', success: boolean, msg?: string | null } };
+
+export type UsersQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQueryQuery = { __typename?: 'Query', users: Array<{ __typename?: 'Users', id: string, isOnline: boolean, name: string, avatar: string }> };
+
+
+export const LoginQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"loginQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"loginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"msg"}},{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<LoginQueryQuery, LoginQueryQueryVariables>;
+export const AddUserMuttationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addUserMuttation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"msg"}}]}}]}}]} as unknown as DocumentNode<AddUserMuttationMutation, AddUserMuttationMutationVariables>;
+export const UsersQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"usersQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isOnline"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]} as unknown as DocumentNode<UsersQueryQuery, UsersQueryQueryVariables>;
