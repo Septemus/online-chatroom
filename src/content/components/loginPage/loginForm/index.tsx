@@ -31,6 +31,7 @@ const LoginForm: React.FC = () => {
 					password: md5(values.password as string),
 				},
 			},
+			fetchPolicy: "network-only",
 		}).then((res) => {
 			if (res.data.login.success) {
 				console.log(res.data.login.success, res.data.login.msg);

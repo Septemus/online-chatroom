@@ -12,8 +12,10 @@ export const REGISTER = gql`
 	}
 `;
 type FieldType = {
-	username?: string;
-	password?: string;
+	email: string;
+	username: string;
+	password: string;
+	confirmPassword: string;
 };
 const RegisterForm: React.FC = () => {
 	const [register, { loading, error, data }] = useMutation(REGISTER);
@@ -23,10 +25,12 @@ const RegisterForm: React.FC = () => {
 		register({
 			variables: {
 				data: {
+					email: values.email,
 					name: values.username,
 					password: md5(values.password as string),
 				},
 			},
+			fetchPolicy: "network-only",
 		}).then((res) => {
 			if (res.data.createUser.success) {
 				console.log(1);
@@ -52,6 +56,22 @@ const RegisterForm: React.FC = () => {
 				onFinishFailed={onFinishFailed}
 				autoComplete="off"
 			>
+				<Form.Item<FieldType>
+					label="Email"
+					name="email"
+					rules={[
+						{
+							type: "email",
+							message: "The input is not valid E-mail!",
+						},
+						{
+							required: true,
+							message: "Please input your Username!",
+						},
+					]}
+				>
+					<Input className="field" />
+				</Form.Item>
 				<Form.Item<FieldType>
 					label="Username"
 					name="username"
@@ -80,11 +100,29 @@ const RegisterForm: React.FC = () => {
 
 				<Form.Item<FieldType>
 					label="Confirm Password"
+					name="confirmPassword"
+					dependencies={["password"]}
 					rules={[
 						{
 							required: true,
 							message: "Please confirm your password!",
 						},
+						({ getFieldValue }) => ({
+							validator(_, value) {
+								console.log("111");
+								if (
+									!value ||
+									getFieldValue("password") === value
+								) {
+									return Promise.resolve();
+								}
+								return Promise.reject(
+									new Error(
+										"The new password that you entered do not match!",
+									),
+								);
+							},
+						}),
 					]}
 				>
 					<Input.Password className="field" />

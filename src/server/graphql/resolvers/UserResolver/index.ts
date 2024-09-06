@@ -22,7 +22,7 @@ export class UserResolver {
 	@Query(() => OperationInfo)
 	async login(@Arg("data") data: loginInput): Promise<OperationInfo> {
 		const user = await UserRepo.findOne({
-			where: [{ ...data }, { email: data.id, password: data.id }],
+			where: [{ ...data }, { email: data.id, password: data.password }],
 		});
 		if (!user) {
 			return {
