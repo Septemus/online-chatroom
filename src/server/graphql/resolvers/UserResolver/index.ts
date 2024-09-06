@@ -16,12 +16,14 @@ export class UserResolver {
 
 	@Query(() => Users)
 	user(@Arg("id") id: string): Promise<Users | null> {
-		return UserRepo.findOne({ where: { id } });
+		return UserRepo.findOne({ where: [{ id }, { email: id }] });
 	}
 
 	@Query(() => OperationInfo)
 	async login(@Arg("data") data: loginInput): Promise<OperationInfo> {
-		const user = await UserRepo.findOne({ where: { ...data } });
+		const user = await UserRepo.findOne({
+			where: [{ ...data }, { email: data.id, password: data.id }],
+		});
 		if (!user) {
 			return {
 				success: false,
@@ -50,7 +52,7 @@ export class UserResolver {
 
 	@Mutation(() => OperationInfo)
 	async deleteUser(@Arg("id") id: string): Promise<OperationInfo> {
-		const user = await UserRepo.findOne({ where: { id } });
+		const user = await UserRepo.findOne({ where: [{ id }, { email: id }] });
 		if (!user) {
 			return {
 				success: false,

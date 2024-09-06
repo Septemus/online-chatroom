@@ -1,5 +1,5 @@
 import { Entity, BaseEntity, PrimaryColumn, Column } from "typeorm";
-import { ObjectType, Field, ID, InputType } from "type-graphql";
+import { ObjectType, Field, InputType } from "type-graphql";
 
 @Entity()
 @ObjectType()
@@ -7,6 +7,12 @@ export class Users extends BaseEntity {
 	@Field(() => String)
 	@PrimaryColumn()
 	id: string;
+
+	@Field(() => String)
+	@Column({
+		unique: true,
+	})
+	email: string;
 
 	@Field(() => Boolean)
 	@Column({ default: false })
@@ -28,6 +34,8 @@ export class Users extends BaseEntity {
 export class CreateUserInput {
 	@Field(() => String)
 	name: string;
+	@Field(() => String)
+	email: string;
 	@Field(() => String)
 	password: string;
 }
