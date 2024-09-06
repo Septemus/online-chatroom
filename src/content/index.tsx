@@ -6,13 +6,9 @@ import routes from "@/common/routes";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { store } from "@/content/store";
 import { Provider } from "react-redux";
-
+import { client } from "@/common/apollo/client";
 let router = createBrowserRouter(routes);
-const client = new ApolloClient({
-	ssrMode: true,
-	uri: "http://localhost:3006/graphql",
-	cache: new InMemoryCache(),
-});
+
 hydrateRoot(
 	document.getElementById("root") as HTMLElement,
 	<React.StrictMode>

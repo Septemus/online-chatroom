@@ -8,10 +8,10 @@ import {
 	StaticHandlerContext,
 	StaticRouterProvider,
 } from "react-router-dom/server";
-import ReactDOMServer from "react-dom/server";
+import { client } from "@/common/apollo/client";
 import React from "react";
 import routes from "@/common/routes";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { store } from "@/content/store";
 import { Provider } from "react-redux";
 import { renderToStringWithData } from "@apollo/client/react/ssr";
@@ -19,12 +19,6 @@ import { renderToStringWithData } from "@apollo/client/react/ssr";
 let handler = createStaticHandler(routes);
 
 const SSRCallback: RequestHandler = async (req, res) => {
-	const client = new ApolloClient({
-		ssrMode: true,
-		uri: "http://localhost:3006/graphql",
-		cache: new InMemoryCache(),
-	});
-
 	let fetchRequest = createFetchRequest(req, res);
 	let context: StaticHandlerContext = (await handler.query(
 		fetchRequest,

@@ -1,46 +1,26 @@
 import { Button, Form, FormProps, Input } from "antd";
-import { useMutation, gql } from "@apollo/client";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import md5 from "md5";
-export const REGISTER = gql`
-	mutation addUserMuttation($data: CreateUserInput!) {
-		createUser(data: $data) {
-			success
-			msg
-		}
-	}
-`;
-type FieldType = {
+import React, { useRef } from "react";
+import { useNavigate, useSubmit } from "react-router-dom";
+export type RegisterFieldType = {
 	email: string;
 	username: string;
 	password: string;
 	confirmPassword: string;
 };
 const RegisterForm: React.FC = () => {
-	const [register, { loading, error, data }] = useMutation(REGISTER);
+	// const [register, { loading, error, data }] = useMutation(REGISTER);
+	const submit = useSubmit();
+	const toggle = useRef<HTMLButtonElement | HTMLAnchorElement | null>(null);
 	const nav = useNavigate();
-	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+	const onFinish: FormProps<RegisterFieldType>["onFinish"] = (values) => {
 		console.log("Fields Check Success:", values);
-		register({
-			variables: {
-				data: {
-					email: values.email,
-					name: values.username,
-					password: md5(values.password as string),
-				},
-			},
-			fetchPolicy: "network-only",
-		}).then((res) => {
-			if (res.data.createUser.success) {
-				console.log(1);
-			} else {
-				console.log("register failed!", res.data.createUser.msg);
-			}
+		submit(values, {
+			action: "/login/register",
+			method: "POST",
 		});
 	};
 
-	const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+	const onFinishFailed: FormProps<RegisterFieldType>["onFinishFailed"] = (
 		errorInfo,
 	) => {
 		console.log("Failed:", errorInfo);
@@ -56,7 +36,7 @@ const RegisterForm: React.FC = () => {
 				onFinishFailed={onFinishFailed}
 				autoComplete="off"
 			>
-				<Form.Item<FieldType>
+				<Form.Item<RegisterFieldType>
 					label="Email"
 					name="email"
 					rules={[
@@ -72,7 +52,7 @@ const RegisterForm: React.FC = () => {
 				>
 					<Input className="field" />
 				</Form.Item>
-				<Form.Item<FieldType>
+				<Form.Item<RegisterFieldType>
 					label="Username"
 					name="username"
 					rules={[
@@ -85,7 +65,7 @@ const RegisterForm: React.FC = () => {
 					<Input className="field" />
 				</Form.Item>
 
-				<Form.Item<FieldType>
+				<Form.Item<RegisterFieldType>
 					label="Password"
 					name="password"
 					rules={[
@@ -98,7 +78,7 @@ const RegisterForm: React.FC = () => {
 					<Input.Password className="field" />
 				</Form.Item>
 
-				<Form.Item<FieldType>
+				<Form.Item<RegisterFieldType>
 					label="Confirm Password"
 					name="confirmPassword"
 					dependencies={["password"]}
@@ -109,7 +89,6 @@ const RegisterForm: React.FC = () => {
 						},
 						({ getFieldValue }) => ({
 							validator(_, value) {
-								console.log("111");
 								if (
 									!value ||
 									getFieldValue("password") === value
@@ -141,6 +120,7 @@ const RegisterForm: React.FC = () => {
 				<Form.Item>
 					<Button
 						className="toggle"
+						ref={toggle}
 						onClick={() => {
 							nav("..");
 						}}

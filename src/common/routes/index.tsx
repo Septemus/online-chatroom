@@ -5,6 +5,7 @@ import LoginPage from "@/content/components/loginPage";
 import LoginForm from "@/content/components/loginPage/loginForm";
 import RegisterForm from "@/content/components/loginPage/registerForm";
 import { createRoutesFromElements, Route } from "react-router-dom";
+import registerAction from "../apollo/client/register";
 
 export default createRoutesFromElements(
 	<>
@@ -32,6 +33,7 @@ export default createRoutesFromElements(
 			<Route
 				element={<RegisterForm />}
 				path="register"
+				action={registerAction}
 			></Route>
 		</Route>
 	</>,

@@ -77,7 +77,7 @@ Array [
       Object {
         "Component": undefined,
         "ErrorBoundary": undefined,
-        "action": undefined,
+        "action": [Function],
         "caseSensitive": undefined,
         "element": <RegisterForm />,
         "errorElement": undefined,

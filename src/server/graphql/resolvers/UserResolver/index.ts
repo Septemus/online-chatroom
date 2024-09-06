@@ -43,11 +43,19 @@ export class UserResolver {
 	): Promise<OperationInfo> {
 		const u = new Users();
 		Object.assign(u, data, { id: randomUUID() });
-		await UserRepo.save(u);
-		return {
+		const ret: OperationInfo = {
 			success: true,
-			msg: "注册成功",
+			msg: "register successful!",
 		};
+		try {
+			console.log("saving");
+			await UserRepo.save(u);
+		} catch (err: any) {
+			console.log("something wrong!", err.detail);
+			ret.success = false;
+			ret.msg = err.detail;
+		}
+		return ret;
 	}
 
 	@Mutation(() => OperationInfo)
