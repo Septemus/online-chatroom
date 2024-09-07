@@ -4,6 +4,8 @@
         "react-app/jest",
         "plugin:prettier/recommended"
     ],
-    "rules": {},
+    "rules": {
+        "jest/no-conditional-expect":"off"
+    },
     "ignorePatterns":["src/common/gql/*"]
 }
