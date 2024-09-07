@@ -1,6 +1,7 @@
 import { LOGIN } from "@/common/apollo/client/login";
 import { REGISTER } from "@/common/apollo/client/register";
-export const apolloMocks = [
+import { MockedResponse } from "@apollo/client/testing";
+export const apolloMocks: MockedResponse[] = [
 	{
 		request: {
 			query: LOGIN,
