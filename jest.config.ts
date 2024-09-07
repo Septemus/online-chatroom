@@ -16,7 +16,7 @@ const config = {
 			"<rootDir>/config/jest/fileTransform.js",
 	},
 	transformIgnorePatterns: [
-		"/node_modules/(?!(chalk|ansi-styles|axios))",
+		// "/node_modules/(?!(chalk|ansi-styles|axios|@bundled-es-modules|node-fetch|data-uri-to-buffer|fetch-blob))",
 		"^.+\\.module\\.(css|sass|scss)$",
 	],
 	modulePaths: [],

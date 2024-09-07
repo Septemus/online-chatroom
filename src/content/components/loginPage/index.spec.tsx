@@ -1,16 +1,28 @@
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { MockedProvider } from "@apollo/client/testing";
 import { Provider } from "react-redux";
 import routes from "@/common/routes";
 import userEvent from "@testing-library/user-event";
 import {
 	render,
 	screen,
+	waitFor,
 	waitForElementToBeRemoved,
 } from "@testing-library/react";
-import { apolloMocks } from "./test/mocks";
+import { loginListener, registerListener, server } from "./test/mocks";
 import { store } from "@/content/store";
+import md5 from "md5";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "@/common/apollo/client";
 describe("loginPage", () => {
+	beforeAll(() => {
+		server.events.on("request:start", ({ request }) => {
+			console.log("Outgoing:", request.method, request.url);
+		});
+		server.listen();
+	});
+	afterAll(() => {
+		server.close();
+	});
 	function generateRenderObj() {
 		const router = createMemoryRouter(routes, {
 			initialEntries: ["/login"],
@@ -18,9 +30,9 @@ describe("loginPage", () => {
 		});
 		const renderObj = (
 			<Provider store={store}>
-				<MockedProvider mocks={apolloMocks}>
+				<ApolloProvider client={client}>
 					<RouterProvider router={router}></RouterProvider>
-				</MockedProvider>
+				</ApolloProvider>
 			</Provider>
 		);
 		return renderObj;
@@ -96,5 +108,49 @@ describe("loginPage", () => {
 		await emailAssert("jingjie@q,q.com", false);
 		await emailAssert("jingjie@qq.com", true);
 		await screen.findByText("Please input your Username!");
+	});
+	test("Login Password using md5 digest", async () => {
+		loginListener.mockImplementation((arg: any) => {
+			return arg[0].variables.data.password;
+		});
+		render(generateRenderObj());
+		let email: HTMLInputElement = screen.getByLabelText("User ID/Email");
+		let pwd: HTMLInputElement = screen.getByLabelText("Password");
+		let submit: HTMLButtonElement = screen.getByText("Login");
+		userEvent.click(email);
+		userEvent.keyboard("jingjie@tencent.com");
+		userEvent.click(pwd);
+		userEvent.keyboard("jingjiebest");
+		userEvent.click(submit);
+		await waitFor(() => {
+			expect(loginListener).toHaveBeenCalledTimes(1);
+		});
+		expect(loginListener).toHaveReturnedWith(md5("jingjiebest"));
+	});
+	test("Register Password using md5 digest", async () => {
+		registerListener.mockImplementation((arg: any) => {
+			return arg[0].variables.data.password;
+		});
+		render(generateRenderObj());
+		let toggler = screen.getByText("Sign Up");
+		userEvent.click(toggler);
+		let email = screen.getByLabelText("Email");
+		let username = screen.getByLabelText("Username");
+		let pwd = screen.getByLabelText("Password");
+		let confirm = screen.getByLabelText("Confirm Password");
+		let submit = screen.getByText("Register");
+		userEvent.click(email);
+		userEvent.keyboard("email@qq.com");
+		userEvent.click(username);
+		userEvent.keyboard("username");
+		userEvent.click(pwd);
+		userEvent.keyboard("jingjie123");
+		userEvent.click(confirm);
+		userEvent.keyboard("jingjie123");
+		userEvent.click(submit);
+		await waitFor(() => {
+			expect(registerListener).toHaveBeenCalledTimes(1);
+		});
+		expect(registerListener).toHaveReturnedWith(md5("jingjie123"));
 	});
 });

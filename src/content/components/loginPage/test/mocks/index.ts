@@ -1,33 +1,31 @@
-import { LOGIN } from "@/common/apollo/client/login";
-import { REGISTER } from "@/common/apollo/client/register";
-import { MockedResponse } from "@apollo/client/testing";
-export const apolloMocks: MockedResponse[] = [
-	{
-		request: {
-			query: LOGIN,
-		},
-		variableMatcher: (variable: any) => true,
-		result: {
-			data: {
-				login: {
-					msg: "登录成功",
-					success: true,
-				},
+import { HttpResponse, graphql } from "msw";
+import { setupServer } from "msw/node";
+export const loginListener = jest.fn((arg: any) => {});
+export const loginMock = (...args: any) => {
+	loginListener(args);
+	return HttpResponse.json({
+		data: {
+			login: {
+				msg: "登录成功",
+				success: true,
 			},
 		},
-	},
-	{
-		request: {
-			query: REGISTER,
-		},
-		variableMatcher: (variables: any) => true,
-		result: {
-			data: {
-				login: {
-					msg: "注册成功",
-					success: true,
-				},
+	});
+};
+export const registerListener = jest.fn((arg: any) => {});
+export const registerMock = (...args: any) => {
+	registerListener(args);
+	return HttpResponse.json({
+		data: {
+			createUser: {
+				msg: "注册成功",
+				success: true,
 			},
 		},
-	},
+	});
+};
+const handlers = [
+	graphql.query("loginQuery", loginMock as any),
+	graphql.mutation("addUserMuttation", registerMock as any),
 ];
+export const server = setupServer(...handlers);
