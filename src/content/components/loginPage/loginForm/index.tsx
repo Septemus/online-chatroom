@@ -32,7 +32,7 @@ const LoginForm: React.FC = () => {
 			autoComplete="off"
 		>
 			<Form.Item<LoginFieldType>
-				label="User ID"
+				label="User ID/Email"
 				name="userid"
 				rules={[
 					{
