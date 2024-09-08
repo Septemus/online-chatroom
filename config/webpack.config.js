@@ -23,6 +23,7 @@ const ForkTsCheckerWebpackPlugin =
 		? require("react-dev-utils/ForkTsCheckerWarningWebpackPlugin")
 		: require("react-dev-utils/ForkTsCheckerWebpackPlugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const dotenvPlugin = require("dotenv-webpack");
 
 const createEnvironmentHash = require("./webpack/persistentCache/createEnvironmentHash");
 
@@ -582,6 +583,7 @@ module.exports = function (webpackEnv) {
 			].filter(Boolean),
 		},
 		plugins: [
+			new dotenvPlugin(),
 			// Generates an `index.html` file with the <script> injected.
 			new HtmlWebpackPlugin(
 				Object.assign(

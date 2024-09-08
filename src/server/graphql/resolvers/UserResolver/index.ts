@@ -1,19 +1,24 @@
-import { Resolver, Query, Mutation, Arg } from "type-graphql";
+import jwt from "jsonwebtoken";
+import { Resolver, Query, Mutation, Arg, Authorized } from "type-graphql";
 import {
 	CreateUserInput,
 	loginInput,
 	Users,
 } from "@/server/graphql/entities/user";
 import { UserRepo } from "@/server/graphql/typeorm";
-import { OperationInfo } from "../../entities/operationInfo";
+import { OperationInfo } from "@/server/graphql/entities/operationInfo";
 import { randomUUID } from "crypto";
+import { checkLogic } from "@/server/graphql/checkers";
 @Resolver()
 export class UserResolver {
+	@Authorized()
 	@Query(() => [Users])
 	users(): Promise<Users[]> {
+		console.log("users");
 		return UserRepo.find();
 	}
 
+	@Authorized()
 	@Query(() => Users)
 	user(@Arg("id") id: string): Promise<Users | null> {
 		return UserRepo.findOne({ where: [{ id }, { email: id }] });
@@ -33,8 +38,22 @@ export class UserResolver {
 			return {
 				success: true,
 				msg: "登录成功",
+				token: jwt.sign(
+					{
+						id: data.id,
+					},
+					process.env.jwt_key as string,
+					{
+						algorithm: "HS256",
+					},
+				),
 			};
 		}
+	}
+
+	@Query(() => OperationInfo)
+	verify(@Arg("token") token: string): OperationInfo {
+		return checkLogic(token);
 	}
 
 	@Mutation(() => OperationInfo)
@@ -58,6 +77,7 @@ export class UserResolver {
 		return ret;
 	}
 
+	@Authorized()
 	@Mutation(() => OperationInfo)
 	async deleteUser(@Arg("id") id: string): Promise<OperationInfo> {
 		const user = await UserRepo.findOne({ where: [{ id }, { email: id }] });

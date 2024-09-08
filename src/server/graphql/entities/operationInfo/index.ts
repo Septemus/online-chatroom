@@ -7,4 +7,10 @@ export class OperationInfo {
 
 	@Field()
 	success: boolean;
+
+	@Field({ nullable: true })
+	token?: string;
+
+	@Field({ nullable: true })
+	id?: string;
 }

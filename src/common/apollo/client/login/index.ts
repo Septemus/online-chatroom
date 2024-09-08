@@ -12,6 +12,7 @@ export const LOGIN = gql(`
 		login(data: $data) {
 			msg
 			success
+			token
 		}
 	}
 `);
@@ -34,6 +35,7 @@ const loginAction = async ({ request, params }: ActionFunctionArgs) => {
 		console.log("login successful!");
 		store.dispatch(setId(data.userid as string));
 		message.success("login successful!");
+		localStorage.setItem("token", res.data.login.token as string);
 		return redirect("/");
 	} else {
 		message.error(`login failed!${res.data.login.msg}`);

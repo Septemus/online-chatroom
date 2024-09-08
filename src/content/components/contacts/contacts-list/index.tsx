@@ -3,16 +3,21 @@ import { UserOutlined } from "@ant-design/icons";
 import "./index.scss";
 import { gql, useQuery } from "@apollo/client";
 export default function ContactsList() {
-	const { data, loading, error } = useQuery(gql`
-		query usersQuery {
-			users {
-				id
-				isOnline
-				name
-				avatar
+	const { data, loading, error } = useQuery(
+		gql`
+			query usersQuery {
+				users {
+					id
+					isOnline
+					name
+					avatar
+				}
 			}
-		}
-	`);
+		`,
+		{
+			pollInterval: 1000,
+		},
+	);
 	let el: JSX.Element = <div></div>;
 	if (loading) {
 		el = <div className="loading"></div>;
