@@ -24,7 +24,7 @@ beforeAll(async () => {
 afterEach(async () => {
 	await BookRepo.clear();
 });
-describe("graphql-middleWare", () => {
+describe("graphql-middleWare-demo", () => {
 	jest.setTimeout(100000);
 
 	test("init", async () => {
