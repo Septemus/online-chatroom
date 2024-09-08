@@ -15,8 +15,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n": types.LoginQueryDocument,
     "\n\tmutation addUserMuttation($data: CreateUserInput!) {\n\t\tcreateUser(data: $data) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t}\n\t}\n": types.AddUserMuttationDocument,
+    "\n\tquery usersQuery {\n\t\tusers {\n\t\t\tid\n\t\t\tisOnline\n\t\t\tname\n\t\t\tavatar\n\t\t}\n\t}\n": types.UsersQueryDocument,
     "\n\tquery verifyQuery($token: String!) {\n\t\tverify(token: $token) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t\tid\n\t\t}\n\t}\n": types.VerifyQueryDocument,
-    "\n\t\t\tquery usersQuery {\n\t\t\t\tusers {\n\t\t\t\t\tid\n\t\t\t\t\tisOnline\n\t\t\t\t\tname\n\t\t\t\t\tavatar\n\t\t\t\t}\n\t\t\t}\n\t\t": types.UsersQueryDocument,
 };
 
 /**
@@ -44,11 +44,11 @@ export function gql(source: "\n\tmutation addUserMuttation($data: CreateUserInpu
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n\tquery verifyQuery($token: String!) {\n\t\tverify(token: $token) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t\tid\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery verifyQuery($token: String!) {\n\t\tverify(token: $token) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t\tid\n\t\t}\n\t}\n"];
+export function gql(source: "\n\tquery usersQuery {\n\t\tusers {\n\t\t\tid\n\t\t\tisOnline\n\t\t\tname\n\t\t\tavatar\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery usersQuery {\n\t\tusers {\n\t\t\tid\n\t\t\tisOnline\n\t\t\tname\n\t\t\tavatar\n\t\t}\n\t}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n\t\t\tquery usersQuery {\n\t\t\t\tusers {\n\t\t\t\t\tid\n\t\t\t\t\tisOnline\n\t\t\t\t\tname\n\t\t\t\t\tavatar\n\t\t\t\t}\n\t\t\t}\n\t\t"): (typeof documents)["\n\t\t\tquery usersQuery {\n\t\t\t\tusers {\n\t\t\t\t\tid\n\t\t\t\t\tisOnline\n\t\t\t\t\tname\n\t\t\t\t\tavatar\n\t\t\t\t}\n\t\t\t}\n\t\t"];
+export function gql(source: "\n\tquery verifyQuery($token: String!) {\n\t\tverify(token: $token) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t\tid\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery verifyQuery($token: String!) {\n\t\tverify(token: $token) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t\tid\n\t\t}\n\t}\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

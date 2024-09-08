@@ -4,6 +4,8 @@ import myCreateGraphql from ".";
 import axios from "axios";
 import events from "events";
 import { BookRepo } from "./typeorm";
+import { client } from "@/common/apollo/client";
+import { USERS } from "@/common/apollo/client/users";
 const PORT = process.env.PORT || 3006;
 const mylistener = new events();
 beforeAll(async () => {
@@ -58,5 +60,21 @@ describe("graphql-middleWare-demo", () => {
 		expect(res.data).toEqual({
 			data: { createBook: { author: "作者", title: "书名" } },
 		});
+	});
+});
+
+describe("user", () => {
+	test("Authentication", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		await new Promise((res) => setTimeout(res, 2000));
+		const res = await client.query({
+			query: USERS,
+			errorPolicy: "all",
+		});
+		expect(res.data).toBe(null);
+		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
 	});
 });
