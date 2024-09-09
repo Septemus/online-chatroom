@@ -6,12 +6,15 @@ import events from "events";
 import { BookRepo } from "./typeorm";
 import { client } from "@/common/apollo/client";
 import { USERS } from "@/common/apollo/client/users";
+import { USER } from "@/common/apollo/client/user";
+import { Server } from "http";
 const PORT = process.env.PORT || 3006;
 const mylistener = new events();
+let server: Server;
 beforeAll(async () => {
 	const midWare = await myCreateGraphql();
 	const app = express();
-	app.listen(PORT, () => {
+	server = app.listen(PORT, () => {
 		setTimeout(() => {
 			mylistener.emit("server-ready");
 		}, 1000);
@@ -25,6 +28,9 @@ beforeAll(async () => {
 });
 afterEach(async () => {
 	await BookRepo.clear();
+});
+afterAll(() => {
+	server.close();
 });
 describe("graphql-middleWare-demo", () => {
 	jest.setTimeout(100000);
@@ -64,15 +70,29 @@ describe("graphql-middleWare-demo", () => {
 });
 
 describe("user", () => {
-	test("Authentication", async () => {
+	test("users list Authentication", async () => {
 		await new Promise((res) => {
 			mylistener.addListener("server-ready", res);
 			mylistener.emit("request");
 		});
-		await new Promise((res) => setTimeout(res, 2000));
-		const res = await client.query({
+		let res = await client.query({
 			query: USERS,
 			errorPolicy: "all",
+		});
+		expect(res.data).toBe(null);
+		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
+	});
+	test("user Authentication", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		let res = await client.query({
+			query: USER,
+			errorPolicy: "all",
+			variables: {
+				userId: "",
+			},
 		});
 		expect(res.data).toBe(null);
 		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
