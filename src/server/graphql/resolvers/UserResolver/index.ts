@@ -40,7 +40,7 @@ export class UserResolver {
 				msg: "登录成功",
 				token: jwt.sign(
 					{
-						id: data.id,
+						id: user.id,
 					},
 					process.env.jwt_key as string,
 					{
