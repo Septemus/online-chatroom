@@ -45,6 +45,7 @@ export class UserResolver {
 					process.env.jwt_key as string,
 					{
 						algorithm: "HS256",
+						expiresIn: "30d",
 					},
 				),
 			};
