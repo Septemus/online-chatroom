@@ -16,7 +16,9 @@ import jwt from "jsonwebtoken";
 import md5 from "md5";
 import { VERIFY } from "@/common/apollo/verify";
 import { REGISTER } from "@/common/apollo/client/register";
-const PORT = process.env.PORT || 3006;
+import { AppDataSource } from "./typeorm";
+import detect from "detect-port";
+const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
 let server: Server;
 const TESTUSER = {
@@ -26,8 +28,18 @@ const TESTUSER = {
 	name: "testuser",
 };
 beforeAll(async () => {
+	AppDataSource.initialize();
 	const midWare = await myCreateGraphql();
 	const app = express();
+	await new Promise((res) => {
+		const itv = setInterval(async () => {
+			const status = (await detect(PORT)) === PORT;
+			if (status) {
+				res(null);
+				clearInterval(itv);
+			}
+		}, 2000);
+	});
 	server = app.listen(PORT, () => {
 		setTimeout(() => {
 			mylistener.emit("server-ready");
@@ -54,8 +66,14 @@ afterEach(async () => {
 	await BookRepo.clear();
 	await UserRepo.clear();
 });
-afterAll(() => {
+afterAll(async () => {
 	server.close();
+	AppDataSource.destroy();
+	await new Promise((res) => {
+		server.on("close", () => {
+			res(null);
+		});
+	});
 });
 describe("graphql-middleWare-demo", () => {
 	jest.setTimeout(100000);
