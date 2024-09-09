@@ -3,11 +3,12 @@ import cors from "cors";
 import myCreateGraphql from ".";
 import axios from "axios";
 import events from "events";
-import { BookRepo } from "./typeorm";
+import { BookRepo, UserRepo } from "./typeorm";
 import { client } from "@/common/apollo/client";
 import { USERS } from "@/common/apollo/client/users";
 import { USER } from "@/common/apollo/client/user";
 import { Server } from "http";
+import { DELETE } from "@/common/apollo/client/delete";
 const PORT = process.env.PORT || 3006;
 const mylistener = new events();
 let server: Server;
@@ -28,6 +29,7 @@ beforeAll(async () => {
 });
 afterEach(async () => {
 	await BookRepo.clear();
+	await UserRepo.clear();
 });
 afterAll(() => {
 	server.close();
@@ -92,6 +94,21 @@ describe("user", () => {
 			errorPolicy: "all",
 			variables: {
 				userId: "",
+			},
+		});
+		expect(res.data).toBe(null);
+		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
+	});
+	test("delete Authentication", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		let res = await client.mutate({
+			mutation: DELETE,
+			errorPolicy: "all",
+			variables: {
+				deleteUserId: "",
 			},
 		});
 		expect(res.data).toBe(null);

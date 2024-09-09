@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n    mutation delMutation($deleteUserId: String!) {\n        deleteUser(id: $deleteUserId) {\n            msg\n            success\n        }\n    }\n": types.DelMutationDocument,
     "\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n": types.LoginQueryDocument,
     "\n\tmutation addUserMuttation($data: CreateUserInput!) {\n\t\tcreateUser(data: $data) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t}\n\t}\n": types.AddUserMuttationDocument,
     "\n    query userQuery($userId: String!) {\n        user(id: $userId) {\n        password\n        id\n        name\n        email\n        avatar\n        isOnline\n        }\n    }\n": types.UserQueryDocument,
@@ -34,6 +35,10 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation delMutation($deleteUserId: String!) {\n        deleteUser(id: $deleteUserId) {\n            msg\n            success\n        }\n    }\n"): (typeof documents)["\n    mutation delMutation($deleteUserId: String!) {\n        deleteUser(id: $deleteUserId) {\n            msg\n            success\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
