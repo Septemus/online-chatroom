@@ -127,6 +127,23 @@ describe("loginPage", () => {
 		});
 		expect(loginListener).toHaveReturnedWith(md5("jingjiebest"));
 	});
+	test("Login success will save token in storage", async () => {
+		render(generateRenderObj());
+		let email: HTMLInputElement = screen.getByLabelText("User ID/Email");
+		let pwd: HTMLInputElement = screen.getByLabelText("Password");
+		let submit: HTMLButtonElement = screen.getByText("Login");
+		userEvent.click(email);
+		userEvent.keyboard("jingjie@tencent.com");
+		userEvent.click(pwd);
+		userEvent.keyboard("jingjiebest");
+		userEvent.click(submit);
+		await waitFor(() => {
+			expect(loginListener).toHaveBeenCalledTimes(1);
+		});
+		await waitFor(() => {
+			expect(localStorage.getItem("token")).toBe("fortest");
+		});
+	});
 	test("Register Password using md5 digest", async () => {
 		registerListener.mockImplementation((arg: any) => {
 			return arg[0].variables.data.password;

@@ -8,6 +8,7 @@ export const loginMock = (...args: any) => {
 			login: {
 				msg: "登录成功",
 				success: true,
+				token: "fortest",
 			},
 		},
 	});
