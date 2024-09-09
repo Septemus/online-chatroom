@@ -12,7 +12,9 @@ import { DELETE } from "@/common/apollo/client/delete";
 import { Users } from "./entities/user";
 import { randomUUID } from "crypto";
 import { LOGIN } from "@/common/apollo/client/login";
+import jwt from "jsonwebtoken";
 import md5 from "md5";
+import { VERIFY } from "@/common/apollo/verify";
 const PORT = process.env.PORT || 3006;
 const mylistener = new events();
 let server: Server;
@@ -92,7 +94,7 @@ describe("graphql-middleWare-demo", () => {
 });
 
 describe("user", () => {
-	test("login", async () => {
+	test("login+JWT verification", async () => {
 		await new Promise((res) => {
 			mylistener.addListener("server-ready", res);
 			mylistener.emit("request");
@@ -108,6 +110,31 @@ describe("user", () => {
 			fetchPolicy: "no-cache",
 		});
 		expect(res.data.login.success).toBe(true);
+		const payload = jwt.verify(
+			res.data.login.token as string,
+			process.env.jwt_key as string,
+			{
+				algorithms: ["HS256"],
+			},
+		) as jwt.JwtPayload;
+		expect(payload.id).toBe(TESTUSER.id);
+		let v_res = await client.query({
+			query: VERIFY,
+			variables: {
+				token: res.data.login.token as string,
+			},
+			fetchPolicy: "no-cache",
+		});
+		expect(v_res.data.verify.success).toBe(true);
+		expect(v_res.data.verify.id).toBe(TESTUSER.id);
+		v_res = await client.query({
+			query: VERIFY,
+			variables: {
+				token: randomUUID(),
+			},
+			fetchPolicy: "no-cache",
+		});
+		expect(v_res.data.verify.success).toBe(false);
 	});
 	test("users list Authentication", async () => {
 		await new Promise((res) => {
