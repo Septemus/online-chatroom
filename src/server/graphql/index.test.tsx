@@ -9,9 +9,19 @@ import { USERS } from "@/common/apollo/client/users";
 import { USER } from "@/common/apollo/client/user";
 import { Server } from "http";
 import { DELETE } from "@/common/apollo/client/delete";
+import { Users } from "./entities/user";
+import { randomUUID } from "crypto";
+import { LOGIN } from "@/common/apollo/client/login";
+import md5 from "md5";
 const PORT = process.env.PORT || 3006;
 const mylistener = new events();
 let server: Server;
+const TESTUSER = {
+	email: "test@jest.com",
+	id: randomUUID(),
+	password: "testpassword",
+	name: "testuser",
+};
 beforeAll(async () => {
 	const midWare = await myCreateGraphql();
 	const app = express();
@@ -26,6 +36,16 @@ beforeAll(async () => {
 		});
 	});
 	app.use("/graphql", cors<cors.CorsRequest>(), express.json(), midWare);
+});
+beforeEach(async () => {
+	await new Promise((res) => {
+		mylistener.addListener("server-ready", res);
+		mylistener.emit("request");
+	});
+	const u = new Users();
+	Object.assign(u, TESTUSER);
+	u.password = md5(u.password);
+	await UserRepo.save(u);
 });
 afterEach(async () => {
 	await BookRepo.clear();
@@ -72,6 +92,23 @@ describe("graphql-middleWare-demo", () => {
 });
 
 describe("user", () => {
+	test("login", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		const res = await client.query({
+			query: LOGIN,
+			variables: {
+				data: {
+					id: TESTUSER.id as string,
+					password: md5(TESTUSER.password as string),
+				},
+			},
+			fetchPolicy: "no-cache",
+		});
+		expect(res.data.login.success).toBe(true);
+	});
 	test("users list Authentication", async () => {
 		await new Promise((res) => {
 			mylistener.addListener("server-ready", res);
@@ -93,7 +130,7 @@ describe("user", () => {
 			query: USER,
 			errorPolicy: "all",
 			variables: {
-				userId: "",
+				userId: TESTUSER.id,
 			},
 		});
 		expect(res.data).toBe(null);
@@ -108,7 +145,7 @@ describe("user", () => {
 			mutation: DELETE,
 			errorPolicy: "all",
 			variables: {
-				deleteUserId: "",
+				deleteUserId: TESTUSER.id,
 			},
 		});
 		expect(res.data).toBe(null);
