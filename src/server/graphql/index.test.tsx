@@ -15,6 +15,7 @@ import { LOGIN } from "@/common/apollo/client/login";
 import jwt from "jsonwebtoken";
 import md5 from "md5";
 import { VERIFY } from "@/common/apollo/verify";
+import { REGISTER } from "@/common/apollo/client/register";
 const PORT = process.env.PORT || 3006;
 const mylistener = new events();
 let server: Server;
@@ -103,7 +104,7 @@ describe("user", () => {
 			query: LOGIN,
 			variables: {
 				data: {
-					id: TESTUSER.id as string,
+					id: TESTUSER.email as string,
 					password: md5(TESTUSER.password as string),
 				},
 			},
@@ -135,6 +136,36 @@ describe("user", () => {
 			fetchPolicy: "no-cache",
 		});
 		expect(v_res.data.verify.success).toBe(false);
+	});
+	test("register", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		const newUser = {
+			email: "musketeerdt@gmail.com",
+			name: "kane",
+			password: "theeverchosen19",
+		};
+		let reg_res = await client.mutate({
+			mutation: REGISTER,
+			errorPolicy: "all",
+			variables: {
+				data: { ...newUser, password: md5(newUser.password) },
+			},
+		});
+		expect(reg_res.data?.createUser.success).toBe(true);
+		const login_res = await client.query({
+			query: LOGIN,
+			variables: {
+				data: {
+					id: newUser.email as string,
+					password: md5(newUser.password as string),
+				},
+			},
+			fetchPolicy: "no-cache",
+		});
+		expect(login_res.data.login.success).toBe(true);
 	});
 	test("users list Authentication", async () => {
 		await new Promise((res) => {
