@@ -1,5 +1,12 @@
 import jwt from "jsonwebtoken";
-import { Resolver, Query, Mutation, Arg, Authorized } from "type-graphql";
+import {
+	Resolver,
+	Query,
+	Mutation,
+	Arg,
+	Authorized,
+	AuthenticationError,
+} from "type-graphql";
 import {
 	CreateUserInput,
 	loginInput,
@@ -9,6 +16,7 @@ import { UserRepo } from "@/server/graphql/typeorm";
 import { OperationInfo } from "@/server/graphql/entities/operationInfo";
 import { randomUUID } from "crypto";
 import { checkLogic } from "@/server/graphql/checkers";
+import genToken from "@/server/jwt/genToken";
 @Resolver()
 export class UserResolver {
 	@Authorized()
@@ -38,23 +46,51 @@ export class UserResolver {
 			return {
 				success: true,
 				msg: "登录成功",
-				token: jwt.sign(
-					{
-						id: user.id,
-					},
-					process.env.jwt_key as string,
-					{
-						algorithm: "HS256",
-						expiresIn: "30d",
-					},
-				),
+				token: genToken(user.id, { expireIn: "3d" }),
 			};
 		}
 	}
 
 	@Query(() => OperationInfo)
 	verify(@Arg("token") token: string): OperationInfo {
-		return checkLogic(token);
+		console.log("verifying");
+		try {
+			return checkLogic(token);
+		} catch (err) {
+			throw new AuthenticationError((err as jwt.VerifyErrors).message);
+		}
+	}
+
+	@Query(() => OperationInfo)
+	refresh(@Arg("oldToken") oldToken: string): OperationInfo {
+		try {
+			checkLogic(oldToken);
+			return {
+				msg: "Refreshed",
+				success: true,
+				token: genToken((jwt.decode(oldToken) as jwt.JwtPayload).id, {
+					expireIn: "3d",
+				}),
+			};
+		} catch (err) {
+			if ((err as jwt.VerifyErrors).name === "TokenExpiredError") {
+				return {
+					msg: "Refreshed",
+					success: true,
+					token: genToken(
+						(jwt.decode(oldToken) as jwt.JwtPayload).id,
+						{
+							expireIn: "3d",
+						},
+					),
+				};
+			} else {
+				return {
+					msg: "refresh failed",
+					success: false,
+				};
+			}
+		}
 	}
 
 	@Mutation(() => OperationInfo)

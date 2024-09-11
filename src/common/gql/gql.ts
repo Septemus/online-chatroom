@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n    mutation delMutation($deleteUserId: String!) {\n        deleteUser(id: $deleteUserId) {\n            msg\n            success\n        }\n    }\n": types.DelMutationDocument,
     "\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n": types.LoginQueryDocument,
+    "\n\tquery refreshQuery($oldToken:String!) {\n\t\trefresh(oldToken: $oldToken) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n": types.RefreshQueryDocument,
     "\n\tmutation addUserMuttation($data: CreateUserInput!) {\n\t\tcreateUser(data: $data) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t}\n\t}\n": types.AddUserMuttationDocument,
     "\n    query userQuery($userId: String!) {\n        user(id: $userId) {\n        password\n        id\n        name\n        email\n        avatar\n        isOnline\n        }\n    }\n": types.UserQueryDocument,
     "\n\tquery usersQuery {\n\t\tusers {\n\t\t\tid\n\t\t\tisOnline\n\t\t\tname\n\t\t\tavatar\n\t\t}\n\t}\n": types.UsersQueryDocument,
@@ -43,6 +44,10 @@ export function gql(source: "\n    mutation delMutation($deleteUserId: String!) 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n\tquery refreshQuery($oldToken:String!) {\n\t\trefresh(oldToken: $oldToken) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery refreshQuery($oldToken:String!) {\n\t\trefresh(oldToken: $oldToken) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

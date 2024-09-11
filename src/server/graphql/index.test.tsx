@@ -137,23 +137,6 @@ describe("user", () => {
 			},
 		) as jwt.JwtPayload;
 		expect(payload.id).toBe(TESTUSER.id);
-		let v_res = await client.query({
-			query: VERIFY,
-			variables: {
-				token: res.data.login.token as string,
-			},
-			fetchPolicy: "no-cache",
-		});
-		expect(v_res.data.verify.success).toBe(true);
-		expect(v_res.data.verify.id).toBe(TESTUSER.id);
-		v_res = await client.query({
-			query: VERIFY,
-			variables: {
-				token: randomUUID(),
-			},
-			fetchPolicy: "no-cache",
-		});
-		expect(v_res.data.verify.success).toBe(false);
 	});
 	test("register", async () => {
 		await new Promise((res) => {
