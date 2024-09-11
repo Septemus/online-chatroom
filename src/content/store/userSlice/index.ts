@@ -35,7 +35,6 @@ export const userSlice = createSlice({
 			})
 			.addCase(verifyToken.rejected, (state, action) => {
 				state.status = "loaded";
-				console.log(action.payload);
 			});
 	},
 });

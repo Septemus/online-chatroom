@@ -8,11 +8,18 @@ import {
 	waitFor,
 	waitForElementToBeRemoved,
 } from "@testing-library/react";
-import { loginListener, registerListener, server } from "./test/mocks";
-import { store } from "@/content/store";
+import {
+	loginListener,
+	registerListener,
+	server,
+	verifyListener,
+	verifyMock,
+} from "./test/mocks";
+import { setUpStore } from "@/content/store";
 import md5 from "md5";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "@/common/apollo/client";
+import { OperationInfo } from "@/server/graphql/entities/operationInfo";
 describe("loginPage", () => {
 	beforeAll(() => {
 		server.events.on("request:start", ({ request }) => {
@@ -23,13 +30,22 @@ describe("loginPage", () => {
 	afterAll(() => {
 		server.close();
 	});
+	beforeEach(() => {
+		verifyListener.mockImplementation((arg: any): OperationInfo => {
+			return {
+				msg: "verification failed!",
+				success: false,
+				id: "",
+			};
+		});
+	});
 	function generateRenderObj() {
 		const router = createMemoryRouter(routes, {
 			initialEntries: ["/login"],
 			initialIndex: 0,
 		});
 		const renderObj = (
-			<Provider store={store}>
+			<Provider store={setUpStore()}>
 				<ApolloProvider client={client}>
 					<RouterProvider router={router}></RouterProvider>
 				</ApolloProvider>
@@ -39,7 +55,7 @@ describe("loginPage", () => {
 	}
 	test("switch between login and register", async () => {
 		render(generateRenderObj());
-		let toggler = screen.getByText("Sign Up");
+		let toggler = await screen.findByText("Sign Up");
 		await userEvent.click(toggler);
 		expect(screen.getByText("Register")).toBeTruthy();
 		toggler = screen.getByText("Switch To Login");
@@ -48,11 +64,11 @@ describe("loginPage", () => {
 	});
 	test("Default display login form", async () => {
 		render(generateRenderObj());
-		expect(screen.getByText("Login")).toBeTruthy();
+		expect(await screen.findByText("Login")).toBeTruthy();
 	});
 	test("Confirm Password", async () => {
 		render(generateRenderObj());
-		let toggler = screen.getByText("Sign Up");
+		let toggler = await screen.findByText("Sign Up");
 		await userEvent.click(toggler);
 		let pwd: HTMLInputElement = screen.getByLabelText("Password");
 		userEvent.click(pwd);
@@ -80,7 +96,7 @@ describe("loginPage", () => {
 	test("Email Check", async () => {
 		const ERR_TIP_TEXT = "The input is not valid E-mail!";
 		render(generateRenderObj());
-		let toggler = screen.getByText("Sign Up");
+		let toggler = await screen.findByText("Sign Up");
 		userEvent.click(toggler);
 		let email: HTMLInputElement = screen.getByLabelText("Email");
 		async function emailAssert(content: string, res: boolean) {
@@ -114,7 +130,8 @@ describe("loginPage", () => {
 			return arg[0].variables.data.password;
 		});
 		render(generateRenderObj());
-		let email: HTMLInputElement = screen.getByLabelText("User ID/Email");
+		let email: HTMLInputElement =
+			await screen.findByLabelText("User ID/Email");
 		let pwd: HTMLInputElement = screen.getByLabelText("Password");
 		let submit: HTMLButtonElement = screen.getByText("Login");
 		userEvent.click(email);
@@ -129,7 +146,8 @@ describe("loginPage", () => {
 	});
 	test("Login success will save token in storage", async () => {
 		render(generateRenderObj());
-		let email: HTMLInputElement = screen.getByLabelText("User ID/Email");
+		let email: HTMLInputElement =
+			await screen.findByLabelText("User ID/Email");
 		let pwd: HTMLInputElement = screen.getByLabelText("Password");
 		let submit: HTMLButtonElement = screen.getByText("Login");
 		userEvent.click(email);
@@ -149,7 +167,7 @@ describe("loginPage", () => {
 			return arg[0].variables.data.password;
 		});
 		render(generateRenderObj());
-		let toggler = screen.getByText("Sign Up");
+		let toggler = await screen.findByText("Sign Up");
 		userEvent.click(toggler);
 		let email = screen.getByLabelText("Email");
 		let username = screen.getByLabelText("Username");

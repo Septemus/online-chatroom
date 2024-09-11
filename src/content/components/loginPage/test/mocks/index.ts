@@ -25,8 +25,19 @@ export const registerMock = (...args: any) => {
 		},
 	});
 };
+export const verifyListener = jest.fn((arg: any): any => {});
+export const verifyMock = (...args: any) => {
+	const verify = verifyListener(args);
+	console.log("this is the verify:", verify);
+	return HttpResponse.json({
+		data: {
+			verify,
+		},
+	});
+};
 const handlers = [
 	graphql.query("loginQuery", loginMock as any),
 	graphql.mutation("addUserMuttation", registerMock as any),
+	graphql.query("verifyQuery", verifyMock as any),
 ];
 export const server = setupServer(...handlers);

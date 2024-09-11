@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
 	password: "123456",
 	database: process.env.db_name,
 	synchronize: true,
-	logging: true,
+	logging: process.env.NODE_ENV === "development",
 	entities: [Book, Users],
 });
 AppDataSource.initialize();

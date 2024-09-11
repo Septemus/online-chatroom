@@ -4,8 +4,15 @@ function RequireCondition({
 	children,
 	condition,
 	loading,
+	fallback = (
+		<Navigate
+			to="/login"
+			replace
+		/>
+	),
 }: {
 	children: JSX.Element;
+	fallback?: JSX.Element;
 	condition: boolean;
 	loading: boolean;
 }) {
@@ -16,14 +23,7 @@ function RequireCondition({
 			</>
 		);
 	} else {
-		return condition ? (
-			children
-		) : (
-			<Navigate
-				to="/login"
-				replace
-			/>
-		);
+		return condition ? children : fallback;
 	}
 }
 
