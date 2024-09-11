@@ -227,4 +227,29 @@ describe("user", () => {
 		expect(res.data).toBe(null);
 		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
 	});
+	test("email is unique", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		let reg_res = await client.mutate({
+			mutation: REGISTER,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					name: "uniquetest",
+					email: TESTUSER.email,
+					password: "not important",
+				},
+			},
+		});
+		expect(reg_res.data?.createUser.success).toBe(false);
+		expect(
+			await UserRepo.count({
+				where: {
+					email: TESTUSER.email,
+				},
+			}),
+		).toBe(1);
+	});
 });
