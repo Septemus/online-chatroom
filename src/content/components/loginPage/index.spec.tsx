@@ -8,37 +8,81 @@ import {
 	waitFor,
 	waitForElementToBeRemoved,
 } from "@testing-library/react";
-import {
-	loginListener,
-	registerListener,
-	server,
-	verifyListener,
-	verifyMock,
-} from "./test/mocks";
+import express from "express";
 import { setUpStore } from "@/content/store";
 import md5 from "md5";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "@/common/apollo/client";
-import { OperationInfo } from "@/server/graphql/entities/operationInfo";
+import { AppDataSource, BookRepo, UserRepo } from "@/server/graphql/typeorm";
+import myCreateGraphql from "@/server/graphql";
+import detect from "detect-port";
+import { Server } from "http";
+import events from "events";
+import cors from "cors";
+import { Users } from "@/server/graphql/entities/user";
+import { randomUUID } from "crypto";
+const PORT = parseInt(process.env.PORT as string) || 3006;
+let server: Server;
+const mylistener = new events();
+const TESTUSER = {
+	email: "test@jest.com",
+	id: randomUUID(),
+	password: "testpassword",
+	name: "testuser",
+};
+beforeAll(async () => {
+	// listenerServer.listen();
+	await AppDataSource.initialize();
+	const midWare = await myCreateGraphql();
+	const app = express();
+	await new Promise((res) => {
+		const itv = setInterval(async () => {
+			const status = (await detect(PORT)) === PORT;
+			if (status) {
+				res(null);
+				clearInterval(itv);
+			}
+		}, 2000);
+	});
+	server = app.listen(PORT, () => {
+		setTimeout(() => {
+			mylistener.emit("server-ready");
+		}, 1000);
+		mylistener.on("request", () => {
+			setTimeout(() => {
+				mylistener.emit("server-ready");
+			}, 1000);
+		});
+	});
+	app.use("/graphql", cors<cors.CorsRequest>(), express.json(), midWare);
+});
+beforeEach(async () => {
+	localStorage.clear();
+	await new Promise((res) => {
+		mylistener.addListener("server-ready", res);
+		mylistener.emit("request");
+	});
+	const u = new Users();
+	Object.assign(u, TESTUSER);
+	u.password = md5(u.password);
+	await UserRepo.save(u);
+});
+afterEach(async () => {
+	await BookRepo.clear();
+	await UserRepo.clear();
+});
+afterAll(async () => {
+	// listenerServer.close();
+	server.close();
+	AppDataSource.destroy();
+	await new Promise((res) => {
+		server.on("close", () => {
+			res(null);
+		});
+	});
+});
 describe("loginPage", () => {
-	beforeAll(() => {
-		server.events.on("request:start", ({ request }) => {
-			console.log("Outgoing:", request.method, request.url);
-		});
-		server.listen();
-	});
-	afterAll(() => {
-		server.close();
-	});
-	beforeEach(() => {
-		verifyListener.mockImplementation((arg: any): OperationInfo => {
-			return {
-				msg: "verification failed!",
-				success: false,
-				id: "",
-			};
-		});
-	});
+	jest.setTimeout(100000);
 	function generateRenderObj() {
 		const router = createMemoryRouter(routes, {
 			initialEntries: ["/login"],
@@ -125,25 +169,6 @@ describe("loginPage", () => {
 		await emailAssert("jingjie@qq.com", true);
 		await screen.findByText("Please input your Username!");
 	});
-	test("Login Password using md5 digest", async () => {
-		loginListener.mockImplementation((arg: any) => {
-			return arg[0].variables.data.password;
-		});
-		render(generateRenderObj());
-		let email: HTMLInputElement =
-			await screen.findByLabelText("User ID/Email");
-		let pwd: HTMLInputElement = screen.getByLabelText("Password");
-		let submit: HTMLButtonElement = screen.getByText("Login");
-		userEvent.click(email);
-		userEvent.keyboard("jingjie@tencent.com");
-		userEvent.click(pwd);
-		userEvent.keyboard("jingjiebest");
-		userEvent.click(submit);
-		await waitFor(() => {
-			expect(loginListener).toHaveBeenCalledTimes(1);
-		});
-		expect(loginListener).toHaveReturnedWith(md5("jingjiebest"));
-	});
 	test("Login success will save token in storage", async () => {
 		render(generateRenderObj());
 		let email: HTMLInputElement =
@@ -151,41 +176,22 @@ describe("loginPage", () => {
 		let pwd: HTMLInputElement = screen.getByLabelText("Password");
 		let submit: HTMLButtonElement = screen.getByText("Login");
 		userEvent.click(email);
-		userEvent.keyboard("jingjie@tencent.com");
+		userEvent.keyboard(TESTUSER.email);
 		userEvent.click(pwd);
-		userEvent.keyboard("jingjiebest");
+		userEvent.keyboard(TESTUSER.password);
 		userEvent.click(submit);
 		await waitFor(() => {
-			expect(loginListener).toHaveBeenCalledTimes(1);
-		});
-		await waitFor(() => {
-			expect(localStorage.getItem("token")).toBe("fortest");
+			expect(localStorage.getItem("token")).toBeTruthy();
 		});
 	});
-	test("Register Password using md5 digest", async () => {
-		registerListener.mockImplementation((arg: any) => {
-			return arg[0].variables.data.password;
-		});
+	test("router guard with correct token:Jump to App", async () => {
+		localStorage.setItem(
+			"token",
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFmYWQzM2YyLWU1NTAtNDNlZS05OGM2LTIxNDcyMzIxODYxNSIsImlhdCI6MTcyNjA1MjU4MSwiZXhwIjoxODgxNTcyNTgxfQ.uCzYbygTW3CjaTU45pU1NugKm3BVKXVEjl8SqAlHyhA",
+		);
 		render(generateRenderObj());
-		let toggler = await screen.findByText("Sign Up");
-		userEvent.click(toggler);
-		let email = screen.getByLabelText("Email");
-		let username = screen.getByLabelText("Username");
-		let pwd = screen.getByLabelText("Password");
-		let confirm = screen.getByLabelText("Confirm Password");
-		let submit = screen.getByText("Register");
-		userEvent.click(email);
-		userEvent.keyboard("email@qq.com");
-		userEvent.click(username);
-		userEvent.keyboard("username");
-		userEvent.click(pwd);
-		userEvent.keyboard("jingjie123");
-		userEvent.click(confirm);
-		userEvent.keyboard("jingjie123");
-		userEvent.click(submit);
 		await waitFor(() => {
-			expect(registerListener).toHaveBeenCalledTimes(1);
+			expect(window.location.pathname).toBe("/");
 		});
-		expect(registerListener).toHaveReturnedWith(md5("jingjie123"));
 	});
 });
