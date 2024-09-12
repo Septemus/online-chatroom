@@ -3,17 +3,21 @@ import { hydrateRoot } from "react-dom/client";
 import reportWebVitals from "@/content/reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routes from "@/common/routes";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { store } from "@/content/store";
 import { Provider } from "react-redux";
-import { client } from "@/common/apollo/client";
+import { browserClient } from "@/common/apollo/client";
 let router = createBrowserRouter(routes);
-
+console.log(
+	"hydrating apollo state in browser!",
+	(window as any).__APOLLO_STATE__,
+);
+browserClient.restore((window as any).__APOLLO_STATE__);
 hydrateRoot(
 	document.getElementById("root") as HTMLElement,
 	<React.StrictMode>
 		<Provider store={store}>
-			<ApolloProvider client={client}>
+			<ApolloProvider client={browserClient}>
 				<RouterProvider router={router} />
 			</ApolloProvider>
 		</Provider>

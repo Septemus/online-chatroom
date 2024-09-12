@@ -70,7 +70,7 @@
     "codegen": "graphql-codegen -w",
     "dev:build-server": "NODE_ENV=development webpack --config config/webpack.server.js --mode=development -w",
     "dev:start": "nodemon ./server-build/index.js",
-    "dev": "npm-run-all --parallel build dev:*",
+    "dev": "npm-run-all --parallel start dev:*",
     "test": "node scripts/test.js",
     "fix": "eslint --ext .jsx,.js,.ts,.tsx src --fix",
     "prepare": "husky"

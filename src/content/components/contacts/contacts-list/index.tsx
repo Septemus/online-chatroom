@@ -6,7 +6,7 @@ import { USERS } from "@/common/apollo/client/users";
 
 export default function ContactsList() {
 	const { data, loading, error } = useQuery(USERS, {
-		pollInterval: 1000,
+		pollInterval: 10000,
 	});
 	let el: JSX.Element = <div></div>;
 	if (loading) {

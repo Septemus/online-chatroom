@@ -4,7 +4,7 @@ import myCreateGraphql from ".";
 import axios from "axios";
 import events from "events";
 import { BookRepo, UserRepo } from "./typeorm";
-import { client } from "@/common/apollo/client";
+import { browserClient } from "@/common/apollo/client";
 import { USERS } from "@/common/apollo/client/users";
 import { USER } from "@/common/apollo/client/user";
 import { Server } from "http";
@@ -14,7 +14,6 @@ import { randomUUID } from "crypto";
 import { LOGIN } from "@/common/apollo/client/login";
 import jwt from "jsonwebtoken";
 import md5 from "md5";
-import { VERIFY } from "@/common/apollo/verify";
 import { REGISTER } from "@/common/apollo/client/register";
 import { AppDataSource } from "./typeorm";
 import detect from "detect-port";
@@ -118,7 +117,7 @@ describe("user", () => {
 			mylistener.addListener("server-ready", res);
 			mylistener.emit("request");
 		});
-		const res = await client.query({
+		const res = await browserClient.query({
 			query: LOGIN,
 			variables: {
 				data: {
@@ -148,7 +147,7 @@ describe("user", () => {
 			name: "kane",
 			password: "theeverchosen19",
 		};
-		let reg_res = await client.mutate({
+		let reg_res = await browserClient.mutate({
 			mutation: REGISTER,
 			errorPolicy: "all",
 			variables: {
@@ -156,7 +155,7 @@ describe("user", () => {
 			},
 		});
 		expect(reg_res.data?.createUser.success).toBe(true);
-		const login_res = await client.query({
+		const login_res = await browserClient.query({
 			query: LOGIN,
 			variables: {
 				data: {
@@ -173,7 +172,7 @@ describe("user", () => {
 			mylistener.addListener("server-ready", res);
 			mylistener.emit("request");
 		});
-		let res = await client.query({
+		let res = await browserClient.query({
 			query: USERS,
 			errorPolicy: "all",
 		});
@@ -185,7 +184,7 @@ describe("user", () => {
 			mylistener.addListener("server-ready", res);
 			mylistener.emit("request");
 		});
-		let res = await client.query({
+		let res = await browserClient.query({
 			query: USER,
 			errorPolicy: "all",
 			variables: {
@@ -200,7 +199,7 @@ describe("user", () => {
 			mylistener.addListener("server-ready", res);
 			mylistener.emit("request");
 		});
-		let res = await client.mutate({
+		let res = await browserClient.mutate({
 			mutation: DELETE,
 			errorPolicy: "all",
 			variables: {
@@ -215,7 +214,7 @@ describe("user", () => {
 			mylistener.addListener("server-ready", res);
 			mylistener.emit("request");
 		});
-		let reg_res = await client.mutate({
+		let reg_res = await browserClient.mutate({
 			mutation: REGISTER,
 			errorPolicy: "all",
 			variables: {

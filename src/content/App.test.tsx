@@ -5,7 +5,7 @@ import { ApolloProvider } from "@apollo/client";
 import { Provider } from "react-redux";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { setUpStore } from "./store";
-import { client } from "@/common/apollo/client";
+import { browserClient } from "@/common/apollo/client";
 import { render, screen, waitFor } from "@testing-library/react";
 import myCreateGraphql from "@/server/graphql";
 import { Server } from "http";
@@ -68,7 +68,7 @@ describe("App", () => {
 		});
 		const renderObj = (
 			<Provider store={setUpStore()}>
-				<ApolloProvider client={client}>
+				<ApolloProvider client={browserClient}>
 					<RouterProvider router={router}></RouterProvider>
 				</ApolloProvider>
 			</Provider>

@@ -12,7 +12,7 @@ import express from "express";
 import { setUpStore } from "@/content/store";
 import md5 from "md5";
 import { ApolloProvider } from "@apollo/client";
-import { client } from "@/common/apollo/client";
+import { browserClient } from "@/common/apollo/client";
 import { AppDataSource, BookRepo, UserRepo } from "@/server/graphql/typeorm";
 import myCreateGraphql from "@/server/graphql";
 import detect from "detect-port";
@@ -90,7 +90,7 @@ describe("loginPage", () => {
 		});
 		const renderObj = (
 			<Provider store={setUpStore()}>
-				<ApolloProvider client={client}>
+				<ApolloProvider client={browserClient}>
 					<RouterProvider router={router}></RouterProvider>
 				</ApolloProvider>
 			</Provider>

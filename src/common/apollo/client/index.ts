@@ -7,8 +7,9 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { REFRESH } from "./refresh";
+
 async function refreshTokenRequestFunc(): Promise<void> {
-	const response = await client.query({
+	const response = await browserClient.query({
 		query: REFRESH,
 		variables: {
 			oldToken: localStorage.getItem("token") ?? "",
@@ -58,8 +59,7 @@ const authLink = setContext((_, { headers }) => {
 		},
 	};
 });
-export const client = new ApolloClient({
-	ssrMode: process.env.NODE_ENV !== "test",
+export const browserClient = new ApolloClient({
 	link: from([errorLink, errorRefreshLink, authLink, httpLink]),
 	cache: new InMemoryCache(),
 });

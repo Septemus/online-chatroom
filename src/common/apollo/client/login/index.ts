@@ -1,5 +1,4 @@
 import { message } from "antd";
-import { client } from "..";
 import { ActionFunctionArgs, redirect } from "react-router-dom";
 import { LoginFieldType } from "@/content/components/loginPage/loginForm";
 // import { gql } from "@apollo/client";
@@ -7,6 +6,7 @@ import { gql } from "@/common/gql";
 import { store } from "@/content/store";
 import { setId } from "@/content/store/userSlice";
 import md5 from "md5";
+import { browserClient } from "..";
 export const LOGIN = gql(`
 	query loginQuery($data: loginInput!) {
 		login(data: $data) {
@@ -21,7 +21,7 @@ const loginAction = async ({ request, params }: ActionFunctionArgs) => {
 	const data: LoginFieldType = Object.fromEntries(
 		await request.formData(),
 	) as LoginFieldType;
-	const res = await client.query({
+	const res = await browserClient.query({
 		query: LOGIN,
 		variables: {
 			data: {

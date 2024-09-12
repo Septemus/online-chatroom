@@ -1,15 +1,15 @@
 import { ActionFunctionArgs, redirect } from "react-router-dom";
-import { client } from "..";
 import { RegisterFieldType } from "@/content/components/loginPage/registerForm";
 import { message } from "antd";
 import { gql } from "@/common/gql";
 import md5 from "md5";
+import { browserClient } from "..";
 
 const registerAction = async ({ request, params }: ActionFunctionArgs) => {
 	const data: RegisterFieldType = Object.fromEntries(
 		await request.formData(),
 	) as RegisterFieldType;
-	const res = await client.mutate({
+	const res = await browserClient.mutate({
 		mutation: REGISTER,
 		variables: {
 			data: {

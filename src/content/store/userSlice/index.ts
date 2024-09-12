@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { client } from "@/common/apollo/client";
+import { browserClient } from "@/common/apollo/client";
 import { VERIFY } from "@/common/apollo/verify";
 // Define a type for the slice state
 export interface userState {
@@ -11,8 +11,8 @@ export interface userState {
 
 // Define the initial state using that type
 const initialState: userState = {
-	id: "",
-	status: "loading",
+	id: "hydrating",
+	status: "loaded",
 };
 
 export const userSlice = createSlice({
@@ -35,6 +35,7 @@ export const userSlice = createSlice({
 			})
 			.addCase(verifyToken.rejected, (state, action) => {
 				state.status = "loaded";
+				state.id = "";
 			});
 	},
 });
@@ -42,7 +43,7 @@ export const userSlice = createSlice({
 export const verifyToken = createAsyncThunk(
 	"user/verifyToken",
 	async (token: string) => {
-		const res = await client.query({
+		const res = await browserClient.query({
 			query: VERIFY,
 			variables: {
 				token,

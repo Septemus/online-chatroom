@@ -1,17 +1,11 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
-import { buildSchema } from "type-graphql";
-import { BookResolver } from "./resolvers/BookResolver";
-import { UserResolver } from "./resolvers/UserResolver";
-import { customAuthChecker } from "./checkers";
+import { genSchema } from "./schema";
 export type Context = {
 	token: string;
 };
 export default async function myCreateGraphql() {
-	const schema = await buildSchema({
-		resolvers: [BookResolver, UserResolver],
-		authChecker: customAuthChecker,
-	});
+	const schema = await genSchema();
 	const aServer = new ApolloServer({
 		schema,
 	});
