@@ -15,10 +15,13 @@ import { ApolloProvider } from "@apollo/client";
 import { store } from "@/content/store";
 import { Provider } from "react-redux";
 import { renderToStringWithData } from "@apollo/client/react/ssr";
+// import type Entity from "@ant-design/cssinjs/es/Cache";
+import { createCache, extractStyle, StyleProvider } from "@ant-design/cssinjs";
 
 let handler = createStaticHandler(routes);
 
 const SSRCallback: RequestHandler = async (req, res) => {
+	const cache = createCache();
 	let fetchRequest = createFetchRequest(req, res);
 	let context: StaticHandlerContext = (await handler.query(
 		fetchRequest,
@@ -26,16 +29,19 @@ const SSRCallback: RequestHandler = async (req, res) => {
 	let router = createStaticRouter(handler.dataRoutes, context);
 	const app = await renderToStringWithData(
 		<React.StrictMode>
-			<Provider store={store}>
-				<ApolloProvider client={client}>
-					<StaticRouterProvider
-						router={router}
-						context={context}
-					/>
-				</ApolloProvider>
-			</Provider>
+			<StyleProvider cache={cache}>
+				<Provider store={store}>
+					<ApolloProvider client={client}>
+						<StaticRouterProvider
+							router={router}
+							context={context}
+						/>
+					</ApolloProvider>
+				</Provider>
+			</StyleProvider>
 		</React.StrictMode>,
 	);
+	const styleText = extractStyle(cache);
 	const indexFile = path.resolve("./build/index.html");
 
 	fs.readFile(indexFile, "utf8", (err, data) => {
@@ -43,13 +49,16 @@ const SSRCallback: RequestHandler = async (req, res) => {
 			console.error("Something went wrong:", err);
 			return res.status(500).send("Oops, better luck next time!");
 		}
-
-		return res.send(
-			data.replace(
-				'<div id="root"></div>',
-				`<div id="root">${app}</div>`,
-			),
+		data = data.replace(
+			'<div id="root"></div>',
+			`<div id="root">${app}</div>`,
 		);
+		data =
+			data.slice(0, data.indexOf("</head>")) +
+			styleText +
+			"</head>" +
+			data.slice(data.indexOf("<body>"));
+		return res.send(data);
 	});
 };
 export default SSRCallback;
