@@ -77,7 +77,6 @@ describe("App", () => {
 	}
 	test("router guard-without token", async () => {
 		render(generateRenderObj());
-		expect(screen.getByText("loading")).toBeTruthy();
 		await waitFor(() => {
 			return window.location.pathname === "/login";
 		});
@@ -88,13 +87,11 @@ describe("App", () => {
 			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im11c2tldGVlcmR0QGdtYWlsLmNvbSIsImlhdCI6MTcyNTc5NTY1M30.KqJ9-x4TrVzu4hrEKBP2b6bNpA6uhK48G1VJ5D0eTXc",
 		);
 		render(generateRenderObj());
-		expect(screen.getByText("loading")).toBeTruthy();
 		await screen.findByRole("menu");
 	});
 	test("router guard-with incorrect token", async () => {
 		window.localStorage.setItem("token", "dwhweuje");
 		render(generateRenderObj());
-		expect(screen.getByText("loading")).toBeTruthy();
 		await waitFor(() => {
 			return window.location.pathname === "/login";
 		});
