@@ -57,16 +57,6 @@ const LoginForm: React.FC = () => {
 				<Input.Password className="field" />
 			</Form.Item>
 
-			<Form.Item<LoginFieldType>
-				name="remember"
-				valuePropName="checked"
-				wrapperCol={{ span: 24 }}
-			>
-				<Flex justify="flex-end">
-					<Checkbox className="remember">Remember me</Checkbox>
-				</Flex>
-			</Form.Item>
-
 			<Form.Item>
 				<Button
 					type="primary"
