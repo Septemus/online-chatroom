@@ -8,7 +8,14 @@ export const setUpStore = (preloadedState?: any) => {
 		preloadedState,
 	});
 };
-export const store = setUpStore();
+let store: AppStore;
+try {
+	store = setUpStore((window as any)?.__PRELOADED_STATE__);
+	console.log("rehydrating store:", (window as any)?.__PRELOADED_STATE__);
+} catch (err) {
+	store = setUpStore();
+}
+export { store };
 // Infer the `RootState`,  `AppDispatch`, and `AppStore` types from the store itself
 export type RootState = ReturnType<typeof rootReducer>;
 

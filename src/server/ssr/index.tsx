@@ -28,11 +28,12 @@ const SSRCallback: RequestHandler = async (req, res) => {
 		fetchRequest,
 	)) as StaticHandlerContext;
 	let router = createStaticRouter(handler.dataRoutes, context);
+	const new_store = setUpStore();
 	const renderOBJ = (
 		<React.StrictMode>
 			<ApolloProvider client={serverClient}>
 				<StyleProvider cache={cache}>
-					<Provider store={setUpStore()}>
+					<Provider store={new_store}>
 						<StaticRouterProvider
 							router={router}
 							context={context}
@@ -43,6 +44,7 @@ const SSRCallback: RequestHandler = async (req, res) => {
 		</React.StrictMode>
 	);
 	const app = await renderToStringWithData(renderOBJ);
+	const preloadedState = new_store.getState();
 	const styleText = extractStyle(cache);
 	const indexFile = path.resolve("./build/index.html");
 	fs.readFile(indexFile, "utf8", (err, data) => {
@@ -52,7 +54,7 @@ const SSRCallback: RequestHandler = async (req, res) => {
 		}
 		data = data.replace(
 			'<div id="root"></div>',
-			`<div id="root">${app}</div><script>window.__APOLLO_STATE__=${JSON.stringify(serverClient.extract()).replace(/</g, "\\u003c")};</script>`,
+			`<div id="root">${app}</div><script>window.__APOLLO_STATE__=${JSON.stringify(serverClient.extract()).replace(/</g, "\\u003c")};window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, "\\u003c")}</script>`,
 		);
 		data =
 			data.slice(0, data.indexOf("</head>")) +
