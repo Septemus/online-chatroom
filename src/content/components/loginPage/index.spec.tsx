@@ -169,6 +169,34 @@ describe("loginPage", () => {
 		await emailAssert("jingjie@qq.com", true);
 		await screen.findByText("Please input your Username!");
 	});
+	test("Username Length Check", async () => {
+		const ERR_TIP_TEXT = "Username length must be between 4 and 18!";
+		render(generateRenderObj());
+		let toggler = await screen.findByText("Sign Up");
+		userEvent.click(toggler);
+		let username: HTMLInputElement = screen.getByLabelText("Username");
+		async function userNameAssert(content: string, res: boolean) {
+			userEvent.click(username);
+			userEvent.keyboard(content);
+			expect(username.value).toBe(content);
+			if (res) {
+				expect(screen.queryByText(ERR_TIP_TEXT)).toBe(null);
+			} else {
+				const tmp = await screen.findByText(ERR_TIP_TEXT);
+				expect(tmp).toBeTruthy();
+			}
+			userEvent.clear(username);
+			if (screen.queryByText(ERR_TIP_TEXT)) {
+				await waitForElementToBeRemoved(() =>
+					screen.queryByText(ERR_TIP_TEXT),
+				);
+			}
+		}
+		await userNameAssert("abc", false);
+		await userNameAssert("abcabcabcabcabcabcabc", false);
+		await userNameAssert("abcabcabc", true);
+		await screen.findByText("Please input your Username!");
+	});
 	test("Login success will save token in storage", async () => {
 		render(generateRenderObj());
 		let email: HTMLInputElement =

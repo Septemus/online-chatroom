@@ -234,4 +234,46 @@ describe("user", () => {
 			}),
 		).toBe(1);
 	});
+	test("username length restriction", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		await browserClient.mutate({
+			mutation: REGISTER,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					name: "abc",
+					email: TESTUSER.email,
+					password: "not important",
+				},
+			},
+		});
+		expect(
+			await UserRepo.count({
+				where: {
+					name: "abc",
+				},
+			}),
+		).toBe(0);
+		await browserClient.mutate({
+			mutation: REGISTER,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					name: "abcabcabcabcabcabcabc",
+					email: TESTUSER.email,
+					password: "not important",
+				},
+			},
+		});
+		expect(
+			await UserRepo.count({
+				where: {
+					name: "abcabcabc",
+				},
+			}),
+		).toBe(0);
+	});
 });
