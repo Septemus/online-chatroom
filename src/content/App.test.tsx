@@ -12,8 +12,11 @@ import { Server } from "http";
 import events from "events";
 import { AppDataSource, BookRepo, UserRepo } from "@/server/graphql/typeorm";
 import detect from "detect-port";
+import userEvent from "@testing-library/user-event";
 const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
+const correct_token =
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im11c2tldGVlcmR0QGdtYWlsLmNvbSIsImlhdCI6MTcyNTc5NTY1M30.KqJ9-x4TrVzu4hrEKBP2b6bNpA6uhK48G1VJ5D0eTXc";
 let server: Server;
 beforeAll(async () => {
 	AppDataSource.initialize();
@@ -77,23 +80,27 @@ describe("App", () => {
 	}
 	test("router guard-without token", async () => {
 		render(generateRenderObj());
-		await waitFor(() => {
-			return window.location.pathname === "/login";
-		});
+		await screen.findAllByText("Login");
 	});
 	test("router guard-with correct token", async () => {
-		window.localStorage.setItem(
-			"token",
-			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im11c2tldGVlcmR0QGdtYWlsLmNvbSIsImlhdCI6MTcyNTc5NTY1M30.KqJ9-x4TrVzu4hrEKBP2b6bNpA6uhK48G1VJ5D0eTXc",
-		);
+		window.localStorage.setItem("token", correct_token);
 		render(generateRenderObj());
 		await screen.findByRole("menu");
+	});
+	test("logout", async () => {
+		window.localStorage.setItem("token", correct_token);
+		render(generateRenderObj());
+		await screen.findByRole("menu");
+		let item = screen.getByRole("menuitem", { name: "logout" });
+		await userEvent.click(item);
+		const confirm = await screen.findByText("Confirm");
+		await userEvent.click(confirm);
+		await screen.findAllByText("Login");
+		expect(localStorage.getItem("token")).toBe(null);
 	});
 	test("router guard-with incorrect token", async () => {
 		window.localStorage.setItem("token", "dwhweuje");
 		render(generateRenderObj());
-		await waitFor(() => {
-			return window.location.pathname === "/login";
-		});
+		await screen.findAllByText("Login");
 	});
 });
