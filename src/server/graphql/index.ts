@@ -1,6 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { genSchema } from "./schema";
+import { jwt_prefix } from "@/common/jwt";
 export type Context = {
 	token: string;
 };
@@ -12,10 +13,7 @@ export default async function myCreateGraphql() {
 	await aServer.start();
 	return expressMiddleware(aServer, {
 		context: async ({ req }) => ({
-			token: req.headers.authorization?.replace(
-				process.env.jwt_prefix as string,
-				"",
-			),
+			token: req.headers.authorization?.replace(jwt_prefix, ""),
 		}),
 	});
 }

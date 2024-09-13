@@ -2,6 +2,7 @@ import { AuthChecker, AuthenticationError } from "type-graphql";
 import { Context } from "..";
 import jwt from "jsonwebtoken";
 import { OperationInfo } from "../entities/operationInfo";
+import { jwt_algorithm, jwt_key } from "@/common/jwt";
 
 export const customAuthChecker: AuthChecker<Context> = ({ context }, roles) => {
 	console.log(
@@ -15,8 +16,8 @@ export const customAuthChecker: AuthChecker<Context> = ({ context }, roles) => {
 	}
 };
 export function checkLogic(token: string): OperationInfo {
-	let payload = jwt.verify(token, process.env.jwt_key as string, {
-		algorithms: ["HS256"],
+	let payload = jwt.verify(token, jwt_key, {
+		algorithms: [jwt_algorithm],
 	}) as jwt.JwtPayload;
 	return {
 		success: true,

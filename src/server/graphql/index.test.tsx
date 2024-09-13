@@ -17,6 +17,7 @@ import md5 from "md5";
 import { REGISTER } from "@/common/apollo/client/register";
 import { AppDataSource } from "./typeorm";
 import detect from "detect-port";
+import { jwt_key } from "@/common/jwt";
 const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
 let server: Server;
@@ -128,13 +129,9 @@ describe("user", () => {
 			fetchPolicy: "no-cache",
 		});
 		expect(res.data.login.success).toBe(true);
-		const payload = jwt.verify(
-			res.data.login.token as string,
-			process.env.jwt_key as string,
-			{
-				algorithms: ["HS256"],
-			},
-		) as jwt.JwtPayload;
+		const payload = jwt.verify(res.data.login.token as string, jwt_key, {
+			algorithms: ["HS256"],
+		}) as jwt.JwtPayload;
 		expect(payload.id).toBe(TESTUSER.id);
 	});
 	test("register", async () => {

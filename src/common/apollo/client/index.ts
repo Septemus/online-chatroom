@@ -7,6 +7,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { REFRESH } from "./refresh";
+import { jwt_prefix } from "@/common/jwt";
 
 async function refreshTokenRequestFunc(): Promise<void> {
 	const response = await browserClient.query({
@@ -55,7 +56,7 @@ const authLink = setContext((_, { headers }) => {
 	return {
 		headers: {
 			...headers,
-			authorization: token ? `${process.env.jwt_prefix}${token}` : "",
+			authorization: token ? `${jwt_prefix}${token}` : "",
 		},
 	};
 });

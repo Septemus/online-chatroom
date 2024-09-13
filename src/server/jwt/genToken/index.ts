@@ -1,3 +1,4 @@
+import { jwt_algorithm, jwt_key } from "@/common/jwt";
 import jwt from "jsonwebtoken";
 export default function genToken(
 	id: string,
@@ -7,9 +8,9 @@ export default function genToken(
 		{
 			id: id,
 		},
-		process.env.jwt_key as string,
+		jwt_key,
 		{
-			algorithm: "HS256",
+			algorithm: jwt_algorithm,
 			expiresIn: option.expireIn,
 		},
 	);
