@@ -7,6 +7,8 @@ $type-area-height: 50px;
 		width: 300px;
 		// height: 100%;
 		border-right:solid 2px rgb(121, 112, 100);
+		padding: 10px 0;
+		box-sizing: border-box;
 	}
 	.message-area {
 		display: flex;

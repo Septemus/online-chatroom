@@ -1,12 +1,17 @@
 import Contact from "@/types/contacts/contact";
-import { UserOutlined } from "@ant-design/icons";
 import "./index.scss";
 import { useQuery } from "@apollo/client";
 import { USERS } from "@/common/apollo/client/queries/users";
+import { useAppSelector } from "@/content/hooks/store";
+import { selectId } from "@/content/store/userSlice";
 
 export default function ContactsList() {
 	const { data, loading, error } = useQuery(USERS, {
 		pollInterval: 10000,
+	});
+	const myid = useAppSelector(selectId);
+	const userList = data?.users.filter((u) => {
+		return u.id != myid;
 	});
 	let el: JSX.Element = <div></div>;
 	if (loading) {
@@ -16,18 +21,32 @@ export default function ContactsList() {
 	} else if (data) {
 		el = (
 			<ul>
-				{data.users.map((item: Contact) => {
+				{userList!.map((item: Contact) => {
 					return (
-						<li>
-							<span>{item.name}</span>
-							<UserOutlined
-								className={item.isOnline ? "online" : "offline"}
+						<li className="contact-item">
+							<img
+								src={item.avatar}
+								alt={item.name}
+								className="avatar"
 							/>
+							<div className="item-info">
+								<p className="name">{item.name}</p>
+								<div className="chat-content">
+									<span>history chat</span>
+									<span className="devider">·</span>
+									<span className="last-time">xd</span>
+								</div>
+							</div>
 						</li>
 					);
 				})}
 			</ul>
 		);
 	}
-	return <div className="contact-list">{el}</div>;
+	return (
+		<div className="contact-list">
+			<h2 className="title">Message List</h2>
+			{el}
+		</div>
+	);
 }
