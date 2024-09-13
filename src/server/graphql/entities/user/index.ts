@@ -1,6 +1,6 @@
 import { Entity, BaseEntity, PrimaryColumn, Column } from "typeorm";
 import { ObjectType, Field, InputType } from "type-graphql";
-
+import { Length } from "class-validator";
 @Entity()
 @ObjectType()
 export class Users extends BaseEntity {
@@ -20,6 +20,7 @@ export class Users extends BaseEntity {
 
 	@Field(() => String)
 	@Column()
+	@Length(4, 18)
 	name: string;
 
 	@Field(() => String)

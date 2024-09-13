@@ -17,6 +17,7 @@ import { OperationInfo } from "@/server/graphql/entities/operationInfo";
 import { randomUUID } from "crypto";
 import { checkLogic } from "@/server/graphql/checkers";
 import genToken from "@/server/jwt/genToken";
+import { validate } from "class-validator";
 @Resolver()
 export class UserResolver {
 	@Authorized()
@@ -103,6 +104,10 @@ export class UserResolver {
 			success: true,
 			msg: "register successful!",
 		};
+		const errors = await validate(u);
+		if (errors.length) {
+			throw errors;
+		}
 		try {
 			console.log("saving");
 			await UserRepo.save(u);

@@ -60,6 +60,12 @@ const RegisterForm: React.FC = () => {
 							required: true,
 							message: "Please input your Username!",
 						},
+						{
+							min: 4,
+							max: 18,
+							message:
+								"Username length must be between 4 and 18!",
+						},
 					]}
 				>
 					<Input className="field" />
