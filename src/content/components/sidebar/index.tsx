@@ -1,7 +1,15 @@
 import "./index.scss";
-import { Menu, MenuProps } from "antd";
-import { MessageOutlined, UserOutlined } from "@ant-design/icons";
+import { Menu, MenuProps, message } from "antd";
+import {
+	LogoutOutlined,
+	MessageOutlined,
+	UserOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import LogoutConfirm from "@/content/components/modals/logoutConfirm";
+import { useState } from "react";
+import { useAppDispatch } from "@/content/hooks/store";
+import { setId } from "@/content/store/userSlice";
 type MenuItem = Required<MenuProps>["items"][number];
 const items: MenuItem[] = [
 	{
@@ -12,9 +20,16 @@ const items: MenuItem[] = [
 		key: "account",
 		icon: <UserOutlined />,
 	},
+	{
+		key: "logout",
+		icon: <LogoutOutlined />,
+		danger: true,
+	},
 ];
 export default function Sidebar() {
+	const [openLogoutConfirm, setOpenLogoutConfirm] = useState(false);
 	const nav = useNavigate();
+	const dispatch = useAppDispatch();
 	return (
 		<div className="sidebar">
 			<Menu
@@ -22,9 +37,25 @@ export default function Sidebar() {
 				defaultSelectedKeys={["chatroom"]}
 				className="sideMenu"
 				onClick={(e) => {
-					nav(e.key);
+					if (e.key === "logout") {
+						setOpenLogoutConfirm(true);
+					} else {
+						nav(e.key);
+					}
 				}}
 			></Menu>
+			<LogoutConfirm
+				open={openLogoutConfirm}
+				handleCancel={() => {
+					setOpenLogoutConfirm(false);
+				}}
+				handleOk={() => {
+					localStorage.removeItem("token");
+					dispatch(setId(""));
+					message.success("logout successful!");
+					nav("/login");
+				}}
+			/>
 		</div>
 	);
 }
