@@ -74,13 +74,15 @@ $form-item-radius:12px;
 				transform: translate(0, -50%);
 				padding-left: 3px;
 				background-color: var(--color-background);
-				font-size: 1rem;
 				label {
 					color: var(--color-text-secondary);
 					&::before,
 					&::after {
 						content: "";
 					}
+					font-size: 1rem;
+					line-height: 1;
+					height: auto;
 				}
 			}
 			.ant-form-item-explain-error {
