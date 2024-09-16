@@ -37,11 +37,17 @@ export type CreateUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addFollowing: OperationInfo;
   createBook: Book;
   createUser: OperationInfo;
   deleteBook: OperationInfo;
   deleteUser: OperationInfo;
   updateBook: Book;
+};
+
+
+export type MutationAddFollowingArgs = {
+  data: FollowInput;
 };
 
 
@@ -124,11 +130,17 @@ export type Users = {
   __typename?: 'Users';
   avatar: Scalars['String']['output'];
   email: Scalars['String']['output'];
-  friends: Users;
+  followers: Array<Users>;
+  following: Array<Users>;
   id: Scalars['String']['output'];
   isOnline: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
+};
+
+export type FollowInput = {
+  followedId: Scalars['String']['input'];
+  followerId: Scalars['String']['input'];
 };
 
 export type LoginInput = {

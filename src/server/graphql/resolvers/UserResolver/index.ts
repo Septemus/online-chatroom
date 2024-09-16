@@ -9,6 +9,7 @@ import {
 } from "type-graphql";
 import {
 	CreateUserInput,
+	followInput,
 	loginInput,
 	Users,
 } from "@/server/graphql/entities/user";
@@ -25,7 +26,8 @@ export class UserResolver {
 	async users(): Promise<Users[]> {
 		const ret = await UserRepo.find({
 			relations: {
-				friends: true,
+				followers: true,
+				following: true,
 			},
 		});
 		return ret;
@@ -33,13 +35,15 @@ export class UserResolver {
 
 	@Authorized()
 	@Query(() => Users)
-	user(@Arg("id") id: string): Promise<Users | null> {
-		return UserRepo.findOne({
+	async user(@Arg("id") id: string): Promise<Users | null> {
+		const ret = await UserRepo.findOne({
 			where: [{ id }, { email: id }],
 			relations: {
-				friends: true,
+				followers: true,
+				following: true,
 			},
 		});
+		return ret;
 	}
 
 	@Query(() => OperationInfo)
@@ -142,6 +146,33 @@ export class UserResolver {
 		return {
 			success: true,
 			msg: "删除成功！",
+		};
+	}
+
+	@Authorized()
+	@Mutation(() => OperationInfo)
+	async addFollowing(@Arg("data") data: followInput): Promise<OperationInfo> {
+		const followed = (await UserRepo.findOne({
+			where: [{ id: data.followedId }, { email: data.followedId }],
+			relations: {
+				followers: true,
+				following: true,
+			},
+		})) as Users;
+		const follower = (await UserRepo.findOne({
+			where: [{ id: data.followerId }, { email: data.followerId }],
+			relations: {
+				followers: true,
+				following: true,
+			},
+		})) as Users;
+		followed?.followers.push(follower);
+		follower.following.push(followed);
+		UserRepo.save(followed);
+		UserRepo.save(follower);
+		return {
+			msg: "添加成功！",
+			success: true,
 		};
 	}
 }

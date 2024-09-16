@@ -38,12 +38,19 @@ export class Users extends BaseEntity {
 	@Column({ default: "images/avatars/default.jpg" })
 	avatar: string;
 
-	@Field(() => Users)
+	@Field(() => [Users!])
 	@ManyToMany(() => Users, {
 		cascade: ["insert", "update"],
 	})
 	@JoinTable()
-	friends: Users[];
+	followers: Users[];
+
+	@Field(() => [Users!])
+	@ManyToMany(() => Users, {
+		cascade: ["insert", "update"],
+	})
+	@JoinTable()
+	following: Users[];
 }
 @InputType()
 export class CreateUserInput {
@@ -61,4 +68,12 @@ export class loginInput {
 	id: string;
 	@Field(() => String)
 	password: string;
+}
+@InputType()
+export class followInput {
+	@Field(() => String)
+	followedId: string;
+
+	@Field(() => String)
+	followerId: string;
 }
