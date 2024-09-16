@@ -51,7 +51,8 @@ beforeEach(async () => {
 });
 afterEach(async () => {
 	await BookRepo.clear();
-	await UserRepo.clear();
+	// await UserRepo.clear();
+	await UserRepo.delete({});
 });
 afterAll(async () => {
 	server.close();

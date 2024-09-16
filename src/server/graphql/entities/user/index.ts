@@ -1,4 +1,11 @@
-import { Entity, BaseEntity, PrimaryColumn, Column } from "typeorm";
+import {
+	Entity,
+	BaseEntity,
+	PrimaryColumn,
+	Column,
+	ManyToMany,
+	JoinTable,
+} from "typeorm";
 import { ObjectType, Field, InputType } from "type-graphql";
 import { Length } from "class-validator";
 @Entity()
@@ -30,6 +37,13 @@ export class Users extends BaseEntity {
 	@Field(() => String)
 	@Column({ default: "images/avatars/default.jpg" })
 	avatar: string;
+
+	@Field(() => Users)
+	@ManyToMany(() => Users, {
+		cascade: ["insert", "update"],
+	})
+	@JoinTable()
+	friends: Users[];
 }
 @InputType()
 export class CreateUserInput {

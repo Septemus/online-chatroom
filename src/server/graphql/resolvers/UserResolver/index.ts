@@ -22,15 +22,24 @@ import { validate } from "class-validator";
 export class UserResolver {
 	@Authorized()
 	@Query(() => [Users])
-	users(): Promise<Users[]> {
-		console.log("users");
-		return UserRepo.find();
+	async users(): Promise<Users[]> {
+		const ret = await UserRepo.find({
+			relations: {
+				friends: true,
+			},
+		});
+		return ret;
 	}
 
 	@Authorized()
 	@Query(() => Users)
 	user(@Arg("id") id: string): Promise<Users | null> {
-		return UserRepo.findOne({ where: [{ id }, { email: id }] });
+		return UserRepo.findOne({
+			where: [{ id }, { email: id }],
+			relations: {
+				friends: true,
+			},
+		});
 	}
 
 	@Query(() => OperationInfo)
