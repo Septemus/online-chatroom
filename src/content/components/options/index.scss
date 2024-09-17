@@ -1,5 +1,6 @@
 .options {
     display: flex;
+    flex-grow: 1;
     .content {
         flex-grow: 1;
         padding-top: var(--space-900);
