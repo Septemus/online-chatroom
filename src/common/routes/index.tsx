@@ -9,6 +9,8 @@ import registerAction from "../apollo/client/register";
 import loginAction from "../apollo/client/login";
 import AccountPosts from "@/content/components/account/posts";
 import AccountPhotos from "@/content/components/account/photos";
+import Options from "@/content/components/options";
+import EditProfile from "@/content/components/options/editProfile";
 
 export default createRoutesFromElements(
 	<>
@@ -40,6 +42,24 @@ export default createRoutesFromElements(
 				<Route
 					path="photos"
 					element={<AccountPhotos />}
+				></Route>
+			</Route>
+			<Route
+				element={<Options />}
+				path="options"
+			>
+				<Route
+					index
+					element={
+						<Navigate
+							to="editProfile"
+							replace
+						></Navigate>
+					}
+				></Route>
+				<Route
+					element={<EditProfile />}
+					path="editProfile"
 				></Route>
 			</Route>
 		</Route>

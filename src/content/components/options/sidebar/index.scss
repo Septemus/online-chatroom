@@ -1,0 +1,25 @@
+$tab-height: 48px;
+.opt-sidebar {
+	height: calc(100%-var(--space-600));
+	box-sizing: border-box;
+	padding: 0 var(--space-900);
+	margin-top: var(--space-600);
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
+	border-right: solid 1px var(--color-delimeter);
+	.title {
+		font-size: 25px;
+		margin-bottom: var(--space-600);
+	}
+	.menu-list {
+		border-right: none !important;
+		.ant-menu-item {
+			margin-left: 0;
+			height: $tab-height;
+			line-height: $tab-height;
+			padding-right: var(--space-900);
+			width: auto;
+		}
+	}
+}

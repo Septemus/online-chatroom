@@ -3,6 +3,7 @@ import { Menu, MenuProps, message } from "antd";
 import {
 	LogoutOutlined,
 	MessageOutlined,
+	SettingOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +20,10 @@ const items: MenuItem[] = [
 	{
 		key: "account",
 		icon: <UserOutlined />,
+	},
+	{
+		key: "options",
+		icon: <SettingOutlined />,
 	},
 	{
 		key: "logout",
