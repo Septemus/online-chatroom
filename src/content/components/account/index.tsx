@@ -61,9 +61,13 @@ export default function Account({ acc_id }: propTypes) {
 				</div>
 				<div className="row">
 					<div className="follow-info">
-						<span className="follower">x followers</span>
+						<span className="follower">
+							{data?.user.followers.length} followers
+						</span>
 						<span className="delimeter">·</span>
-						<span className="following">x following</span>
+						<span className="following">
+							{data?.user.following.length} following
+						</span>
 					</div>
 				</div>
 				<div className="row">

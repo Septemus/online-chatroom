@@ -9,6 +9,12 @@ export const USER = gql(
         email
         avatar
         isOnline
+        followers {
+            id
+        }
+        following {
+            id
+        }
         }
     }
 `,
