@@ -29,7 +29,14 @@ export default function Account({ acc_id }: propTypes) {
 	const isMyself = accid === myid;
 	let operation_bts = (
 		<>
-			<button className="edit gray-bt">Edit Profile</button>
+			<button
+				className="edit gray-bt"
+				onClick={() => {
+					nav("/options/editProfile");
+				}}
+			>
+				Edit Profile
+			</button>
 		</>
 	);
 	const items: MenuItem[] = [
