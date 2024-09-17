@@ -20,13 +20,15 @@ export default function OptionsSidebar() {
 		setCurrent(loc.pathname.split("/").at(-1) as string);
 	}, [loc]);
 	return (
-		<div className="opt-sidebar">
-			<div className="title">Options</div>
-			<Menu
-				items={optionItems}
-				selectedKeys={[current]}
-				className="menu-list"
-			></Menu>
+		<div className="opt-sidebar-wrapper">
+			<div className="opt-sidebar">
+				<div className="title">Options</div>
+				<Menu
+					items={optionItems}
+					selectedKeys={[current]}
+					className="menu-list"
+				></Menu>
+			</div>
 		</div>
 	);
 }
