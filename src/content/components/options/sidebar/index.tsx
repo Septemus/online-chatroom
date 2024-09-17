@@ -1,12 +1,11 @@
 import { UserOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import "./index.scss";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-type MenuItem = Required<MenuProps>["items"][number];
+import { MenuItemType } from "antd/es/menu/interface";
 
-const items: MenuItem[] = [
+export const optionItems: MenuItemType[] = [
 	{
 		key: "editProfile",
 		label: "Edit Profile",
@@ -24,7 +23,7 @@ export default function OptionsSidebar() {
 		<div className="opt-sidebar">
 			<div className="title">Options</div>
 			<Menu
-				items={items}
+				items={optionItems}
 				selectedKeys={[current]}
 				className="menu-list"
 			></Menu>

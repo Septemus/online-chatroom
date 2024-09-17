@@ -2,5 +2,12 @@
     display: flex;
     .content {
         flex-grow: 1;
+        padding-top: var(--space-900);
+        padding-left: var(--space-1200);
+        .content-title {
+            font-size: 20px;
+            margin-bottom: var(--space-600);
+            font-weight: var(--font-weight-bold);
+        }
     }
 }

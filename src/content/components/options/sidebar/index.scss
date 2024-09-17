@@ -2,8 +2,8 @@ $tab-height: 48px;
 .opt-sidebar {
 	height: calc(100%-var(--space-600));
 	box-sizing: border-box;
-	padding: 0 var(--space-900);
-	margin-top: var(--space-600);
+	padding: 0 var(--space-600);
+	margin-top: var(--space-900);
 	display: flex;
 	flex-direction: column;
 	overflow-y: scroll;
@@ -11,6 +11,7 @@ $tab-height: 48px;
 	.title {
 		font-size: 25px;
 		margin-bottom: var(--space-600);
+		font-weight: var(--font-weight-bold);
 	}
 	.menu-list {
 		border-right: none !important;
