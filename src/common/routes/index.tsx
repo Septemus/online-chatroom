@@ -4,9 +4,11 @@ import Chatroom from "@/content/components/chatroom";
 import LoginPage from "@/content/components/loginPage";
 import LoginForm from "@/content/components/loginPage/loginForm";
 import RegisterForm from "@/content/components/loginPage/registerForm";
-import { createRoutesFromElements, Route } from "react-router-dom";
+import { createRoutesFromElements, Navigate, Route } from "react-router-dom";
 import registerAction from "../apollo/client/register";
 import loginAction from "../apollo/client/login";
+import AccountPosts from "@/content/components/account/posts";
+import AccountPhotos from "@/content/components/account/photos";
 
 export default createRoutesFromElements(
 	<>
@@ -21,7 +23,25 @@ export default createRoutesFromElements(
 			<Route
 				element={<Account />}
 				path="account"
-			></Route>
+			>
+				<Route
+					index
+					element={
+						<Navigate
+							to="posts"
+							replace
+						></Navigate>
+					}
+				></Route>
+				<Route
+					path="posts"
+					element={<AccountPosts />}
+				></Route>
+				<Route
+					path="photos"
+					element={<AccountPhotos />}
+				></Route>
+			</Route>
 		</Route>
 		<Route
 			element={<LoginPage />}

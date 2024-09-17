@@ -2,23 +2,25 @@ $top-width: 488px;
 .account {
 	color: var(--color-text-default);
 	width: 100%;
-    button {
-        height: 48px;
-        font-size: var(--font-size-300);
-        padding: var(--space-300) var(--space-400);
-        border-radius: var(--rounding-600);
-        border-width: 0;
-        margin: 0 4px;
-        font-weight: var(--font-weight-semibold);
-        font-family: var(--font-family);
-        &.gray-bt {
-            background-color: var(--color-background-button-secondary-default);
-            &:hover {
-                background-color: var(--color-background-button-secondary-hover);
-                cursor: pointer;
-            }
-        }
-    }
+	button {
+		height: 48px;
+		font-size: var(--font-size-300);
+		padding: var(--space-300) var(--space-400);
+		border-radius: var(--rounding-600);
+		border-width: 0;
+		margin: 0 4px;
+		font-weight: var(--font-weight-semibold);
+		font-family: var(--font-family);
+		&.gray-bt {
+			background-color: var(--color-background-button-secondary-default);
+			&:hover {
+				background-color: var(
+					--color-background-button-secondary-hover
+				);
+				cursor: pointer;
+			}
+		}
+	}
 	.account-top {
 		width: $top-width;
 		margin: 0 auto;
@@ -26,28 +28,33 @@ $top-width: 488px;
 		flex-direction: column;
 		align-items: center;
 		margin-top: 12px;
-        .row {
-            margin: 4px 0;
-            .username {
-                font-size: var(--font-size-600);
-            }
-            .userid {
-                font-size: var(--font-size-100);
-                margin-top: 8px;
-                color: var(--color-text-secondary);
-            }
-            .follow-info {
-                font-size: var(--font-size-300);
-                .follower {
-                    font-weight: var(--font-weight-semibold);
-                }
-                .delimeter {
-                    margin: 0 4px;
-                }
-            }
-        }
+		.row {
+			margin: 4px 0;
+			.username {
+				font-size: var(--font-size-600);
+			}
+			.userid {
+				font-size: var(--font-size-100);
+				margin-top: 8px;
+				color: var(--color-text-secondary);
+			}
+			.follow-info {
+				font-size: var(--font-size-300);
+				.follower {
+					font-weight: var(--font-weight-semibold);
+				}
+				.delimeter {
+					margin: 0 4px;
+				}
+			}
+		}
 	}
-    .account-menu {
-        justify-content: center;
-    }
+	.account-menu {
+		justify-content: center;
+		margin-bottom: var(--space-400);
+	}
+	.empty {
+		text-align: center;
+		padding: var(--space-400) 0;
+	}
 }

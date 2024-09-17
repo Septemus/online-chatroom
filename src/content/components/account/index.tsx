@@ -6,14 +6,17 @@ import { selectId } from "@/content/store/userSlice";
 import { useQuery } from "@apollo/client";
 import { USER } from "@/common/apollo/client/user";
 import { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 type MenuItem = Required<MenuProps>["items"][number];
 type propTypes = {
 	acc_id?: string;
 };
 export default function Account({ acc_id }: propTypes) {
-	debugger;
+	const loc = useLocation();
+	const [current, setCurrent] = useState(loc.pathname.split("/").at(-1));
+	const nav = useNavigate();
 	const myid = useAppSelector(selectId);
-	const [accid, setAccid] = useState(acc_id ? acc_id : myid);
+	const [accid] = useState(acc_id ? acc_id : myid);
 	const { loading, error, data } = useQuery(USER, {
 		variables: {
 			userId: accid ?? "",
@@ -78,7 +81,13 @@ export default function Account({ acc_id }: propTypes) {
 				mode="horizontal"
 				className="account-menu"
 				items={items}
+				selectedKeys={[current as string]}
+				onClick={(e) => {
+					setCurrent(e.key);
+					nav(e.key);
+				}}
 			/>
+			<Outlet />
 		</div>
 	);
 }
