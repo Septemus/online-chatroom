@@ -6,8 +6,16 @@ import {
 	ManyToMany,
 	JoinTable,
 } from "typeorm";
-import { ObjectType, Field, InputType } from "type-graphql";
+import { ObjectType, Field, InputType, registerEnumType } from "type-graphql";
 import { Length } from "class-validator";
+enum Gender {
+	male = "Male",
+	female = "Female",
+	nottosay = "Prefer not to say",
+}
+registerEnumType(Gender, {
+	name: "Gender", // Mandatory
+});
 @Entity()
 @ObjectType()
 export class Users extends BaseEntity {
@@ -33,6 +41,18 @@ export class Users extends BaseEntity {
 	@Field(() => String)
 	@Column({ nullable: true })
 	password: string;
+
+	@Field(() => String, { nullable: true })
+	@Column({ nullable: true })
+	website: string;
+
+	@Field(() => String, { nullable: true })
+	@Column({ nullable: true })
+	bio: string;
+
+	@Field(() => Gender, { nullable: true })
+	@Column({ nullable: true })
+	gender: Gender;
 
 	@Field(() => String)
 	@Column({ default: "images/avatars/default.jpg" })
@@ -60,6 +80,20 @@ export class CreateUserInput {
 	email: string;
 	@Field(() => String)
 	password: string;
+}
+
+@InputType()
+export class UpdateUserInput {
+	@Field(() => String, { nullable: true })
+	id: string;
+	@Field(() => String, { nullable: true })
+	name?: string;
+	@Field(() => String, { nullable: true })
+	website?: string;
+	@Field(() => String, { nullable: true })
+	bio?: string;
+	@Field(() => Gender, { nullable: true })
+	gender?: Gender;
 }
 
 @InputType()

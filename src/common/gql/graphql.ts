@@ -35,6 +35,12 @@ export type CreateUserInput = {
   password: Scalars['String']['input'];
 };
 
+export enum Gender {
+  Female = 'female',
+  Male = 'male',
+  Nottosay = 'nottosay'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   addFollowing: OperationInfo;
@@ -43,6 +49,7 @@ export type Mutation = {
   deleteBook: OperationInfo;
   deleteUser: OperationInfo;
   updateBook: Book;
+  updateUser: OperationInfo;
 };
 
 
@@ -74,6 +81,11 @@ export type MutationDeleteUserArgs = {
 export type MutationUpdateBookArgs = {
   data: UpdateBookInput;
   id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
 };
 
 export type OperationInfo = {
@@ -126,16 +138,27 @@ export type UpdateBookInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateUserInput = {
+  bio?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Gender>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  website?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Users = {
   __typename?: 'Users';
   avatar: Scalars['String']['output'];
+  bio?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   followers: Array<Users>;
   following: Array<Users>;
+  gender?: Maybe<Gender>;
   id: Scalars['String']['output'];
   isOnline: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
+  website?: Maybe<Scalars['String']['output']>;
 };
 
 export type FollowInput = {

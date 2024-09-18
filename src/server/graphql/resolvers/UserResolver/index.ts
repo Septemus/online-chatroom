@@ -11,6 +11,7 @@ import {
 	CreateUserInput,
 	followInput,
 	loginInput,
+	UpdateUserInput,
 	Users,
 } from "@/server/graphql/entities/user";
 import { UserRepo } from "@/server/graphql/typeorm";
@@ -168,11 +169,35 @@ export class UserResolver {
 		})) as Users;
 		followed?.followers.push(follower);
 		follower.following.push(followed);
-		UserRepo.save(followed);
-		UserRepo.save(follower);
+		await UserRepo.save(followed);
+		await UserRepo.save(follower);
 		return {
 			msg: "添加成功！",
 			success: true,
 		};
+	}
+
+	@Authorized()
+	@Mutation(() => OperationInfo)
+	async updateUser(
+		@Arg("data") data: UpdateUserInput,
+	): Promise<OperationInfo> {
+		const target = await UserRepo.findOne({
+			where: [{ id: data.id }, { email: data.id }],
+		});
+		if (target) {
+			data.id = target.id;
+			Object.assign(target, data);
+			await UserRepo.save(target);
+			return {
+				msg: "Update Successful!",
+				success: true,
+			};
+		} else {
+			return {
+				msg: "User Not Exist!",
+				success: false,
+			};
+		}
 	}
 }
