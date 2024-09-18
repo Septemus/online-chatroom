@@ -4,9 +4,10 @@
     .content {
         flex-grow: 1;
         padding-top: var(--space-900);
-        padding-left: var(--space-1200);
+        max-width: 706px;
+        margin: 0 auto;
         .content-title {
-            font-size: 20px;
+            font-size: var(--font-size-400);
             margin-bottom: var(--space-600);
             font-weight: var(--font-weight-bold);
         }
