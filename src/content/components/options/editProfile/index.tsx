@@ -35,7 +35,9 @@ export default function EditProfile() {
 		<Formik
 			initialValues={initVals}
 			onSubmit={(values) => {
-				submit(values);
+				submit(values, {
+					method: "POST",
+				});
 			}}
 			validationSchema={editSchema}
 		>

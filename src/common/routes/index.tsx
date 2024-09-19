@@ -12,6 +12,7 @@ import AccountPhotos from "@/content/components/account/photos";
 import Options from "@/content/components/options";
 import EditProfile from "@/content/components/options/editProfile";
 import loginAction from "../apollo/client/queries/login";
+import { editProfileAction } from "../apollo/client/queries/user";
 
 export default createRoutesFromElements(
 	<>
@@ -61,6 +62,7 @@ export default createRoutesFromElements(
 				<Route
 					element={<EditProfile />}
 					path="editProfile"
+					action={editProfileAction}
 				></Route>
 			</Route>
 		</Route>

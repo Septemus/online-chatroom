@@ -121,7 +121,7 @@ Array [
           Object {
             "Component": undefined,
             "ErrorBoundary": undefined,
-            "action": undefined,
+            "action": [Function],
             "caseSensitive": undefined,
             "element": <EditProfile />,
             "errorElement": undefined,
