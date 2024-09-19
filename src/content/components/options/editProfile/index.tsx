@@ -2,10 +2,27 @@ import { Avatar, Button, Input, Select } from "antd";
 import "./index.scss";
 import { UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { Gender } from "@/common/gql/graphql";
+import { useAppSelector } from "@/content/hooks/store";
+import { selectId } from "@/content/store/userSlice";
 const { TextArea } = Input;
-
+type updateField = {
+	id: string;
+	name: string;
+	website: string;
+	bio: string;
+	gender: Gender | null;
+};
 export default function EditProfile() {
 	const [changed, setChanged] = useState(false);
+	const myid = useAppSelector(selectId);
+	const [formState, setFormState] = useState<updateField>({
+		id: myid,
+		name: "",
+		website: "",
+		bio: "",
+		gender: null,
+	});
 	return (
 		<div className="edit-profile">
 			<div className="avatar-section">
@@ -26,11 +43,31 @@ export default function EditProfile() {
 					showCount
 					maxLength={20}
 					style={{ height: 40 }}
+					value={formState.name}
+					onInput={(e) => {
+						setChanged(true);
+						setFormState(
+							Object.assign({}, formState, {
+								name: e.currentTarget.value,
+							}),
+						);
+					}}
 				/>
 			</div>
 			<div className="website-section section">
 				<div className="sub-content-title">Website</div>
-				<Input style={{ height: 40 }} />
+				<Input
+					style={{ height: 40 }}
+					value={formState.website}
+					onInput={(e) => {
+						setChanged(true);
+						setFormState(
+							Object.assign({}, formState, {
+								website: e.currentTarget.value,
+							}),
+						);
+					}}
+				/>
 			</div>
 			<div className="bio-section section">
 				<div className="sub-content-title">Bio</div>
@@ -38,6 +75,15 @@ export default function EditProfile() {
 					showCount
 					maxLength={150}
 					style={{ height: 60, resize: "none" }}
+					value={formState.bio}
+					onInput={(e) => {
+						setChanged(true);
+						setFormState(
+							Object.assign({}, formState, {
+								bio: e.currentTarget.value,
+							}),
+						);
+					}}
 				/>
 			</div>
 			<div className="gender-section section">
@@ -49,8 +95,14 @@ export default function EditProfile() {
 						{ value: "female", label: "Female" },
 						{ value: "nottosay", label: "Prefer not to say" },
 					]}
+					value={formState.gender}
 					onChange={(e) => {
 						setChanged(true);
+						setFormState(
+							Object.assign({}, formState, {
+								gender: e,
+							}),
+						);
 					}}
 				/>
 				<div className="caption">
