@@ -11,9 +11,11 @@ export default function Options() {
 	return (
 		<div className="options">
 			<OptionsSidebar></OptionsSidebar>
-			<div className="content">
-				<div className="content-title">{contentTitle}</div>
-				<Outlet />
+			<div className="content-wrapper">
+				<div className="content">
+					<div className="content-title">{contentTitle}</div>
+					<Outlet />
+				</div>
 			</div>
 		</div>
 	);
