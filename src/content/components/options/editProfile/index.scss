@@ -77,8 +77,13 @@
 		.ant-input-suffix {
 			font-size: var(--font-size-100);
 		}
-		input,textarea {
+		input,
+		textarea {
 			font-size: var(--font-size-300) !important;
+		}
+		.error {
+			font-size: var(--font-size-200);
+			color: var(--color-error-tip);
 		}
 		margin-bottom: var(--space-400);
 	}
