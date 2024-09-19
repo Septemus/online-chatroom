@@ -2,7 +2,7 @@ import Contact from "@/types/contacts/contact";
 import { UserOutlined } from "@ant-design/icons";
 import "./index.scss";
 import { useQuery } from "@apollo/client";
-import { USERS } from "@/common/apollo/client/users";
+import { USERS } from "@/common/apollo/client/queries/users";
 
 export default function ContactsList() {
 	const { data, loading, error } = useQuery(USERS, {

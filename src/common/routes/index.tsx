@@ -5,12 +5,13 @@ import LoginPage from "@/content/components/loginPage";
 import LoginForm from "@/content/components/loginPage/loginForm";
 import RegisterForm from "@/content/components/loginPage/registerForm";
 import { createRoutesFromElements, Navigate, Route } from "react-router-dom";
-import registerAction from "../apollo/client/register";
-import loginAction from "../apollo/client/login";
+import registerAction from "../apollo/client/queries/register";
+
 import AccountPosts from "@/content/components/account/posts";
 import AccountPhotos from "@/content/components/account/photos";
 import Options from "@/content/components/options";
 import EditProfile from "@/content/components/options/editProfile";
+import loginAction from "../apollo/client/queries/login";
 
 export default createRoutesFromElements(
 	<>

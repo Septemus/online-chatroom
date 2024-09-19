@@ -4,7 +4,7 @@ import "./index.scss";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
 import { useQuery } from "@apollo/client";
-import { USER } from "@/common/apollo/client/user";
+import { USER } from "@/common/apollo/client/queries/user";
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 type MenuItem = Required<MenuProps>["items"][number];

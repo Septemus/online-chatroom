@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
-import { REFRESH } from "./refresh";
+import { REFRESH } from "./queries/refresh";
 import { jwt_prefix } from "@/common/jwt";
 
 async function refreshTokenRequestFunc(): Promise<void> {
