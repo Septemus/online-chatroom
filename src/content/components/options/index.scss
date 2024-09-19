@@ -4,7 +4,7 @@
 	.content-wrapper {
 		flex-grow: 1;
 		height: 100%;
-		overflow-y: scroll;
+		overflow-y: auto;
 		.content {
 			padding-top: var(--space-900);
 			padding-left: var(--space-1200);
