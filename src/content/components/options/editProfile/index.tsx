@@ -1,10 +1,10 @@
-import { Avatar, Button, Select } from "antd";
+import { Avatar, Button, Input, Select } from "antd";
 import "./index.scss";
 import { UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
+const { TextArea } = Input;
+
 export default function EditProfile() {
-	const [bioLength, setBioLength] = useState(0);
-	const [usernameLength, setUsernameLength] = useState(0);
 	const [changed, setChanged] = useState(false);
 	return (
 		<div className="edit-profile">
@@ -22,37 +22,23 @@ export default function EditProfile() {
 			</div>
 			<div className="section username-section">
 				<div className="sub-content-title">Username</div>
-				<input
-					type="text"
-					defaultValue={"myusername"}
-					onInput={(e) => {
-						setUsernameLength(e.currentTarget.value.length);
-						setChanged(true);
-					}}
+				<Input
+					showCount
+					maxLength={20}
+					style={{ height: 40 }}
 				/>
-				<div className="length-restriction">{usernameLength}/150</div>
 			</div>
 			<div className="website-section section">
 				<div className="sub-content-title">Website</div>
-				<input
-					type="text"
-					placeholder="Website"
-					onInput={(e) => {
-						setChanged(true);
-					}}
-				/>
+				<Input style={{ height: 40 }} />
 			</div>
 			<div className="bio-section section">
 				<div className="sub-content-title">Bio</div>
-				<textarea
-					name="bio"
-					className="bio"
-					onInput={(e) => {
-						setBioLength(e.currentTarget.textLength);
-						setChanged(true);
-					}}
-				></textarea>
-				<div className="length-restriction">{bioLength}/150</div>
+				<TextArea
+					showCount
+					maxLength={150}
+					style={{ height: 60, resize: "none" }}
+				/>
 			</div>
 			<div className="gender-section section">
 				<div className="sub-content-title">Gender</div>
