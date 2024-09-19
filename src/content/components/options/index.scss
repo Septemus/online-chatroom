@@ -3,11 +3,12 @@
 	flex-grow: 1;
 	.content-wrapper {
 		flex-grow: 1;
-        height: 100%;
-        overflow-y: scroll;
+		height: 100%;
+		overflow-y: scroll;
 		.content {
 			padding-top: var(--space-900);
-			box-sizing: border-box;
+			padding-left: var(--space-1200);
+			padding-right: var(--space-1200);
 			max-width: 706px;
 			margin: 0 auto;
 			.content-title {
