@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { Spin } from "antd";
-import "./index.scss";
+import Loading from "../loading";
 function RequireCondition({
 	children,
 	condition,
@@ -19,14 +18,7 @@ function RequireCondition({
 }) {
 	let res: JSX.Element;
 	if (loading) {
-		res = (
-			<div className="guard-wrapper">
-				<Spin
-					className="loading-spinner"
-					size="large"
-				/>
-			</div>
-		);
+		res = <Loading />;
 	} else {
 		res = condition ? children : fallback;
 	}
