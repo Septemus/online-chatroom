@@ -18,15 +18,27 @@ import { REGISTER } from "@/common/apollo/client/queries/register";
 import { AppDataSource } from "./typeorm";
 import detect from "detect-port";
 import { jwt_key } from "@/common/jwt";
+import { FOLLOW } from "@/common/apollo/client/queries/user/follow";
+const correct_token =
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im11c2tldGVlcmR0QGdtYWlsLmNvbSIsImlhdCI6MTcyNTc5NTY1M30.KqJ9-x4TrVzu4hrEKBP2b6bNpA6uhK48G1VJ5D0eTXc";
 const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
 let server: Server;
-const TESTUSER = {
-	email: "test@jest.com",
-	id: randomUUID(),
-	password: "testpassword",
-	name: "testuser",
-};
+const TESTUSER_ARR = [
+	{
+		email: "test@jest.com",
+		id: randomUUID(),
+		password: "testpassword",
+		name: "testuser",
+	},
+	{
+		email: "abc@jest.com",
+		id: randomUUID(),
+		password: "testpassword2",
+		name: "testuser2",
+	},
+];
+const TESTUSER = TESTUSER_ARR[0];
 beforeAll(async () => {
 	AppDataSource.initialize();
 	const midWare = await myCreateGraphql();
@@ -57,10 +69,12 @@ beforeEach(async () => {
 		mylistener.addListener("server-ready", res);
 		mylistener.emit("request");
 	});
-	const u = new Users();
-	Object.assign(u, TESTUSER);
-	u.password = md5(u.password);
-	await UserRepo.save(u);
+	for (const USER of TESTUSER_ARR) {
+		const u = new Users();
+		Object.assign(u, USER);
+		u.password = md5(u.password);
+		await UserRepo.save(u);
+	}
 });
 afterEach(async () => {
 	await BookRepo.clear();
@@ -273,5 +287,53 @@ describe("user", () => {
 				},
 			}),
 		).toBe(0);
+	});
+	test("follow Authentication", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		let res = await browserClient.mutate({
+			mutation: FOLLOW,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					followedId: TESTUSER_ARR[0].email,
+					followerId: TESTUSER_ARR[1].email,
+				},
+			},
+		});
+		expect(res.data).toBe(null);
+		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
+	});
+	test("follow api", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		localStorage.setItem("token", correct_token);
+		await browserClient.mutate({
+			mutation: FOLLOW,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					followedId: TESTUSER_ARR[0].email,
+					followerId: TESTUSER_ARR[1].email,
+				},
+			},
+		});
+		const res = await Promise.all(
+			[TESTUSER_ARR[0], TESTUSER_ARR[1]].map((TARGET) => {
+				return browserClient.query({
+					query: USER,
+					variables: {
+						userId: TARGET.id,
+					},
+				});
+			}),
+		);
+		console.log(res[0].data.user.followers, res[1].data.user.following);
+		expect(res[0].data.user.followers[0].id).toBe(TESTUSER_ARR[1].id);
+		expect(res[1].data.user.following[0].id).toBe(TESTUSER_ARR[0].id);
 	});
 });
