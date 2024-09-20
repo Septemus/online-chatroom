@@ -51,6 +51,21 @@ export const editProfileAction = async ({
 			data,
 		},
 		fetchPolicy: "no-cache",
+		update(cache) {
+			cache.writeFragment({
+				id: `Users:${data.id}`,
+				fragment: gql(`
+                        fragment updateField on Users {
+                            id
+                            website
+                            bio
+                            gender
+                            name
+                        }
+                    `),
+				data,
+			});
+		},
 	});
 	if (res.data?.updateUser.success) {
 		console.log("update user successful!");

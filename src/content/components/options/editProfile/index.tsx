@@ -13,6 +13,7 @@ import { TransitionWrapper } from "../../transition";
 import { useLazyQuery } from "@apollo/client";
 import { USER } from "@/common/apollo/client/queries/user";
 import Loading from "../../loading";
+import _ from "lodash";
 const { TextArea } = Input;
 export type updateField = {
 	id: string;
@@ -48,7 +49,8 @@ export default function EditProfile() {
 		</div>
 	);
 	if (!loading && data) {
-		Object.assign(initVals, data.user);
+		const { name, website, bio, gender } = data.user;
+		Object.assign(initVals, { name, website, bio, gender });
 		el = (
 			<Formik
 				initialValues={initVals}
@@ -145,10 +147,18 @@ export default function EditProfile() {
 								type="primary"
 								className="submit"
 								htmlType="submit"
+								disabled={_.isEqual(props.values, initVals)}
 							>
 								Submit
 							</Button>
-							<Button>Undo</Button>
+							<Button
+								onClick={() => {
+									props.setValues(initVals);
+								}}
+								disabled={_.isEqual(props.values, initVals)}
+							>
+								Undo
+							</Button>
 						</div>
 					</Form>
 				)}
