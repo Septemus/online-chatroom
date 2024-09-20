@@ -13,6 +13,9 @@ export const USER = gql(
         email
         avatar
         isOnline
+        bio
+        website
+        gender
         followers {
             id
         }
