@@ -1,3 +1,4 @@
+$avatar-width: 56px;
 .edit-profile {
 	display: flex;
 	flex-direction: column;
@@ -8,6 +9,14 @@
 		border-radius: var(--rounding-500);
 		display: flex;
 		align-items: center;
+		.avatar {
+			img {
+				display: block;
+				width: $avatar-width;
+				height: $avatar-width;
+				border-radius: $avatar-width;
+			}
+		}
 		.info {
 			flex-grow: 1;
 			padding: 0 var(--space-400);

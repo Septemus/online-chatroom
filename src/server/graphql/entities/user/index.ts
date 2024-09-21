@@ -55,7 +55,7 @@ export class Users extends BaseEntity {
 	gender: Gender;
 
 	@Field(() => String)
-	@Column({ default: "images/avatars/default.jpg" })
+	@Column({ default: "/images/avatars/default.jpg" })
 	avatar: string;
 
 	@Field(() => [Users!])
@@ -92,6 +92,8 @@ export class UpdateUserInput {
 	website?: string;
 	@Field(() => String, { nullable: true })
 	bio?: string;
+	@Field(() => String, { nullable: true })
+	avatar?: string;
 	@Field(() => Gender, { nullable: true })
 	gender?: Gender;
 }

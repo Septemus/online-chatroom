@@ -61,6 +61,7 @@ export const editProfileAction = async ({
                             bio
                             gender
                             name
+                            avatar
                         }
                     `),
 				data,

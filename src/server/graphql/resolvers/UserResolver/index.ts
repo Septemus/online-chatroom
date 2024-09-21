@@ -20,6 +20,8 @@ import { randomUUID } from "crypto";
 import { checkLogic } from "@/server/graphql/checkers";
 import genToken from "@/server/jwt/genToken";
 import { validate } from "class-validator";
+import fs from "fs";
+import path from "path";
 @Resolver()
 export class UserResolver {
 	@Authorized()
@@ -186,6 +188,25 @@ export class UserResolver {
 			where: [{ id: data.id }, { email: data.id }],
 		});
 		if (target) {
+			if (data.avatar?.includes(";base64,")) {
+				const imgData = data.avatar.split(";base64,").pop();
+				const avatarNewPath = `/images/avatars/${data.id}-${randomUUID()}.png`;
+				fs.writeFileSync(
+					path.resolve(process.cwd(), `build${avatarNewPath}`),
+					imgData!,
+					{ encoding: "base64" },
+				);
+				if (process.env.NODE_ENV === "development") {
+					fs.writeFileSync(
+						path.resolve(process.cwd(), `public${avatarNewPath}`),
+						imgData!,
+						{ encoding: "base64" },
+					);
+				}
+				data.avatar = avatarNewPath;
+			} else {
+				data.avatar = target.avatar;
+			}
 			data.id = target.id;
 			Object.assign(target, data);
 			await UserRepo.save(target);

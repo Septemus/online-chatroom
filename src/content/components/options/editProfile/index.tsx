@@ -1,8 +1,7 @@
-import { Avatar, Button, Input } from "antd";
+import { Button, Input } from "antd";
 import { Select } from "formik-antd";
 import "./index.scss";
-import { UserOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Gender } from "@/common/gql/graphql";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
@@ -14,6 +13,7 @@ import { useLazyQuery } from "@apollo/client";
 import { USER } from "@/common/apollo/client/queries/user";
 import Loading from "../../loading";
 import _ from "lodash";
+import changeAvatar from "./changeAvatar";
 const { TextArea } = Input;
 export type updateField = {
 	id: string;
@@ -21,12 +21,14 @@ export type updateField = {
 	website: string;
 	bio: string;
 	gender: Gender | null;
+	avatar: string;
 };
 const editSchema = Yup.object().shape({
 	name: Yup.string().min(4, "Too Short!"),
 });
 export default function EditProfile() {
 	const myid = useAppSelector(selectId);
+	const avatarPreview = useRef<HTMLImageElement | null>(null);
 	const [getInfo, { loading, error, data }] = useLazyQuery(USER, {
 		variables: {
 			userId: myid,
@@ -42,6 +44,7 @@ export default function EditProfile() {
 		website: "",
 		bio: "",
 		gender: null,
+		avatar: "/images/avatars/default.jpg",
 	};
 	let el = (
 		<div className="edit-profile">
@@ -49,8 +52,8 @@ export default function EditProfile() {
 		</div>
 	);
 	if (!loading && data) {
-		const { name, website, bio, gender } = data.user;
-		Object.assign(initVals, { name, website, bio, gender });
+		const { name, website, bio, gender, email, avatar } = data.user;
+		Object.assign(initVals, { name, website, bio, gender, avatar });
 		el = (
 			<Formik
 				initialValues={initVals}
@@ -64,16 +67,44 @@ export default function EditProfile() {
 				{(props: FormikProps<updateField>) => (
 					<Form className="edit-profile">
 						<div className="avatar-section">
-							<Avatar
-								icon={<UserOutlined />}
-								className="avatar"
-								size={56}
-							/>
-							<div className="info">
-								<span className="username">username</span>
-								<span className="email">email</span>
+							<div className="avatar">
+								<img
+									src={props.values.avatar}
+									alt="avatar"
+									ref={avatarPreview}
+									onLoad={(e) => {
+										console.log("image loaded!");
+										if (
+											e.currentTarget.src.includes(
+												";base64,",
+											)
+										) {
+											props.setValues(
+												Object.assign(
+													{},
+													props.values,
+													{
+														avatar: e.currentTarget
+															.src,
+													},
+												),
+											);
+										}
+									}}
+								/>
 							</div>
-							<Button type="primary">Change photo</Button>
+							<div className="info">
+								<span className="username">{name}</span>
+								<span className="email">{email}</span>
+							</div>
+							<Button
+								type="primary"
+								onClick={() => {
+									changeAvatar(avatarPreview.current!);
+								}}
+							>
+								Change photo
+							</Button>
 						</div>
 						<div className="section username-section">
 							<div className="sub-content-title">Username</div>

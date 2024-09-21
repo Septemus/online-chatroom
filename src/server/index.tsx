@@ -15,7 +15,7 @@ async function setUpExpressServer() {
 	app.use(
 		"/graphql",
 		cors<cors.CorsRequest>(),
-		express.json(),
+		express.json({ limit: "10mb" }),
 		await myCreateGraphql(),
 	);
 
