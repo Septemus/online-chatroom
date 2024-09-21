@@ -10,6 +10,9 @@ export const customAuthChecker: AuthChecker<Context> = ({ context }, roles) => {
 		context,
 	);
 	try {
+		if (process.env.NODE_ENV === "development" && process.env.SKIP_CHECK) {
+			return true;
+		}
 		return checkLogic(context.token).success;
 	} catch (err) {
 		throw new AuthenticationError((err as jwt.VerifyErrors).message);
