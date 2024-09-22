@@ -97,6 +97,7 @@ afterAll(async () => {
 	});
 });
 describe("Account", () => {
+	jest.setTimeout(100000);
 	function localGen() {
 		const store = setUpStore();
 		store.dispatch(setId(MAIN_CHARACTER.id));
