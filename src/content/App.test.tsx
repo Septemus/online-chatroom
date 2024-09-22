@@ -1,11 +1,5 @@
 import express from "express";
 import cors from "cors";
-import routes from "@/common/routes";
-import { ApolloProvider } from "@apollo/client";
-import { Provider } from "react-redux";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
-import { setUpStore } from "./store";
-import { browserClient } from "@/common/apollo/client";
 import { render, screen, waitFor } from "@testing-library/react";
 import myCreateGraphql from "@/server/graphql";
 import { Server } from "http";
@@ -13,6 +7,7 @@ import events from "events";
 import { AppDataSource, BookRepo, UserRepo } from "@/server/graphql/typeorm";
 import detect from "detect-port";
 import userEvent from "@testing-library/user-event";
+import { generateWholeApp } from "@/tests/utils/generateRenderObj";
 const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
 const correct_token =
@@ -48,6 +43,7 @@ beforeEach(async () => {
 		mylistener.addListener("server-ready", res);
 		mylistener.emit("request");
 	});
+	window.location.pathname = "/";
 });
 afterEach(async () => {
 	await BookRepo.clear();
@@ -65,32 +61,19 @@ afterAll(async () => {
 });
 describe("App", () => {
 	jest.setTimeout(100000);
-	function generateRenderObj() {
-		const router = createMemoryRouter(routes, {
-			initialEntries: ["/"],
-			initialIndex: 0,
-		});
-		const renderObj = (
-			<Provider store={setUpStore()}>
-				<ApolloProvider client={browserClient}>
-					<RouterProvider router={router}></RouterProvider>
-				</ApolloProvider>
-			</Provider>
-		);
-		return renderObj;
-	}
+
 	test("router guard-without token", async () => {
-		render(generateRenderObj());
+		render(generateWholeApp());
 		await screen.findAllByText("Login");
 	});
 	test("router guard-with correct token", async () => {
 		window.localStorage.setItem("token", correct_token);
-		render(generateRenderObj());
+		render(generateWholeApp());
 		await screen.findByRole("menu");
 	});
 	test("logout", async () => {
 		window.localStorage.setItem("token", correct_token);
-		render(generateRenderObj());
+		render(generateWholeApp());
 		await screen.findByRole("menu");
 		let item = screen.getByRole("menuitem", { name: "logout" });
 		await userEvent.click(item);
@@ -101,7 +84,7 @@ describe("App", () => {
 	});
 	test("router guard-with incorrect token", async () => {
 		window.localStorage.setItem("token", "dwhweuje");
-		render(generateRenderObj());
+		render(generateWholeApp());
 		await screen.findAllByText("Login");
 	});
 });
