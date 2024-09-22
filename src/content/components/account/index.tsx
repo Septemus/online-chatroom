@@ -24,7 +24,6 @@ export default function Account({ acc_id }: propTypes) {
 		variables: {
 			userId: accid ?? "",
 		},
-		pollInterval: 10000,
 	});
 	const isMyself = accid === myid;
 	let operation_bts = (

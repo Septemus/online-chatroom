@@ -57,6 +57,9 @@ beforeAll(async () => {
 	app.use("/graphql", cors<cors.CorsRequest>(), express.json(), midWare);
 });
 beforeEach(async () => {
+	await BookRepo.clear();
+	// await UserRepo.clear();
+	await UserRepo.delete({});
 	localStorage.clear();
 	await new Promise((res) => {
 		mylistener.addListener("server-ready", res);
@@ -67,11 +70,7 @@ beforeEach(async () => {
 	u.password = md5(u.password);
 	await UserRepo.save(u);
 });
-afterEach(async () => {
-	await BookRepo.clear();
-	// await UserRepo.clear();
-	await UserRepo.delete({});
-});
+afterEach(async () => {});
 afterAll(async () => {
 	// listenerServer.close();
 	server.close();

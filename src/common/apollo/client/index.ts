@@ -24,11 +24,10 @@ const httpLink = createHttpLink({
 	uri: `http://localhost:${process.env.PORT}/graphql`,
 });
 const errorLink = onError(({ graphQLErrors, operation, forward }) => {
-	console.log("token has expired!Trying to refresh!");
 	if (!graphQLErrors) return;
 	for (const { path, extensions } of graphQLErrors) {
 		if (extensions!.code !== "UNAUTHENTICATED" || !path) continue;
-
+		console.log("token has expired!Trying to refresh!");
 		const { getContext, setContext } = operation;
 		const context = getContext();
 

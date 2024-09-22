@@ -17,6 +17,7 @@ import { Users } from "@/server/graphql/entities/user";
 import md5 from "md5";
 import { setId } from "@/content/store/userSlice";
 import { FOLLOW } from "@/common/apollo/client/queries/user/follow";
+import { generateWholeApp } from "@/tests/utils/generateRenderObj";
 const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
 const correct_token =
@@ -69,6 +70,8 @@ beforeAll(async () => {
 	app.use("/graphql", cors<cors.CorsRequest>(), express.json(), midWare);
 });
 beforeEach(async () => {
+	await BookRepo.clear();
+	await UserRepo.delete({});
 	await new Promise((res) => {
 		mylistener.addListener("server-ready", res);
 		mylistener.emit("request");
@@ -82,10 +85,9 @@ beforeEach(async () => {
 	localStorage.setItem("token", correct_token);
 });
 afterEach(async () => {
-	await BookRepo.clear();
-	// await UserRepo.clear();
-	await UserRepo.delete({});
-	browserClient.clearStore();
+	// await BookRepo.clear();
+	// await UserRepo.delete({});
+	await browserClient.clearStore();
 });
 afterAll(async () => {
 	server.close();
@@ -152,5 +154,21 @@ describe("Account", () => {
 		render(localGen());
 		await screen.findByText("2 followers");
 		await screen.findByText("1 following");
+	});
+	test("account default show posts", async () => {
+		render(
+			generateWholeApp(undefined, {
+				initialEntries: ["/account"],
+				initialIndex: 0,
+			}),
+		);
+		const postsEl = await screen.findByText("Posts", undefined, {
+			timeout: 3000,
+		});
+		// eslint-disable-next-line testing-library/no-node-access
+		expect(postsEl.parentElement?.classList).toContain(
+			"ant-menu-item-selected",
+		);
+		await screen.findByText(MAIN_CHARACTER.name, undefined);
 	});
 });
