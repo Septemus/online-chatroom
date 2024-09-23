@@ -13,6 +13,7 @@ import { Gender } from "@/common/gql/graphql";
 import { screen } from "@testing-library/react";
 import { Users } from "@/server/graphql/entities/user";
 import md5 from "md5";
+import userEvent from "@testing-library/user-event";
 let server: Server;
 const mylistener = new events();
 const PORT = parseInt(process.env.PORT as string) || 3006;
@@ -124,5 +125,40 @@ describe("Edit Profile", () => {
 		});
 		const avatar: HTMLImageElement = await screen.findByAltText("avatar");
 		expect(avatar.src).toBe(MAIN_CHARACTER.avatar);
+	});
+	test("username length restriction", async () => {
+		render(
+			generateWholeApp(undefined, {
+				initialEntries: ["/options/editProfile"],
+				initialIndex: 0,
+			}),
+		);
+		userEvent.clear(
+			await screen.findByLabelText("Username", undefined, {
+				timeout: 3000,
+			}),
+		);
+		userEvent.click(await screen.findByLabelText("Username"));
+		userEvent.keyboard("abc");
+		await screen.findByText("Too Short!");
+		userEvent.click(await screen.findByText("Submit"));
+		userEvent.clear(await screen.findByLabelText("Username"));
+		userEvent.click(await screen.findByLabelText("Username"));
+		userEvent.keyboard(
+			"herfweffdjkwledflwejkodfjiowedfjwejdfuiwefdfefuhfidjnwfjhnweffefgverfguidf",
+		);
+		expect(
+			((await screen.findByLabelText("Username")) as HTMLInputElement)
+				.value.length,
+		).toBe(18);
+		expect(
+			(
+				await UserRepo.findOne({
+					where: {
+						id: MAIN_CHARACTER.id,
+					},
+				})
+			)?.name,
+		).toBe(MAIN_CHARACTER.name);
 	});
 });

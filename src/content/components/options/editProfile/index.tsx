@@ -107,8 +107,14 @@ export default function EditProfile() {
 							</Button>
 						</div>
 						<div className="section username-section">
-							<div className="sub-content-title">Username</div>
+							<label
+								className="sub-content-title"
+								htmlFor="username_input"
+							>
+								Username
+							</label>
 							<Input
+								id="username_input"
 								name="name"
 								showCount
 								maxLength={18}
