@@ -31,6 +31,7 @@ const TESTUSER_ARR = [
 		bio: "mybio:hello",
 		website: "www.bing.com",
 		gender: genderMap.get(Gender.Nottosay),
+		avatar: "https://cdn.whatever.com/7777",
 	},
 	{
 		email: "test@jest.com",
@@ -121,5 +122,7 @@ describe("Edit Profile", () => {
 		await screen.findByText(MAIN_CHARACTER.gender!, undefined, {
 			timeout: 3000,
 		});
+		const avatar: HTMLImageElement = await screen.findByAltText("avatar");
+		expect(avatar.src).toBe(MAIN_CHARACTER.avatar);
 	});
 });
