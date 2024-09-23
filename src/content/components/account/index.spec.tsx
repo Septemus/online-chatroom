@@ -18,6 +18,7 @@ import md5 from "md5";
 import { setId } from "@/content/store/userSlice";
 import { FOLLOW } from "@/common/apollo/client/queries/user/follow";
 import { generateWholeApp } from "@/tests/utils/generateRenderObj";
+import userEvent from "@testing-library/user-event";
 const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
 const correct_token =
@@ -170,5 +171,22 @@ describe("Account", () => {
 			"ant-menu-item-selected",
 		);
 		await screen.findByText(MAIN_CHARACTER.name, undefined);
+	});
+	test("click Edit Profile button will redirect", async () => {
+		render(
+			generateWholeApp(undefined, {
+				initialEntries: ["/account"],
+				initialIndex: 0,
+			}),
+		);
+		const edit_profile_bt = await screen.findByText(
+			"Edit Profile",
+			undefined,
+			{
+				timeout: 3000,
+			},
+		);
+		userEvent.click(edit_profile_bt);
+		await screen.findByText("Change photo");
 	});
 });
