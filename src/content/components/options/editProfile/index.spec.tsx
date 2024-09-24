@@ -204,4 +204,48 @@ describe("Edit Profile", () => {
 			});
 		});
 	});
+	test.only("Undo", async () => {
+		const NEW_INFO = {
+			name: "my_new_name",
+			bio: "my_new_bio",
+			website: "https://newweb.com/edyuyh/888",
+			gender: Gender.Female,
+		};
+		render(
+			generateWholeApp(undefined, {
+				initialEntries: ["/options/editProfile"],
+				initialIndex: 0,
+			}),
+		);
+		userEvent.clear(
+			await screen.findByLabelText("Username", undefined, {
+				timeout: 3000,
+			}),
+		);
+		userEvent.click(await screen.findByLabelText("Username"));
+		userEvent.keyboard(NEW_INFO.name);
+		userEvent.clear(await screen.findByLabelText("Website"));
+		userEvent.click(await screen.findByLabelText("Website"));
+		userEvent.keyboard(NEW_INFO.website);
+		userEvent.clear(await screen.findByLabelText("Bio"));
+		userEvent.click(await screen.findByLabelText("Bio"));
+		userEvent.keyboard(NEW_INFO.bio);
+		userEvent.click(await screen.findByLabelText("Gender"));
+		userEvent.click(
+			await screen.findByText(genderMap.get(NEW_INFO.gender)!),
+		);
+		userEvent.click(await screen.findByText("Undo"));
+		await screen.findByDisplayValue(MAIN_CHARACTER.name);
+		await screen.findByDisplayValue(MAIN_CHARACTER.bio!);
+		await screen.findByDisplayValue(MAIN_CHARACTER.website!);
+		const tmp = await screen.findAllByText(MAIN_CHARACTER.gender!);
+		let exist = false;
+		for (const el of tmp) {
+			if (el.className === "ant-select-selection-item") {
+				exist = true;
+				break;
+			}
+		}
+		expect(exist).toBe(true);
+	});
 });
