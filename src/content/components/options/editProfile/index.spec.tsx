@@ -4,7 +4,7 @@ import detect from "detect-port";
 import myCreateGraphql from "@/server/graphql";
 import { AppDataSource, BookRepo, UserRepo } from "@/server/graphql/typeorm";
 import { generateWholeApp } from "@/tests/utils/generateRenderObj";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import events from "events";
 import cors from "cors";
 import { randomUUID } from "crypto";
@@ -160,5 +160,48 @@ describe("Edit Profile", () => {
 				})
 			)?.name,
 		).toBe(MAIN_CHARACTER.name);
+	});
+	test("update user submit", async () => {
+		const NEW_INFO = {
+			name: "my_new_name",
+			bio: "my_new_bio",
+			website: "https://newweb.com/edyuyh/888",
+			gender: Gender.Female,
+		};
+		render(
+			generateWholeApp(undefined, {
+				initialEntries: ["/options/editProfile"],
+				initialIndex: 0,
+			}),
+		);
+		userEvent.clear(
+			await screen.findByLabelText("Username", undefined, {
+				timeout: 3000,
+			}),
+		);
+		userEvent.click(await screen.findByLabelText("Username"));
+		userEvent.keyboard(NEW_INFO.name);
+		userEvent.clear(await screen.findByLabelText("Website"));
+		userEvent.click(await screen.findByLabelText("Website"));
+		userEvent.keyboard(NEW_INFO.website);
+		userEvent.clear(await screen.findByLabelText("Bio"));
+		userEvent.click(await screen.findByLabelText("Bio"));
+		userEvent.keyboard(NEW_INFO.bio);
+		userEvent.click(await screen.findByLabelText("Gender"));
+		userEvent.click(
+			await screen.findByText(genderMap.get(NEW_INFO.gender)!),
+		);
+		userEvent.click(await screen.findByText("Submit"));
+		await waitFor(async () => {
+			const { name, bio, gender, website } = (await UserRepo.findOne({
+				where: {
+					id: MAIN_CHARACTER.id,
+				},
+			}))!;
+			expect({ name, bio, gender, website }).toEqual({
+				...NEW_INFO,
+				gender: genderMap.get(NEW_INFO.gender),
+			});
+		});
 	});
 });

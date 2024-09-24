@@ -139,8 +139,14 @@ export default function EditProfile() {
 							</TransitionWrapper>
 						</div>
 						<div className="website-section section">
-							<div className="sub-content-title">Website</div>
+							<label
+								className="sub-content-title"
+								htmlFor="website_input"
+							>
+								Website
+							</label>
 							<Input
+								id="website_input"
 								name="website"
 								style={{ height: 40 }}
 								value={props.values.website}
@@ -148,8 +154,14 @@ export default function EditProfile() {
 							/>
 						</div>
 						<div className="bio-section section">
-							<div className="sub-content-title">Bio</div>
+							<label
+								className="sub-content-title"
+								htmlFor="bio_input"
+							>
+								Bio
+							</label>
 							<TextArea
+								id="bio_input"
 								name="bio"
 								showCount
 								maxLength={150}
@@ -159,8 +171,14 @@ export default function EditProfile() {
 							/>
 						</div>
 						<div className="gender-section section">
-							<div className="sub-content-title">Gender</div>
+							<label
+								className="sub-content-title"
+								htmlFor="gender_sel"
+							>
+								Gender
+							</label>
 							<Select
+								id="gender_sel"
 								name="gender"
 								className="gender-selection"
 								options={[
