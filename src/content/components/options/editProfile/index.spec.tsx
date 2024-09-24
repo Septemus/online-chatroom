@@ -204,7 +204,7 @@ describe("Edit Profile", () => {
 			});
 		});
 	});
-	test.only("Undo", async () => {
+	test("Undo", async () => {
 		const NEW_INFO = {
 			name: "my_new_name",
 			bio: "my_new_bio",
@@ -247,5 +247,37 @@ describe("Edit Profile", () => {
 			}
 		}
 		expect(exist).toBe(true);
+	});
+	test("buttons disabled when no changes made", async () => {
+		/* eslint-disable testing-library/no-node-access */
+		render(
+			generateWholeApp(undefined, {
+				initialEntries: ["/options/editProfile"],
+				initialIndex: 0,
+			}),
+		);
+		await screen.findByLabelText("Username");
+		expect(
+			(document.querySelector(".submit") as HTMLButtonElement).disabled,
+		).toBe(true);
+		expect(
+			(document.querySelector(".undo") as HTMLButtonElement).disabled,
+		).toBe(true);
+		userEvent.clear(await screen.findByLabelText("Username"));
+		expect(
+			(document.querySelector(".submit") as HTMLButtonElement).disabled,
+		).toBe(false);
+		expect(
+			(document.querySelector(".undo") as HTMLButtonElement).disabled,
+		).toBe(false);
+		userEvent.click(await screen.findByLabelText("Username"));
+		userEvent.keyboard(MAIN_CHARACTER.name);
+		expect(
+			(document.querySelector(".submit") as HTMLButtonElement).disabled,
+		).toBe(true);
+		expect(
+			(document.querySelector(".undo") as HTMLButtonElement).disabled,
+		).toBe(true);
+		/* eslint-disable testing-library/no-node-access */
 	});
 });

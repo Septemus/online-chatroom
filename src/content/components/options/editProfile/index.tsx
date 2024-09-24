@@ -211,6 +211,7 @@ export default function EditProfile() {
 									props.setValues(initVals);
 								}}
 								disabled={_.isEqual(props.values, initVals)}
+								className="undo"
 							>
 								Undo
 							</Button>
