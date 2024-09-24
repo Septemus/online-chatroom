@@ -63,6 +63,7 @@ export default function Account({ acc_id }: propTypes) {
 					<Avatar
 						size={120}
 						icon={<UserOutlined />}
+						src={data?.user.avatar}
 					/>
 				</div>
 				<div className="row">
