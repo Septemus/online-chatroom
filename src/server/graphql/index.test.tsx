@@ -6,7 +6,7 @@ import events from "events";
 import { BookRepo, UserRepo } from "./typeorm";
 import { browserClient } from "@/common/apollo/client";
 import { USERS } from "@/common/apollo/client/queries/users";
-import { USER } from "@/common/apollo/client/queries/user";
+import { UPDATE_USER, USER } from "@/common/apollo/client/queries/user";
 import { Server } from "http";
 import { DELETE } from "@/common/apollo/client/queries/delete";
 import { Users } from "./entities/user";
@@ -19,17 +19,27 @@ import { AppDataSource } from "./typeorm";
 import detect from "detect-port";
 import { jwt_key } from "@/common/jwt";
 import { FOLLOW } from "@/common/apollo/client/queries/user/follow";
+import { Gender } from "@/common/gql/graphql";
 const correct_token =
 	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im11c2tldGVlcmR0QGdtYWlsLmNvbSIsImlhdCI6MTcyNTc5NTY1M30.KqJ9-x4TrVzu4hrEKBP2b6bNpA6uhK48G1VJ5D0eTXc";
 const PORT = parseInt(process.env.PORT as string) || 3006;
 const mylistener = new events();
 let server: Server;
+const genderMap = new Map<string, string>();
+genderMap.set("male", "Male");
+genderMap.set("female", "Female");
+genderMap.set("nottosay", "Prefer not to say");
 const TESTUSER_ARR = [
 	{
+		avatar: "https://cdn.sdyduyh.com/999",
 		email: "test@jest.com",
 		id: randomUUID(),
 		password: "testpassword",
 		name: "testuser",
+		bio: "original bio",
+		website: "origin",
+		gender: genderMap.get(Gender.Female),
+		isOnline: false,
 	},
 	{
 		email: "abc@jest.com",
@@ -78,6 +88,7 @@ beforeEach(async () => {
 		u.password = md5(u.password);
 		await UserRepo.save(u);
 	}
+	localStorage.removeItem("token");
 });
 afterEach(async () => {});
 afterAll(async () => {
@@ -334,5 +345,66 @@ describe("user", () => {
 		console.log(res[0].data.user.followers, res[1].data.user.following);
 		expect(res[0].data.user.followers[0].id).toBe(TESTUSER_ARR[1].id);
 		expect(res[1].data.user.following[0].id).toBe(TESTUSER_ARR[0].id);
+	});
+	test("update user Authentication", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		let res = await browserClient.mutate({
+			mutation: UPDATE_USER,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					id: TESTUSER.id,
+					name: "my_new_name",
+				},
+			},
+		});
+		expect(res.data).toBe(null);
+		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
+	});
+	test("update user API", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		localStorage.setItem("token", correct_token);
+		expect(
+			await UserRepo.findOne({
+				where: {
+					id: TESTUSER.id,
+				},
+			}),
+		).toEqual({
+			...TESTUSER,
+			gender: TESTUSER.gender,
+			password: md5(TESTUSER.password),
+		});
+		const new_info = {
+			name: "my_new_name",
+			bio: "my_new_bio",
+			website: "my_new_website",
+			gender: Gender.Male,
+		};
+		let res = await browserClient.mutate({
+			mutation: UPDATE_USER,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					id: TESTUSER.id,
+					...new_info,
+				},
+			},
+		});
+		const altered: Users = (await UserRepo.findOne({
+			where: {
+				id: TESTUSER.id,
+			},
+		}))!;
+		expect(altered.bio).toBe(new_info.bio);
+		expect(altered.gender).toBe(genderMap.get(new_info.gender));
+		expect(altered.name).toBe(new_info.name);
+		expect(altered.website).toBe(new_info.website);
 	});
 });
