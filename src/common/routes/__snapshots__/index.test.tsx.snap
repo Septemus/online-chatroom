@@ -13,7 +13,7 @@ Array [
         "ErrorBoundary": undefined,
         "action": undefined,
         "caseSensitive": undefined,
-        "element": <Chatroom />,
+        "element": <Message />,
         "errorElement": undefined,
         "handle": undefined,
         "hasErrorBoundary": false,
@@ -21,7 +21,7 @@ Array [
         "index": undefined,
         "lazy": undefined,
         "loader": undefined,
-        "path": "chatroom",
+        "path": "message",
         "shouldRevalidate": undefined,
       },
       Object {

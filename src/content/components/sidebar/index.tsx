@@ -14,7 +14,7 @@ import { setId } from "@/content/store/userSlice";
 type MenuItem = Required<MenuProps>["items"][number];
 const items: MenuItem[] = [
 	{
-		key: "chatroom",
+		key: "message",
 		icon: <MessageOutlined />,
 	},
 	{

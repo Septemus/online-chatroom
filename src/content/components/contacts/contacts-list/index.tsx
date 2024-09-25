@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { USERS } from "@/common/apollo/client/queries/users";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
+import Loading from "../../loading";
 
 export default function ContactsList() {
 	const { data, loading, error } = useQuery(USERS, {
@@ -15,7 +16,11 @@ export default function ContactsList() {
 	});
 	let el: JSX.Element = <div></div>;
 	if (loading) {
-		el = <div className="loading"></div>;
+		el = (
+			<div className="loading">
+				<Loading />
+			</div>
+		);
 	} else if (error) {
 		el = <div className="error"></div>;
 	} else if (data) {

@@ -1,6 +1,6 @@
 import App from "@/content/App";
 import Account from "@/content/components/account";
-import Chatroom from "@/content/components/chatroom";
+import Message from "@/content/components/message";
 import LoginPage from "@/content/components/loginPage";
 import LoginForm from "@/content/components/loginPage/loginForm";
 import RegisterForm from "@/content/components/loginPage/registerForm";
@@ -21,8 +21,8 @@ export default createRoutesFromElements(
 			path="/"
 		>
 			<Route
-				element={<Chatroom />}
-				path="chatroom"
+				element={<Message />}
+				path="message"
 			></Route>
 			<Route
 				element={<Account />}

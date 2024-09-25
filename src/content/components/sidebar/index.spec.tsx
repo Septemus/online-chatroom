@@ -21,7 +21,7 @@ test("redirect when clicking items", async () => {
 	);
 	let item = screen.getByRole("menuitem", { name: "message" });
 	await userEvent.click(item);
-	expect(mockspy).toHaveBeenCalledWith("chatroom");
+	expect(mockspy).toHaveBeenCalledWith("message");
 	item = screen.getByRole("menuitem", { name: "user" });
 	await userEvent.click(item);
 	expect(mockspy).toHaveBeenCalledWith("account");

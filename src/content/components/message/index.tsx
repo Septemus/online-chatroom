@@ -10,7 +10,7 @@ type FieldType = {
 	msg: string;
 };
 
-const Chatroom = () => {
+const Message = () => {
 	const [msgList, setMsgList] = useState<Note[]>([]);
 	const [id, setId] = useState<string>("");
 	const [msg, setMsg] = useState("");
@@ -109,4 +109,4 @@ const Chatroom = () => {
 	);
 };
 
-export default Chatroom;
+export default Message;
