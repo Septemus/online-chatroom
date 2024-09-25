@@ -1,0 +1,30 @@
+$type-area-height: 50px;
+.message-screen {
+	flex-grow: 1;
+	overflow-y: scroll;
+	.msg-note {
+		.welcome {
+			text-align: center;
+			color: rgb(149, 141, 128);
+			font-size: 12px;
+		}
+		.self {
+			text-align: right;
+		}
+		.other {
+			text-align: left;
+		}
+		padding: 10px 0;
+	}
+}
+.type-area {
+	height: $type-area-height;
+	display: flex;
+	.type-input,
+	button[type="submit"] {
+		height: $type-area-height;
+	}
+	button[type="submit"] {
+		width: 150px;
+	}
+}

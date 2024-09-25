@@ -13,6 +13,7 @@ import Options from "@/content/components/options";
 import EditProfile from "@/content/components/options/editProfile";
 import loginAction from "../apollo/client/queries/login";
 import { editProfileAction } from "../apollo/client/queries/user";
+import Chatbox from "@/content/components/message/chatbox";
 
 export default createRoutesFromElements(
 	<>
@@ -23,7 +24,12 @@ export default createRoutesFromElements(
 			<Route
 				element={<Message />}
 				path="message"
-			></Route>
+			>
+				<Route
+					element={<Chatbox />}
+					path="chatbox"
+				/>
+			</Route>
 			<Route
 				element={<Account />}
 				path="account"

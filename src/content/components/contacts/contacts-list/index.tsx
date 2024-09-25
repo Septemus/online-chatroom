@@ -5,8 +5,10 @@ import { USERS } from "@/common/apollo/client/queries/users";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
 import Loading from "../../loading";
+import { useNavigate } from "react-router-dom";
 
 export default function ContactsList() {
+	const nav = useNavigate();
 	const { data, loading, error } = useQuery(USERS, {
 		pollInterval: 10000,
 	});
@@ -28,7 +30,12 @@ export default function ContactsList() {
 			<ul>
 				{userList!.map((item: Contact) => {
 					return (
-						<li className="contact-item">
+						<li
+							className="contact-item"
+							onClick={() => {
+								nav("chatbox");
+							}}
+						>
 							<img
 								src={item.avatar}
 								alt={item.name}
