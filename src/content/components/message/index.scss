@@ -8,6 +8,7 @@
 		border-right:solid 2px rgb(121, 112, 100);
 		padding: 10px 0;
 		box-sizing: border-box;
+		flex-shrink: 0;
 	}
 	.message-area {
 		display: flex;

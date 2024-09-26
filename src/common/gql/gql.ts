@@ -21,6 +21,7 @@ const documents = {
     "\n    query userQuery($userId: String!) {\n        user(id: $userId) {\n        id\n        name\n        email\n        avatar\n        isOnline\n        bio\n        website\n        gender\n        followers {\n            id\n        }\n        following {\n            id\n        }\n        }\n    }\n": types.UserQueryDocument,
     "\n        mutation updUser($data: UpdateUserInput!) {\n            updateUser(data: $data) {\n                success\n                msg\n            }\n        }\n    ": types.UpdUserDocument,
     "\n                        fragment updateField on Users {\n                            id\n                            website\n                            bio\n                            gender\n                            name\n                            avatar\n                        }\n                    ": types.UpdateFieldFragmentDoc,
+    "\n    query avatarQuery($userId: String!) {\n        user(id: $userId) {\n            avatar\n        }\n    }\n": types.AvatarQueryDocument,
     "\n\tquery usersQuery {\n\t\tusers {\n\t\t\tid\n\t\t\tisOnline\n\t\t\tname\n\t\t\tavatar\n\t\t}\n\t}\n": types.UsersQueryDocument,
     "\n\tquery verifyQuery($token: String!) {\n\t\tverify(token: $token) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t\tid\n\t\t}\n\t}\n": types.VerifyQueryDocument,
 };
@@ -71,6 +72,10 @@ export function gql(source: "\n        mutation updUser($data: UpdateUserInput!)
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n                        fragment updateField on Users {\n                            id\n                            website\n                            bio\n                            gender\n                            name\n                            avatar\n                        }\n                    "): (typeof documents)["\n                        fragment updateField on Users {\n                            id\n                            website\n                            bio\n                            gender\n                            name\n                            avatar\n                        }\n                    "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query avatarQuery($userId: String!) {\n        user(id: $userId) {\n            avatar\n        }\n    }\n"): (typeof documents)["\n    query avatarQuery($userId: String!) {\n        user(id: $userId) {\n            avatar\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

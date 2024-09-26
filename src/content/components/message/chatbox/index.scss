@@ -1,24 +1,58 @@
 $type-area-height: 50px;
+$avatar-size: 28px;
 .message-screen {
 	flex-grow: 1;
-	overflow-y: scroll;
+	overflow-y: auto;
 	.msg-note {
+		width: 100%;
+		display: flex;
+		justify-content: flex-start;
+		align-items: end;
 		.welcome {
 			text-align: center;
 			color: rgb(149, 141, 128);
-			font-size: 12px;
+			font-size: var(--font-size-100);
 		}
-		.self {
-			text-align: right;
+		&.self {
+			flex-direction: row-reverse;
+			.avatar {
+				margin-left: var(--space-200);
+				margin-right: var(--space-400);
+			}
+			.msg-content {
+				background-color: var(--color-primary);
+				color: white;
+			}
 		}
-		.other {
-			text-align: left;
+		&.other {
+			.avatar {
+				margin-left: var(--space-400);
+				margin-right: var(--space-200);
+			}
+			.msg-content {
+				background-color: var(--color-highlight-background);
+			}
 		}
 		padding: 10px 0;
+		.avatar {
+			box-sizing: content-box;
+			display: block;
+			width: $avatar-size;
+			height: $avatar-size;
+			border-radius: $avatar-size;
+		}
+		.msg-content {
+			padding: var(--space-200) var(--space-300);
+			border-radius: var(--rounding-400);
+			max-width: 40%;
+			min-width: 0;
+			word-break: break-all;
+		}
 	}
 }
 .type-area {
 	height: $type-area-height;
+	width:100%;
 	display: flex;
 	.type-input,
 	button[type="submit"] {

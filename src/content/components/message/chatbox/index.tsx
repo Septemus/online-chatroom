@@ -7,6 +7,8 @@ import "./index.scss";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
 import { useParams } from "react-router-dom";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { AVATAR } from "@/common/apollo/client/queries/user";
 type FieldType = {
 	msg: string;
 };
@@ -17,6 +19,18 @@ const Chatbox: React.FC = () => {
 	const [msgList, setMsgList] = useState<SocketNote[]>([]);
 	const [form] = Form.useForm<FieldType>();
 	const [socket, isReady] = useSocket("ws://localhost:3006");
+	const { data: targetAvatar } = useQuery(AVATAR, {
+		variables: {
+			userId: targetId!,
+		},
+		fetchPolicy: "cache-first",
+	});
+	const { data: myAvatar } = useQuery(AVATAR, {
+		variables: {
+			userId: myid!,
+		},
+		fetchPolicy: "cache-first",
+	});
 	useEffect(() => {
 		if (isReady) {
 			const intro = new SocketNote(targetId!, myid, "init");
@@ -43,12 +57,28 @@ const Chatbox: React.FC = () => {
 	const msgListEl = msgList.map((content) => {
 		let tmp: ReactElement | null = null;
 		tmp = (
-			<div className={content.id === myid ? "self" : "other"}>
-				<span>{content.id}:</span>
-				{content.msg}
+			<>
+				<img
+					src={
+						content.id === myid
+							? myAvatar?.user.avatar
+							: targetAvatar?.user.avatar
+					}
+					alt="avatar"
+					className="avatar"
+				/>
+				<div className="msg-content">{content.msg}</div>
+			</>
+		);
+		return (
+			<div
+				className={
+					(content.id === myid ? "self" : "other") + " msg-note"
+				}
+			>
+				{tmp}
 			</div>
 		);
-		return <div className="msg-note">{tmp}</div>;
 	});
 
 	return (

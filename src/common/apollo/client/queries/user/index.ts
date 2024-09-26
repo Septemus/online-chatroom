@@ -76,3 +76,13 @@ export const editProfileAction = async ({
 	}
 	return null;
 };
+
+export const AVATAR = gql(
+	`
+    query avatarQuery($userId: String!) {
+        user(id: $userId) {
+            avatar
+        }
+    }
+`,
+);
