@@ -3,14 +3,14 @@ import { Context } from "..";
 import jwt from "jsonwebtoken";
 import { OperationInfo } from "../entities/operationInfo";
 import { jwt_algorithm, jwt_key } from "@/common/jwt";
-
+const SKIP_CHECK = false;
 export const customAuthChecker: AuthChecker<Context> = ({ context }, roles) => {
 	console.log(
 		"checker for App actions:must bring along correcr token",
 		context,
 	);
 	try {
-		if (process.env.NODE_ENV === "development" && process.env.SKIP_CHECK) {
+		if (process.env.NODE_ENV === "development" && SKIP_CHECK) {
 			return true;
 		}
 		return checkLogic(context.token).success;
