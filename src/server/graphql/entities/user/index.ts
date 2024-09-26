@@ -5,9 +5,12 @@ import {
 	Column,
 	ManyToMany,
 	JoinTable,
+	OneToMany,
+	type Relation,
 } from "typeorm";
 import { ObjectType, Field, InputType, registerEnumType } from "type-graphql";
 import { Length } from "class-validator";
+import { Message } from "../message";
 enum Gender {
 	male = "Male",
 	female = "Female",
@@ -71,6 +74,10 @@ export class Users extends BaseEntity {
 	})
 	@JoinTable()
 	following: Users[];
+
+	@Field(() => [Message!])
+	@ManyToMany(() => Message, (msg: Message) => msg.usersInvolved)
+	messages: Relation<Message[]>;
 }
 @InputType()
 export class CreateUserInput {

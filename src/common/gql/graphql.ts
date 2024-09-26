@@ -41,6 +41,13 @@ export enum Gender {
   Nottosay = 'nottosay'
 }
 
+export type Message = {
+  __typename?: 'Message';
+  id: Scalars['String']['output'];
+  notes: Array<Note>;
+  usersInvolved: Array<Users>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addFollowing: OperationInfo;
@@ -86,6 +93,13 @@ export type MutationUpdateBookArgs = {
 
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
+};
+
+export type Note = {
+  __typename?: 'Note';
+  content: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  message: Array<Message>;
 };
 
 export type OperationInfo = {
@@ -157,6 +171,7 @@ export type Users = {
   gender?: Maybe<Gender>;
   id: Scalars['String']['output'];
   isOnline: Scalars['Boolean']['output'];
+  messages: Array<Message>;
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
   website?: Maybe<Scalars['String']['output']>;
