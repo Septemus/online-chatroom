@@ -27,7 +27,7 @@ export default createRoutesFromElements(
 			>
 				<Route
 					element={<Chatbox />}
-					path="chatbox"
+					path="chatbox/:targetId"
 				/>
 			</Route>
 			<Route

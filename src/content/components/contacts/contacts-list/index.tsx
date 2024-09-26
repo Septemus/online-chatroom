@@ -9,9 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ContactsList() {
 	const nav = useNavigate();
-	const { data, loading, error } = useQuery(USERS, {
-		pollInterval: 10000,
-	});
+	const { data, loading, error } = useQuery(USERS);
 	const myid = useAppSelector(selectId);
 	const userList = data?.users.filter((u) => {
 		return u.id != myid;
@@ -33,7 +31,7 @@ export default function ContactsList() {
 						<li
 							className="contact-item"
 							onClick={() => {
-								nav("chatbox");
+								nav(`chatbox/${item.id}`);
 							}}
 						>
 							<img

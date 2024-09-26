@@ -1,4 +1,4 @@
-export class Note {
+export class SocketNote {
 	msg: string;
 	id: string;
 	type: "message" | "init";

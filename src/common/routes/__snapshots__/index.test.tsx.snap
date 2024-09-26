@@ -27,7 +27,7 @@ Array [
             "index": undefined,
             "lazy": undefined,
             "loader": undefined,
-            "path": "chatbox",
+            "path": "chatbox/:targetId",
             "shouldRevalidate": undefined,
           },
         ],

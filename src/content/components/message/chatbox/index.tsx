@@ -1,36 +1,38 @@
-import { ReactElement, useEffect, useState } from "react";
-import type { FormProps } from "antd";
+import { ReactElement, RefObject, useEffect, useRef, useState } from "react";
+import type { FormProps, InputRef } from "antd";
 import { Button, Form, Input } from "antd";
 import { useSocket } from "@/content/hooks/socket";
-import { Note } from "@/types/message";
+import { SocketNote } from "@/types/message";
 import "./index.scss";
+import { useAppSelector } from "@/content/hooks/store";
+import { selectId } from "@/content/store/userSlice";
+import { useParams } from "react-router-dom";
 type FieldType = {
 	msg: string;
 };
 
 const Chatbox: React.FC = () => {
-	const [msgList, setMsgList] = useState<Note[]>([]);
-	const [id, setId] = useState<string>("");
-	const [msg, setMsg] = useState("");
+	const { targetId } = useParams();
+	const myid = useAppSelector(selectId);
+	const [msgList, setMsgList] = useState<SocketNote[]>([]);
+	const [form] = Form.useForm<FieldType>();
 	const [socket, isReady] = useSocket("ws://localhost:3006");
 	useEffect(() => {
 		if (isReady) {
+			const intro = new SocketNote(targetId!, myid, "init");
+			socket.send(JSON.stringify(intro));
 			socket.onmessage = (e: MessageEvent<string>) => {
-				const tmp: Note = JSON.parse(e.data);
+				const tmp: SocketNote = JSON.parse(e.data);
 				setMsgList([...msgList, tmp]);
-				if (tmp.type === "message") {
-					console.log("on message!", tmp, msgList);
-				} else if (tmp.type === "init") {
-					console.log("set init id!", tmp.id);
-					setId(tmp.id);
-				}
+				console.log("on message!", tmp, msgList);
 			};
 		}
 	}, [isReady, msgList, socket]);
 	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
 		console.log("Success:", values);
-		const target = new Note(values.msg, id, "message");
+		const target = new SocketNote(values.msg, myid, "message");
 		socket.send(JSON.stringify(target));
+		form.setFieldValue("msg", "");
 	};
 
 	const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
@@ -40,16 +42,12 @@ const Chatbox: React.FC = () => {
 	};
 	const msgListEl = msgList.map((content) => {
 		let tmp: ReactElement | null = null;
-		if (content.type === "message") {
-			tmp = (
-				<div className={content.id === id ? "self" : "other"}>
-					<span>{content.id}:</span>
-					{content.msg}
-				</div>
-			);
-		} else if (content.type === "init") {
-			tmp = <div className="welcome">You have joined the gang!🥷🏿</div>;
-		}
+		tmp = (
+			<div className={content.id === myid ? "self" : "other"}>
+				<span>{content.id}:</span>
+				{content.msg}
+			</div>
+		);
 		return <div className="msg-note">{tmp}</div>;
 	});
 
@@ -62,6 +60,7 @@ const Chatbox: React.FC = () => {
 				onFinishFailed={onFinishFailed}
 				autoComplete="off"
 				className="type-area"
+				form={form}
 			>
 				<Form.Item<FieldType>
 					name="msg"
@@ -76,13 +75,7 @@ const Chatbox: React.FC = () => {
 						height: "100%",
 					}}
 				>
-					<Input
-						className="type-input"
-						value={msg}
-						onChange={(e) => {
-							setMsg(e.target.value);
-						}}
-					/>
+					<Input className="type-input" />
 				</Form.Item>
 
 				<Form.Item>
