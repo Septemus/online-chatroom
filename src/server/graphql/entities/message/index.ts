@@ -9,6 +9,7 @@ import {
 	OneToMany,
 	ManyToOne,
 	type Relation,
+	PrimaryGeneratedColumn,
 } from "typeorm";
 import { ObjectType, Field, InputType, registerEnumType } from "type-graphql";
 import { Length } from "class-validator";
@@ -19,19 +20,26 @@ import { Note } from "./note";
 @ObjectType()
 export class Message extends BaseEntity {
 	@Field(() => String)
-	@PrimaryColumn()
+	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@Field(() => [Users!])
+	@Field(() => [Users!]!)
 	@ManyToMany(() => Users!, {
 		cascade: ["insert", "update"],
 	})
 	@JoinTable()
 	usersInvolved: Relation<Users[]>;
 
-	@Field(() => [Note!])
+	@Field(() => [Note!]!)
 	@OneToMany(() => Note, (note) => note.message, {
-		cascade: ["insert", "update"],
+		cascade: ["insert", "update", "remove"],
 	})
 	notes: Relation<Note[]>;
+}
+@InputType()
+export class getMessageInput {
+	@Field(() => String)
+	id1: string;
+	@Field(() => String)
+	id2: string;
 }

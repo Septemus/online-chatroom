@@ -1,8 +1,7 @@
 import { SocketNote } from "@/types/message";
-import { randomUUID } from "crypto";
 import { Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
-
+import { newNote } from "../graphql/resolvers/MessageResolver";
 export default function myCreateSocket(server: Server) {
 	const connections = new Map<string, WebSocket>();
 	const wss = new WebSocketServer({ server });
@@ -22,6 +21,10 @@ export default function myCreateSocket(server: Server) {
 				target_id = note.msg;
 				connections.set(mc_id, ws);
 			} else {
+				if (mc_id && target_id) {
+					console.log("@@joetesting:saving this note into database");
+					newNote(note.msg, { id1: mc_id, id2: target_id });
+				}
 				const target = connections.get(target_id);
 				ws.send(ori.toString());
 				if (target?.readyState === WebSocket.OPEN) {

@@ -18,3 +18,4 @@ export const AppDataSource = new DataSource({
 AppDataSource.initialize();
 export const BookRepo = AppDataSource.getRepository(Book);
 export const UserRepo = AppDataSource.getRepository(Users);
+export const MessageRepo = AppDataSource.getRepository(Message);
