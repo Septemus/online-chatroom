@@ -30,7 +30,9 @@ export async function selectMessageBetween(user1_id: string, user2_id: string) {
 			where: { id: targetId! },
 			relations: {
 				usersInvolved: true,
-				notes: true,
+				notes: {
+					sender: true,
+				},
 			},
 		});
 		console.log("@@joetesting:select message result:", target);
@@ -40,10 +42,17 @@ export async function selectMessageBetween(user1_id: string, user2_id: string) {
 	}
 }
 
-export async function newNote(
-	content: string,
-	{ id1, id2 }: { id1: string; id2: string },
-) {
+export async function newNote({
+	id1,
+	id2,
+	content,
+	sender,
+}: {
+	id1: string;
+	id2: string;
+	content: string;
+	sender: string;
+}) {
 	console.log(`@@joetesting:finding message between ${id1} and ${id2}`);
 	let msg: Message | null = await selectMessageBetween(id1, id2);
 	if (!msg) {
@@ -58,8 +67,17 @@ export async function newNote(
 	const note = new Note();
 	note.message = msg;
 	note.content = content;
+	note.sender = (await UserRepo.findOne({
+		where: {
+			id: sender,
+		},
+	}))!;
 	msg.notes.push(note);
-	console.log("@@joetesting:saving modified message into database");
+	console.log(
+		"@@joetesting:saving modified message into database",
+		msg,
+		sender,
+	);
 	await MessageRepo.save(msg);
 }
 

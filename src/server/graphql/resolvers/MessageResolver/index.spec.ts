@@ -57,9 +57,11 @@ describe("Message Resolver", () => {
 			TESTUSER_ARR[1].id,
 		);
 		expect(res0).toBe(null);
-		await newNote(test_content, {
+		await newNote({
 			id1: TESTUSER_ARR[0].id,
 			id2: TESTUSER_ARR[1].id,
+			content: test_content,
+			sender: TESTUSER_ARR[0].id,
 		});
 		const res1 = await selectMessageBetween(
 			TESTUSER_ARR[0].id,

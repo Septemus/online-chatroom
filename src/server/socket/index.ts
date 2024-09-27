@@ -23,7 +23,12 @@ export default function myCreateSocket(server: Server) {
 			} else {
 				if (mc_id && target_id) {
 					console.log("@@joetesting:saving this note into database");
-					newNote(note.msg, { id1: mc_id, id2: target_id });
+					newNote({
+						id1: mc_id,
+						id2: target_id,
+						content: note.msg,
+						sender: note.id,
+					});
 				}
 				const target = connections.get(target_id);
 				ws.send(ori.toString());

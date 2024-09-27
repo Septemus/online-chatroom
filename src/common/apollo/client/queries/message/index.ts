@@ -7,6 +7,9 @@ export const MESSAGE = gql(
                 notes {
                     content
                     createdDate
+                    sender {
+                        id
+                    }
                 }
                 usersInvolved {
                    email

@@ -9,6 +9,7 @@ import {
 	type Relation,
 } from "typeorm";
 import { Message } from "..";
+import { Users } from "../../user";
 
 @Entity()
 @ObjectType()
@@ -20,6 +21,14 @@ export class Note extends BaseEntity {
 		cascade: ["insert", "update", "remove"],
 	})
 	message: Relation<Message>;
+
+	@Field(() => Users!)
+	@ManyToOne(() => Users!, {
+		onDelete: "CASCADE",
+		onUpdate: "CASCADE",
+		cascade: ["insert", "update"],
+	})
+	sender: Relation<Users>;
 
 	@Field(() => String)
 	@PrimaryGeneratedColumn("uuid")
