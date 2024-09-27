@@ -15,7 +15,6 @@ export const AppDataSource = new DataSource({
 	logging: process.env.NODE_ENV === "development",
 	entities: [Book, Users, Message, Note],
 });
-AppDataSource.initialize();
 export const BookRepo = AppDataSource.getRepository(Book);
 export const UserRepo = AppDataSource.getRepository(Users);
 export const MessageRepo = AppDataSource.getRepository(Message);

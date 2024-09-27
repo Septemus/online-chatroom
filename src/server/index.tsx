@@ -4,9 +4,11 @@ import myCreateSocket from "./socket";
 import myCreateGraphql from "./graphql";
 import SSRCallback from "./ssr";
 import dotenv from "dotenv";
+import { AppDataSource } from "./graphql/typeorm";
 Object.assign(global, { WebSocket: require("ws") });
 dotenv.config();
 async function setUpExpressServer() {
+	await AppDataSource.initialize();
 	const PORT = process.env.PORT || 3006;
 	const app = express();
 	const server = app.listen(PORT, () => {
