@@ -4,6 +4,7 @@ import { Book } from "@/server/graphql/entities/book";
 import { Users } from "@/server/graphql/entities/user";
 import { Message } from "../entities/message";
 import { Note } from "../entities/message/note";
+const LOGGING = false;
 export const AppDataSource = new DataSource({
 	type: "postgres",
 	host: "localhost",
@@ -12,7 +13,7 @@ export const AppDataSource = new DataSource({
 	password: "123456",
 	database: process.env.db_name,
 	synchronize: true,
-	logging: process.env.NODE_ENV === "development",
+	logging: process.env.NODE_ENV === "development" && LOGGING,
 	entities: [Book, Users, Message, Note],
 });
 export const BookRepo = AppDataSource.getRepository(Book);
