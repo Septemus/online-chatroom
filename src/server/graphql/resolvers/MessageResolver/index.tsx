@@ -1,4 +1,4 @@
-import { Arg, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Query, Resolver } from "type-graphql";
 import { getMessageInput, Message } from "../../entities/message";
 import { Note } from "../../entities/message/note";
 import { MessageRepo, UserRepo } from "../../typeorm";
@@ -65,6 +65,7 @@ export async function newNote(
 
 @Resolver()
 export class MessageResolver {
+	@Authorized()
 	@Query(() => Message, { nullable: true })
 	Message(@Arg("data") data: getMessageInput): Promise<Message | null> {
 		return selectMessageBetween(data.id1, data.id2);
