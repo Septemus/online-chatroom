@@ -1,7 +1,7 @@
 import Contact from "@/types/contacts/contact";
 import "./index.scss";
 import { useQuery } from "@apollo/client";
-import { USERS } from "@/common/apollo/client/queries/users";
+import { USERS } from "@/common/apollo/client/queries/user/users";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
 import Loading from "../../loading";

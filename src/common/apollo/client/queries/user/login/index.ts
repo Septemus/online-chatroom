@@ -6,7 +6,7 @@ import { gql } from "@/common/gql";
 import { store } from "@/content/store";
 import { setId } from "@/content/store/userSlice";
 import md5 from "md5";
-import { browserClient } from "../..";
+import { browserClient } from "@/common/apollo/client";
 
 export const LOGIN = gql(`
 	query loginQuery($data: loginInput!) {

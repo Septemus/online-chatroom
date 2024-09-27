@@ -3,7 +3,7 @@ import { RegisterFieldType } from "@/content/components/loginPage/registerForm";
 import { message } from "antd";
 import { gql } from "@/common/gql";
 import md5 from "md5";
-import { browserClient } from "../..";
+import { browserClient } from "@/common/apollo/client";
 
 const registerAction = async ({ request, params }: ActionFunctionArgs) => {
 	const data: RegisterFieldType = Object.fromEntries(
