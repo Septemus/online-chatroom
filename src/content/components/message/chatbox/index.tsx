@@ -9,7 +9,7 @@ import { selectId } from "@/content/store/userSlice";
 import { useParams } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { AVATAR } from "@/common/apollo/client/queries/user";
-import { MESSAGE } from "@/common/apollo/client/queries/message";
+import { useMessageList } from "./hooks/messageList";
 type FieldType = {
 	msg: string;
 };
@@ -17,7 +17,7 @@ type FieldType = {
 const Chatbox: React.FC = () => {
 	const { targetId } = useParams();
 	const myid = useAppSelector(selectId);
-	const [msgList, setMsgList] = useState<SocketNote[]>([]);
+	const [msgList, setMsgList] = useMessageList({ id1: myid, id2: targetId });
 	const [form] = Form.useForm<FieldType>();
 	const [socket, isReady] = useSocket("ws://localhost:3006");
 	const { data: targetAvatar } = useQuery(AVATAR, {
@@ -32,37 +32,19 @@ const Chatbox: React.FC = () => {
 		},
 		fetchPolicy: "cache-first",
 	});
-	const { data: messageRecord, loading: messageRecordLoading } = useQuery(
-		MESSAGE,
-		{
-			variables: {
-				data: {
-					id1: myid,
-					id2: targetId!,
-				},
-			},
-		},
-	);
 	useEffect(() => {
 		if (isReady) {
-			const intro = new SocketNote(targetId!, myid, "init");
-			socket.send(JSON.stringify(intro));
+			if (targetId && myid && myid !== "hydrating") {
+				const intro = new SocketNote(targetId!, myid, "init");
+				socket.send(JSON.stringify(intro));
+			}
 			socket.onmessage = (e: MessageEvent<string>) => {
 				const tmp: SocketNote = JSON.parse(e.data);
 				setMsgList([...msgList, tmp]);
 				console.log("on message!", tmp, msgList);
 			};
 		}
-	}, [isReady, msgList, socket]);
-	useEffect(() => {
-		if (!messageRecordLoading && messageRecord) {
-			const history_notes =
-				messageRecord.Message?.notes.map((n) => {
-					return new SocketNote(n.content, n.sender.id, "message");
-				}) ?? [];
-			setMsgList(history_notes);
-		}
-	}, [messageRecord, messageRecordLoading]);
+	}, [isReady, msgList, socket, myid, targetId, setMsgList]);
 	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
 		console.log("Success:", values);
 		const target = new SocketNote(values.msg, myid, "message");
