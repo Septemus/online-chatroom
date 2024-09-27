@@ -20,6 +20,7 @@ import detect from "detect-port";
 import { jwt_key } from "@/common/jwt";
 import { FOLLOW } from "@/common/apollo/client/queries/user/follow";
 import { Gender } from "@/common/gql/graphql";
+import { MESSAGE } from "@/common/apollo/client/queries/message";
 const correct_token =
 	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im11c2tldGVlcmR0QGdtYWlsLmNvbSIsImlhdCI6MTcyNTc5NTY1M30.KqJ9-x4TrVzu4hrEKBP2b6bNpA6uhK48G1VJ5D0eTXc";
 const PORT = parseInt(process.env.PORT as string) || 3006;
@@ -406,5 +407,23 @@ describe("user", () => {
 		expect(altered.gender).toBe(genderMap.get(new_info.gender));
 		expect(altered.name).toBe(new_info.name);
 		expect(altered.website).toBe(new_info.website);
+	});
+	test("message Authentication", async () => {
+		await new Promise((res) => {
+			mylistener.addListener("server-ready", res);
+			mylistener.emit("request");
+		});
+		let res = await browserClient.query({
+			query: MESSAGE,
+			errorPolicy: "all",
+			variables: {
+				data: {
+					id1: "not important",
+					id2: "not important",
+				},
+			},
+		});
+		expect(res.data.Message).toBe(null);
+		expect(res.errors!["0"].extensions!.code).toBe("UNAUTHENTICATED");
 	});
 });

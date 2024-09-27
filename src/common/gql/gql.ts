@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n    mutation delMutation($deleteUserId: String!) {\n        deleteUser(id: $deleteUserId) {\n            msg\n            success\n        }\n    }\n": types.DelMutationDocument,
     "\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n": types.LoginQueryDocument,
+    "\n        query MessageQuery($data: getMessageInput!) {\n            Message(data: $data) {\n                notes {\n                    content\n                    createdDate\n                }\n                usersInvolved {\n                   email\n                }\n            }\n        }\n    ": types.MessageQueryDocument,
     "\n\tquery refreshQuery($oldToken:String!) {\n\t\trefresh(oldToken: $oldToken) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n": types.RefreshQueryDocument,
     "\n\tmutation addUserMuttation($data: CreateUserInput!) {\n\t\tcreateUser(data: $data) {\n\t\t\tsuccess\n\t\t\tmsg\n\t\t}\n\t}\n": types.AddUserMuttationDocument,
     "\n    mutation followMutation($data: followInput!) {\n        addFollowing(data: $data) {\n            success\n            msg\n        }\n    }    \n": types.FollowMutationDocument,
@@ -48,6 +49,10 @@ export function gql(source: "\n    mutation delMutation($deleteUserId: String!) 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n"): (typeof documents)["\n\tquery loginQuery($data: loginInput!) {\n\t\tlogin(data: $data) {\n\t\t\tmsg\n\t\t\tsuccess\n\t\t\ttoken\n\t\t}\n\t}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n        query MessageQuery($data: getMessageInput!) {\n            Message(data: $data) {\n                notes {\n                    content\n                    createdDate\n                }\n                usersInvolved {\n                   email\n                }\n            }\n        }\n    "): (typeof documents)["\n        query MessageQuery($data: getMessageInput!) {\n            Message(data: $data) {\n                notes {\n                    content\n                    createdDate\n                }\n                usersInvolved {\n                   email\n                }\n            }\n        }\n    "];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
