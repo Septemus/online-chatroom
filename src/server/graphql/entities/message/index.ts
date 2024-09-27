@@ -32,7 +32,7 @@ export class Message extends BaseEntity {
 
 	@Field(() => [Note!]!)
 	@OneToMany(() => Note, (note) => note.message, {
-		cascade: ["insert", "update", "remove"],
+		cascade: ["insert", "update"],
 	})
 	notes: Relation<Note[]>;
 }

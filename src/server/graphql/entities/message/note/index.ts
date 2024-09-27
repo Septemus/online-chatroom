@@ -15,7 +15,9 @@ import { Message } from "..";
 export class Note extends BaseEntity {
 	@Field(() => Message!)
 	@ManyToOne(() => Message!, (msg) => msg.notes, {
-		cascade: ["insert", "update"],
+		onDelete: "CASCADE",
+		onUpdate: "CASCADE",
+		cascade: ["insert", "update", "remove"],
 	})
 	message: Relation<Message>;
 
