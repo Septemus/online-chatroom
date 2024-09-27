@@ -9,6 +9,7 @@ import { selectId } from "@/content/store/userSlice";
 import { useParams } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { AVATAR } from "@/common/apollo/client/queries/user";
+import { MESSAGE } from "@/common/apollo/client/queries/message";
 type FieldType = {
 	msg: string;
 };
@@ -31,6 +32,17 @@ const Chatbox: React.FC = () => {
 		},
 		fetchPolicy: "cache-first",
 	});
+	const { data: messageRecord, loading: messageRecordLoading } = useQuery(
+		MESSAGE,
+		{
+			variables: {
+				data: {
+					id1: myid,
+					id2: targetId!,
+				},
+			},
+		},
+	);
 	useEffect(() => {
 		if (isReady) {
 			const intro = new SocketNote(targetId!, myid, "init");
@@ -42,6 +54,15 @@ const Chatbox: React.FC = () => {
 			};
 		}
 	}, [isReady, msgList, socket]);
+	useEffect(() => {
+		if (!messageRecordLoading && messageRecord) {
+			const history_notes =
+				messageRecord.Message?.notes.map((n) => {
+					return new SocketNote(n.content, n.sender.id, "message");
+				}) ?? [];
+			setMsgList(history_notes);
+		}
+	}, [messageRecord, messageRecordLoading]);
 	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
 		console.log("Success:", values);
 		const target = new SocketNote(values.msg, myid, "message");
