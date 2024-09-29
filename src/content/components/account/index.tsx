@@ -6,20 +6,18 @@ import { selectId } from "@/content/store/userSlice";
 import { useQuery } from "@apollo/client";
 import { USER } from "@/common/apollo/client/queries/user";
 import { useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 type MenuItem = Required<MenuProps>["items"][number];
-type propTypes = {
-	acc_id?: string;
-};
-export default function Account({ acc_id }: propTypes) {
+export default function Account() {
 	const loc = useLocation();
+	const { targetId } = useParams();
 	const [current, setCurrent] = useState<string>("");
 	useEffect(() => {
 		setCurrent(loc.pathname.split("/").at(-1) as string);
 	}, [loc]);
 	const nav = useNavigate();
 	const myid = useAppSelector(selectId);
-	const [accid] = useState(acc_id ? acc_id : myid);
+	const [accid] = useState(targetId ? targetId : myid);
 	const { loading, error, data } = useQuery(USER, {
 		variables: {
 			userId: accid ?? "",

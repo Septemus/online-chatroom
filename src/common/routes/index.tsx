@@ -32,7 +32,7 @@ export default createRoutesFromElements(
 			</Route>
 			<Route
 				element={<Account />}
-				path="account"
+				path="account/:targetId?"
 			>
 				<Route
 					index
