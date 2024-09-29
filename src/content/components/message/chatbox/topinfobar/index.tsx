@@ -14,7 +14,7 @@ const TopInfoBar: React.FC<{ id?: string | undefined }> = ({ id = "" }) => {
 		<div className="top-info-bar">
 			<Link
 				className="link-wrapper"
-				to={"/account"}
+				to={`/account/${id}`}
 			>
 				<img
 					src={data?.user.avatar}

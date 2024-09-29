@@ -6,7 +6,7 @@ import { SocketNote } from "@/types/message";
 import "./index.scss";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { AVATAR } from "@/common/apollo/client/queries/user";
 import { useMessageList } from "./hooks/messageList";
@@ -63,15 +63,17 @@ const Chatbox: React.FC = () => {
 		let tmp: ReactElement | null = null;
 		tmp = (
 			<>
-				<img
-					src={
-						content.id === myid
-							? myAvatar?.user.avatar
-							: targetAvatar?.user.avatar
-					}
-					alt="avatar"
-					className="avatar"
-				/>
+				<Link to={`/account/${content.id === myid ? "" : content.id}`}>
+					<img
+						src={
+							content.id === myid
+								? myAvatar?.user.avatar
+								: targetAvatar?.user.avatar
+						}
+						alt="avatar"
+						className="avatar"
+					/>
+				</Link>
 				<div className="msg-content">{content.msg}</div>
 			</>
 		);
