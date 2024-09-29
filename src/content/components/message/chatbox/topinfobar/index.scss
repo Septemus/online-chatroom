@@ -1,0 +1,32 @@
+$top-info-bar-height: 75px;
+$avatar-size: 44px;
+
+.top-info-bar {
+	height: $top-info-bar-height;
+	padding: 0 var(--space-400);
+	border-bottom: solid 1px var(--color-delimeter);
+	align-items: center;
+	display: flex;
+	flex-shrink: 0;
+	.avatar {
+		width: $avatar-size;
+		height: $avatar-size;
+		border-radius: $avatar-size;
+		padding: 6px;
+	}
+	.name {
+		padding: 6px;
+		margin: 0;
+		flex-grow: 1;
+		font-weight: var(--font-weight-semibold);
+	}
+	.opration-bts {
+		.opr-bt {
+			font-size: 24px;
+			padding: var(--space-200);
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
+}

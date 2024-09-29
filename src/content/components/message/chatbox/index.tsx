@@ -11,6 +11,7 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { AVATAR } from "@/common/apollo/client/queries/user";
 import { useMessageList } from "./hooks/messageList";
 import Loading from "@/content/components/loading";
+import TopInfoBar from "./topinfobar";
 type FieldType = {
 	msg: string;
 };
@@ -89,6 +90,7 @@ const Chatbox: React.FC = () => {
 	}
 	return (
 		<>
+			<TopInfoBar id={targetId} />
 			<div className="message-screen">{msgListEl}</div>
 			<Form
 				name="basic"
