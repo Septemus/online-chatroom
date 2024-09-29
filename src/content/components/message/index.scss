@@ -11,6 +11,7 @@
 		flex-shrink: 0;
 	}
 	.message-area {
+		position: relative;
 		display: flex;
 		flex-grow: 1;
 		justify-content: space-between;

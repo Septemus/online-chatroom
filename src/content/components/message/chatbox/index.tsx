@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { AVATAR } from "@/common/apollo/client/queries/user";
 import { useMessageList } from "./hooks/messageList";
+import Loading from "@/content/components/loading";
 type FieldType = {
 	msg: string;
 };
@@ -83,7 +84,9 @@ const Chatbox: React.FC = () => {
 			</div>
 		);
 	});
-
+	if (!isReady) {
+		return <Loading />;
+	}
 	return (
 		<>
 			<div className="message-screen">{msgListEl}</div>
