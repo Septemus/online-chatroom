@@ -5,10 +5,12 @@ import { USERS } from "@/common/apollo/client/queries/user/users";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
 import Loading from "../../loading";
-import { useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import classnames from "classnames";
 export default function ContactsList() {
+	const loc = useLocation();
 	const nav = useNavigate();
+	const selected_user = loc.pathname.split("/").at(-1);
 	const { data, loading, error } = useQuery(USERS);
 	const myid = useAppSelector(selectId);
 	const userList = data?.users.filter((u) => {
@@ -29,7 +31,9 @@ export default function ContactsList() {
 				{userList!.map((item: Contact) => {
 					return (
 						<li
-							className="contact-item"
+							className={classnames("contact-item", {
+								selected: item.id === selected_user,
+							})}
 							onClick={() => {
 								nav(`chatbox/${item.id}`);
 							}}

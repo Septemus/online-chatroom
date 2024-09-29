@@ -16,7 +16,10 @@ $list-left-padding: 10px;
 			padding:10px $list-left-padding;
 			cursor: pointer;
 			display: flex;
-			&:hover {
+			&.selected {
+				background-color: var(--color-highlight-background);
+			}
+			&:hover:not(.selected) {
 				background-color: var(--color-secondary-background);
 			}
 			.avatar {
