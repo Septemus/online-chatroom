@@ -37,6 +37,7 @@ export default function ContactsList() {
 							onClick={() => {
 								nav(`chatbox/${item.id}`);
 							}}
+							key={item.id}
 						>
 							<img
 								src={item.avatar}

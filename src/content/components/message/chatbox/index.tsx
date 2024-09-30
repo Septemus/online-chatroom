@@ -65,7 +65,7 @@ const Chatbox: React.FC = () => {
 	) => {
 		console.log("Failed:", errorInfo);
 	};
-	const msgListEl = msgList.map((content) => {
+	const msgListEl = msgList.map((content, index) => {
 		let tmp: ReactElement | null = null;
 		tmp = (
 			<>
@@ -88,6 +88,7 @@ const Chatbox: React.FC = () => {
 				className={
 					(content.id === myid ? "self" : "other") + " msg-note"
 				}
+				key={content.msg + index}
 			>
 				{tmp}
 			</div>
