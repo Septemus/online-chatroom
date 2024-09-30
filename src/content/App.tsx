@@ -20,7 +20,9 @@ function App() {
 		>
 			<div className="App">
 				<Sidebar />
-				<Outlet />
+				<div className="app-content-wrapper">
+					<Outlet />
+				</div>
 			</div>
 		</RequireCondition>
 	);

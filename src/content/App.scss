@@ -1,9 +1,19 @@
+@use "/src/common/styles/variables.scss";
 * {
-  padding: 0;
-  margin: 0;
+	padding: 0;
+	margin: 0;
 }
 .App {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	.app-content-wrapper {
+		flex-grow: 1;
+	}
+	@media screen and (max-width: variables.$responsive-stage1) {
+		flex-direction: column-reverse;
+    .app-content-wrapper {
+      max-height: calc(100% - variables.$bottom-sidebar-height);
+    }
+	}
 }

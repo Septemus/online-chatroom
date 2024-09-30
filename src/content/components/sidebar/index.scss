@@ -1,23 +1,25 @@
+@use "/src/common/styles/variables.scss";
 $item-height: 24px;
 .sidebar {
-	@media screen and (max-width: 900px) {
-		position: fixed;
-		bottom: 0;
+	@media screen and (max-width: variables.$responsive-stage1) {
+		// position: fixed;
+		// bottom: 0;
+		flex-shrink: 0;
 		width: 100%;
 		background-color: white;
-		z-index: 100;
-        border-top: solid 1px var(--color-delimeter);
+		// z-index: 100;
+		border-top: solid 1px var(--color-delimeter);
 		.sideMenu {
 			height: auto;
 			display: flex;
 			.ant-menu-item {
-                box-sizing: content-box;
+				box-sizing: content-box;
 				text-align: center;
-                flex-grow: 1;
+				flex-grow: 1;
 				height: $item-height;
-                line-height: $item-height;
-                padding: 12px;
-                .ant-menu-item-icon {
+				line-height: $item-height;
+				padding: 12px;
+				.ant-menu-item-icon {
 					font-size: $item-height;
 					transition-duration: 0.5s;
 				}
@@ -33,9 +35,10 @@ $item-height: 24px;
 			}
 		}
 	}
-	@media screen and (min-width: 900px) {
+	@media screen and (min-width: variables.$responsive-stage1) {
 		border-right: solid 1px var(--color-delimeter);
 		padding: 8px 12px 20px;
+		flex-shrink: 0;
 		.sideMenu {
 			height: 100%;
 			border: none !important;

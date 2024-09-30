@@ -1,11 +1,11 @@
 .chatroom {
 	height: 100%;
-	flex-grow: 1;
+	width: 100%;
 	display: flex;
 	.contact-list-wrapper {
 		width: 300px;
 		// height: 100%;
-		border-right:solid 1px var(--color-delimeter);
+		border-right: solid 1px var(--color-delimeter);
 		padding: 10px 0;
 		box-sizing: border-box;
 		flex-shrink: 0;
