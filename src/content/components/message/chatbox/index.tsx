@@ -34,6 +34,12 @@ const Chatbox: React.FC = () => {
 		},
 		fetchPolicy: "cache-first",
 	});
+	const msg_screen_bottom = useRef<HTMLDivElement | null>(null);
+	useEffect(() => {
+		if (isReady && msg_screen_bottom.current && msgList.length) {
+			msg_screen_bottom.current.scrollIntoView();
+		}
+	}, [msg_screen_bottom, isReady, msgList]);
 	useEffect(() => {
 		if (isReady) {
 			if (targetId && myid && myid !== "hydrating") {
@@ -93,7 +99,13 @@ const Chatbox: React.FC = () => {
 	return (
 		<>
 			<TopInfoBar id={targetId} />
-			<div className="message-screen">{msgListEl}</div>
+			<div className="message-screen">
+				{msgListEl}
+				<div
+					className="bottom"
+					ref={msg_screen_bottom}
+				></div>
+			</div>
 			<Form
 				name="basic"
 				onFinish={onFinish}
