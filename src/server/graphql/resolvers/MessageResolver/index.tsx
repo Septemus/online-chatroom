@@ -41,7 +41,13 @@ export async function selectMessageBetween(user1_id: string, user2_id: string) {
 		return null;
 	}
 }
-
+export async function selectLastNoteBetween(
+	user1_id: string,
+	user2_id: string,
+) {
+	const msg = await selectMessageBetween(user1_id, user2_id);
+	return msg?.notes.at(-1);
+}
 export async function newNote({
 	id1,
 	id2,
@@ -87,5 +93,11 @@ export class MessageResolver {
 	@Query(() => Message, { nullable: true })
 	Message(@Arg("data") data: getMessageInput): Promise<Message | null> {
 		return selectMessageBetween(data.id1, data.id2);
+	}
+
+	@Authorized()
+	@Query(() => Note, { nullable: true })
+	LastNote(@Arg("data") data: getMessageInput): Promise<Note | undefined> {
+		return selectLastNoteBetween(data.id1, data.id2);
 	}
 }

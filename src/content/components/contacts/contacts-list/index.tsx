@@ -1,4 +1,3 @@
-import Contact from "@/types/contacts/contact";
 import "./index.scss";
 import { useQuery } from "@apollo/client";
 import { USERS } from "@/common/apollo/client/queries/user/users";
@@ -11,8 +10,12 @@ export default function ContactsList() {
 	const loc = useLocation();
 	const nav = useNavigate();
 	const selected_user = loc.pathname.split("/").at(-1);
-	const { data, loading, error } = useQuery(USERS);
 	const myid = useAppSelector(selectId);
+	const { data, loading, error } = useQuery(USERS, {
+		variables: {
+			finderId: myid,
+		},
+	});
 	const userList = data?.users.filter((u) => {
 		return u.id != myid;
 	});
@@ -28,7 +31,7 @@ export default function ContactsList() {
 	} else if (data) {
 		el = (
 			<ul>
-				{userList!.map((item: Contact) => {
+				{userList!.map((item) => {
 					return (
 						<li
 							className={classnames("contact-item", {
@@ -47,7 +50,9 @@ export default function ContactsList() {
 							<div className="item-info">
 								<p className="name">{item.name}</p>
 								<div className="chat-content">
-									<span>history chat</span>
+									<span className="last-note">
+										{item.lastNote?.content}
+									</span>
 									<span className="devider">·</span>
 									<span className="last-time">xd</span>
 								</div>

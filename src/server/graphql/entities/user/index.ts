@@ -11,6 +11,7 @@ import {
 import { ObjectType, Field, InputType, registerEnumType } from "type-graphql";
 import { Length } from "class-validator";
 import { Message } from "../message";
+import { Note } from "../message/note";
 enum Gender {
 	male = "Male",
 	female = "Female",
@@ -78,6 +79,9 @@ export class Users extends BaseEntity {
 	@Field(() => [Message!])
 	@ManyToMany(() => Message, (msg: Message) => msg.usersInvolved)
 	messages: Relation<Message[]>;
+
+	@Field(() => Note, { nullable: true })
+	lastNote: Note | undefined;
 }
 @InputType()
 export class CreateUserInput {

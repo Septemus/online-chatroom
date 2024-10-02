@@ -22,23 +22,34 @@ import genToken from "@/server/jwt/genToken";
 import { validate } from "class-validator";
 import fs from "fs";
 import path from "path";
+import { selectLastNoteBetween } from "../MessageResolver";
 @Resolver()
 export class UserResolver {
 	@Authorized()
 	@Query(() => [Users])
-	async users(): Promise<Users[]> {
+	async users(
+		@Arg("finderId", { nullable: true }) finderId?: string,
+	): Promise<Users[]> {
 		const ret = await UserRepo.find({
 			relations: {
 				followers: true,
 				following: true,
 			},
 		});
+		if (finderId) {
+			for (const u of ret) {
+				u.lastNote = await selectLastNoteBetween(finderId, u.id);
+			}
+		}
 		return ret;
 	}
 
 	@Authorized()
 	@Query(() => Users)
-	async user(@Arg("id") id: string): Promise<Users | null> {
+	async user(
+		@Arg("id") id: string,
+		@Arg("finderId", { nullable: true }) finderId?: string,
+	): Promise<Users | null> {
 		const ret = await UserRepo.findOne({
 			where: [{ id }, { email: id }],
 			relations: {
@@ -46,6 +57,9 @@ export class UserResolver {
 				following: true,
 			},
 		});
+		if (finderId && ret) {
+			ret.lastNote = await selectLastNoteBetween(ret?.id, finderId);
+		}
 		return ret;
 	}
 
