@@ -1,3 +1,4 @@
+@use "/src/common/styles/variables.scss";
 .chatroom {
 	height: 100%;
 	width: 100%;
@@ -9,6 +10,10 @@
 		padding: 10px 0;
 		box-sizing: border-box;
 		flex-shrink: 0;
+		@media screen and (max-width: variables.$responsive-stage2) {
+			width: auto;
+			padding-top: 0;
+		}
 	}
 	.message-area {
 		position: relative;

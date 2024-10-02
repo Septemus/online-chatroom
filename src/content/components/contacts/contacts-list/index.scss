@@ -1,3 +1,4 @@
+@use "/src/common/styles/variables.scss";
 $avatar-width: 56px;
 $list-left-padding: 10px;
 .contact-list {
@@ -7,13 +8,16 @@ $list-left-padding: 10px;
 	.title {
 		padding-bottom: 20px;
 		padding-left: $list-left-padding;
+		@media screen and (max-width: variables.$responsive-stage2) {
+			display: none;
+		}
 	}
 	ul {
 		list-style: none;
 		.contact-item {
 			box-sizing: border-box;
 			width: 100%;
-			padding:10px $list-left-padding;
+			padding: 10px $list-left-padding;
 			cursor: pointer;
 			display: flex;
 			&.selected {
@@ -31,6 +35,9 @@ $list-left-padding: 10px;
 				margin-right: 12px;
 			}
 			.item-info {
+				@media screen and (max-width: variables.$responsive-stage2) {
+					display: none;
+				}
 				flex: 1;
 				padding: 7px 0;
 				display: flex;
@@ -41,7 +48,7 @@ $list-left-padding: 10px;
 				}
 				.chat-content {
 					font-size: 12px;
-					color:var(--color-text-secondary);
+					color: var(--color-text-secondary);
 				}
 				.devider {
 					margin: 0 4px;

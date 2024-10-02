@@ -12,8 +12,8 @@
 	}
 	@media screen and (max-width: variables.$responsive-stage1) {
 		flex-direction: column-reverse;
-    .app-content-wrapper {
-      max-height: calc(100% - variables.$bottom-sidebar-height);
-    }
+		.app-content-wrapper {
+			max-height: calc(100% - variables.$bottom-sidebar-height);
+		}
 	}
 }
