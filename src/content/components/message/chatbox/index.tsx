@@ -1,13 +1,11 @@
-import { ReactElement, RefObject, useEffect, useRef, useState } from "react";
-import type { FormProps, InputRef } from "antd";
+import { ReactElement, useEffect, useRef } from "react";
+import type { FormProps } from "antd";
 import { Button, Form, Input } from "antd";
-import { useSocket } from "@/content/hooks/socket";
-import { SocketNote } from "@/types/message";
 import "./index.scss";
 import { useAppSelector } from "@/content/hooks/store";
 import { selectId } from "@/content/store/userSlice";
 import { Link, useParams } from "react-router-dom";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { AVATAR } from "@/common/apollo/client/queries/user";
 import { useMessageList } from "./hooks/messageList";
 import Loading from "@/content/components/loading";
@@ -19,9 +17,11 @@ type FieldType = {
 const Chatbox: React.FC = () => {
 	const { targetId } = useParams();
 	const myid = useAppSelector(selectId);
-	const [msgList, setMsgList] = useMessageList({ id1: myid, id2: targetId });
+	const { msgList, mutate } = useMessageList({
+		id1: myid,
+		id2: targetId,
+	});
 	const [form] = Form.useForm<FieldType>();
-	const [socket, isReady] = useSocket("ws://localhost:3006");
 	const { data: targetAvatar } = useQuery(AVATAR, {
 		variables: {
 			userId: targetId!,
@@ -36,27 +36,22 @@ const Chatbox: React.FC = () => {
 	});
 	const msg_screen_bottom = useRef<HTMLDivElement | null>(null);
 	useEffect(() => {
-		if (isReady && msg_screen_bottom.current && msgList.length) {
+		if (msg_screen_bottom.current && msgList.length) {
 			msg_screen_bottom.current.scrollIntoView();
 		}
-	}, [msg_screen_bottom, isReady, msgList]);
-	useEffect(() => {
-		if (isReady) {
-			if (targetId && myid && myid !== "hydrating") {
-				const intro = new SocketNote(targetId!, myid, "init");
-				socket.send(JSON.stringify(intro));
-			}
-			socket.onmessage = (e: MessageEvent<string>) => {
-				const tmp: SocketNote = JSON.parse(e.data);
-				setMsgList([...msgList, tmp]);
-				console.log("on message!", tmp, msgList);
-			};
-		}
-	}, [isReady, msgList, socket, myid, targetId, setMsgList]);
+	}, [msg_screen_bottom, msgList]);
 	const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
 		console.log("Success:", values);
-		const target = new SocketNote(values.msg, myid, "message");
-		socket.send(JSON.stringify(target));
+		mutate({
+			variables: {
+				data: {
+					content: values.msg,
+					id1: myid,
+					id2: targetId!,
+					sender: myid,
+				},
+			},
+		});
 		form.setFieldValue("msg", "");
 	};
 
@@ -94,9 +89,9 @@ const Chatbox: React.FC = () => {
 			</div>
 		);
 	});
-	if (!isReady) {
-		return <Loading />;
-	}
+	// if (!isReady) {
+	// 	return <Loading />;
+	// }
 	return (
 		<>
 			<TopInfoBar id={targetId} />

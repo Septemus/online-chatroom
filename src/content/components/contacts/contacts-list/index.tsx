@@ -6,12 +6,15 @@ import { selectId } from "@/content/store/userSlice";
 import Loading from "../../loading";
 import { useLocation, useNavigate } from "react-router-dom";
 import classnames from "classnames";
+import { useEffect } from "react";
+import { SUBSCRIBE_NEW_NOTE } from "@/common/apollo/client/queries/message";
+import { produce } from "immer";
 export default function ContactsList() {
 	const loc = useLocation();
 	const nav = useNavigate();
 	const selected_user = loc.pathname.split("/").at(-1);
 	const myid = useAppSelector(selectId);
-	const { data, loading, error } = useQuery(USERS, {
+	const { data, loading, error, subscribeToMore } = useQuery(USERS, {
 		variables: {
 			finderId: myid,
 		},
@@ -20,6 +23,36 @@ export default function ContactsList() {
 		return u.id != myid;
 	});
 	let el: JSX.Element = <div></div>;
+	useEffect(() => {
+		subscribeToMore({
+			document: SUBSCRIBE_NEW_NOTE,
+			variables: {
+				recipientId: myid,
+			},
+			updateQuery: (prev, { subscriptionData }) => {
+				if (!subscriptionData.data) return prev;
+				const newQueryData = produce(prev, (draft) => {
+					const target = draft.users.find(
+						(u) => u.id === subscriptionData.data.newNote.target_id,
+					)!;
+					if (target.lastNote) {
+						target.lastNote!.content =
+							subscriptionData.data.newNote.newNote.content;
+					} else {
+						target.lastNote = {
+							__typename: "Note",
+							content:
+								subscriptionData.data.newNote.newNote.content,
+							createdDate:
+								subscriptionData.data.newNote.newNote
+									.createdDate,
+						};
+					}
+				});
+				return newQueryData;
+			},
+		});
+	}, []);
 	if (loading) {
 		el = (
 			<div className="loading">
