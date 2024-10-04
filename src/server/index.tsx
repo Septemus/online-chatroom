@@ -1,6 +1,5 @@
 import cors from "cors";
 import express from "express";
-import myCreateSocket from "./socket";
 import myCreateGraphql from "./graphql";
 import SSRCallback from "./ssr";
 import dotenv from "dotenv";
@@ -18,13 +17,11 @@ async function setUpExpressServer() {
 		"/graphql",
 		cors<cors.CorsRequest>(),
 		express.json({ limit: "10mb" }),
-		await myCreateGraphql(),
+		await myCreateGraphql(server),
 	);
 
 	app.use(express.static("./build", { index: false }));
 
 	app.get("*", SSRCallback);
-
-	myCreateSocket(server);
 }
 setUpExpressServer();
