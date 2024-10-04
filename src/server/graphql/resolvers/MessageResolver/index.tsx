@@ -1,8 +1,21 @@
-import { Arg, Authorized, Query, Resolver } from "type-graphql";
-import { getMessageInput, Message } from "../../entities/message";
-import { Note } from "../../entities/message/note";
+import {
+	Arg,
+	Authorized,
+	Mutation,
+	Query,
+	Resolver,
+	Root,
+	Subscription,
+} from "type-graphql";
+import {
+	addMessageInput,
+	getMessageInput,
+	Message,
+} from "../../entities/message";
+import { NewNoteNotification, Note } from "../../entities/message/note";
 import { MessageRepo, UserRepo } from "../../typeorm";
 import { Brackets } from "typeorm";
+import { type NEW_NOTE_PAYLOAD, pubSub } from "../../pubsub";
 export async function selectMessageBetween(user1_id: string, user2_id: string) {
 	const targetId = (
 		await MessageRepo.createQueryBuilder("message")
@@ -35,7 +48,6 @@ export async function selectMessageBetween(user1_id: string, user2_id: string) {
 				},
 			},
 		});
-		console.log("@@joetesting:select message result:", target);
 		return target;
 	} else {
 		return null;
@@ -48,21 +60,9 @@ export async function selectLastNoteBetween(
 	const msg = await selectMessageBetween(user1_id, user2_id);
 	return msg?.notes.at(-1);
 }
-export async function newNote({
-	id1,
-	id2,
-	content,
-	sender,
-}: {
-	id1: string;
-	id2: string;
-	content: string;
-	sender: string;
-}) {
-	console.log(`@@joetesting:finding message between ${id1} and ${id2}`);
+export async function newNote({ id1, id2, content, sender }: addMessageInput) {
 	let msg: Message | null = await selectMessageBetween(id1, id2);
 	if (!msg) {
-		console.log("@@joetesting:no message between them,creating a new one");
 		const involved = await UserRepo.find({
 			where: [{ id: id1 }, { email: id1 }, { id: id2 }, { email: id2 }],
 		});
@@ -85,6 +85,7 @@ export async function newNote({
 		sender,
 	);
 	await MessageRepo.save(msg);
+	return note;
 }
 
 @Resolver()
@@ -99,5 +100,33 @@ export class MessageResolver {
 	@Query(() => Note, { nullable: true })
 	LastNote(@Arg("data") data: getMessageInput): Promise<Note | undefined> {
 		return selectLastNoteBetween(data.id1, data.id2);
+	}
+	@Authorized()
+	@Mutation(() => Note, { nullable: true })
+	async AddNote(@Arg("data") data: addMessageInput): Promise<Note> {
+		const ret = await newNote(data);
+		pubSub.publish("NEW_NOTE", data.id1, {
+			target_id: data.id2,
+			newNote: ret,
+		});
+		pubSub.publish("NEW_NOTE", data.id2, {
+			target_id: data.id1,
+			newNote: ret,
+		});
+		return ret;
+	}
+
+	@Authorized()
+	@Subscription({
+		topics: "NEW_NOTE",
+		topicId: ({ args }) => args.recipientID,
+	})
+	newNote(
+		@Arg("recipientID", () => String) recipientID: string,
+		@Root() new_note: NEW_NOTE_PAYLOAD,
+	): NewNoteNotification {
+		const ret = new NewNoteNotification();
+		Object.assign(ret, new_note);
+		return ret;
 	}
 }

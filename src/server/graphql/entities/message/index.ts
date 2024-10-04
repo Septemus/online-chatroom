@@ -1,18 +1,13 @@
 import {
 	Entity,
 	BaseEntity,
-	PrimaryColumn,
-	Column,
 	ManyToMany,
 	JoinTable,
-	OneToOne,
 	OneToMany,
-	ManyToOne,
 	type Relation,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { ObjectType, Field, InputType, registerEnumType } from "type-graphql";
-import { Length } from "class-validator";
+import { ObjectType, Field, InputType } from "type-graphql";
 import { Users } from "../user";
 import { Note } from "./note";
 
@@ -42,4 +37,16 @@ export class getMessageInput {
 	id1: string;
 	@Field(() => String)
 	id2: string;
+}
+
+@InputType()
+export class addMessageInput {
+	@Field(() => String)
+	id1: string;
+	@Field(() => String)
+	id2: string;
+	@Field(() => String)
+	content: string;
+	@Field(() => String)
+	sender: string;
 }

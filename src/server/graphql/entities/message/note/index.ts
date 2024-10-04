@@ -4,7 +4,6 @@ import {
 	Column,
 	Entity,
 	ManyToOne,
-	PrimaryColumn,
 	PrimaryGeneratedColumn,
 	type Relation,
 } from "typeorm";
@@ -41,4 +40,12 @@ export class Note extends BaseEntity {
 	@Field(() => Date)
 	@Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
 	createdDate: Date;
+}
+@ObjectType()
+export class NewNoteNotification extends BaseEntity {
+	@Field(() => String)
+	target_id: string;
+
+	@Field(() => Note!)
+	newNote: Note;
 }
