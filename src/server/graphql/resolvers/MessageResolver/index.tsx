@@ -116,7 +116,6 @@ export class MessageResolver {
 		return ret;
 	}
 
-	@Authorized()
 	@Subscription({
 		topics: "NEW_NOTE",
 		topicId: ({ args }) => args.recipientID,
