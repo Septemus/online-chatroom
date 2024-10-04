@@ -114,6 +114,7 @@
     "classnames": "^2.5.1",
     "cors": "^2.8.5",
     "cra-build-watch": "^3.4.0",
+    "date-fns": "^4.1.0",
     "detect-port": "^1.6.1",
     "dotenv-webpack": "^8.1.0",
     "eslint-config-prettier": "^9.1.0",

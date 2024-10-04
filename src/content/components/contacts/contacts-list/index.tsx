@@ -9,6 +9,7 @@ import classnames from "classnames";
 import { useEffect } from "react";
 import { SUBSCRIBE_NEW_NOTE } from "@/common/apollo/client/queries/message";
 import { produce } from "immer";
+import { dateDiffSimpleString } from "@/common/utilities/time";
 export default function ContactsList() {
 	const loc = useLocation();
 	const nav = useNavigate();
@@ -87,7 +88,14 @@ export default function ContactsList() {
 										{item.lastNote?.content}
 									</span>
 									<span className="devider">·</span>
-									<span className="last-time">xd</span>
+									<span className="last-time">
+										{dateDiffSimpleString(
+											new Date(),
+											new Date(
+												item.lastNote?.createdDate,
+											),
+										)}
+									</span>
 								</div>
 							</div>
 						</li>
