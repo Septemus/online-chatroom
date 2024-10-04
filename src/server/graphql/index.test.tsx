@@ -52,7 +52,6 @@ const TESTUSER_ARR = [
 const TESTUSER = TESTUSER_ARR[0];
 beforeAll(async () => {
 	AppDataSource.initialize();
-	const midWare = await myCreateGraphql();
 	const app = express();
 	await new Promise((res) => {
 		const itv = setInterval(async () => {
@@ -73,6 +72,7 @@ beforeAll(async () => {
 			}, 1000);
 		});
 	});
+	const midWare = await myCreateGraphql(server);
 	app.use("/graphql", cors<cors.CorsRequest>(), express.json(), midWare);
 });
 beforeEach(async () => {
